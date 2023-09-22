@@ -1,0 +1,28 @@
+// Check for update the system 
+sudo apt update
+
+// Now in acutal update the system application.
+sudo apt upgrade
+
+// we can run both command at same time
+sudo apt update && sudo apt upgrade
+
+// install the application 
+
+sudo apt install <PackageName or PackageNames(space saperated)>
+sudo apt install vlc
+sudo apt install gparted vlc pdfsam-basic
+
+// remove the installed Application 
+sudo apt remove <PackageName>
+or remove everything of that Package use purge
+sudo apt-get --purge remove <PackageName>
+sudo apt-get --purge remove conky conky-all
+
+
+git add this line shubham code 
+git add this line deepak code new code for shubham
+
+
+// Docker RabbitMQ run command
+sudo docker run -d --hostname my-rabbit --name rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
