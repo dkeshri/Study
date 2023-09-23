@@ -1,0 +1,6 @@
+if you are using docker container
+// https://docs.influxdata.com/influxdb/v2/get-started/query/?t=influx+CLI
+step 1: do inside the terminal of influxdb container.
+cmd: docker exec -it containerName or id bash
+
+setp 2: type cmd influx v1 shell
