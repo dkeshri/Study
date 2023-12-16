@@ -1,4 +1,4 @@
 {
     "version": "1.0.0",
-    "endPoints": "http://localhost:5283/"
+    "endPoints": "https://localhost:7283/"
 }
