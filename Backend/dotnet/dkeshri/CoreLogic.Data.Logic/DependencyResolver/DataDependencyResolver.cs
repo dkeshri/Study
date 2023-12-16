@@ -2,7 +2,7 @@
 using CoreLogic.Extensibility.Interfaces.Base;
 using System;
 using System.Collections.Generic;
-using System.Composition;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

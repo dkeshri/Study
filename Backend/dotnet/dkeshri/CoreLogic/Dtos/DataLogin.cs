@@ -11,7 +11,7 @@ namespace CoreLogic.Dtos
     {
         public DataLogin(IAddress address)
         {
-            
+            //Address address1 = new Address();
         }
     }
 }

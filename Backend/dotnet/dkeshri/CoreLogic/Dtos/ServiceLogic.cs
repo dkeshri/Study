@@ -11,7 +11,7 @@ namespace CoreLogic.Dtos
     {
         public ServiceLogic(IPublicService publicService)
         {
-                
+            //PublicService publicService1 = new PublicService();
         }
     }
 }
