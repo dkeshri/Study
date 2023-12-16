@@ -1,0 +1,37 @@
+<nav>
+    <div class="logo-container">
+        <div class="nav-logo" style="color:black">
+            <app-logo [shopName]="shopName"></app-logo>
+        </div>
+    </div>
+    <div class="menu-container">
+        <p-menubar [autoDisplay]="autoDisplay" [model]="items"></p-menubar>
+    </div>
+    <div class="user-detail-container">
+        <div class="language" style="cursor: pointer;" (click)="languageMenuPop.toggle($event)" >
+            <p-menu #languageMenuPop [popup]="true" appendTo="body" [style]="{'width':'150px', 'textAlign':'center'}" styleClass="pop-menu" [model]="languageMenu"></p-menu>
+            <i class="pi pi-fw pi-language"></i>
+            <span style="margin-left: 5px;">{{'language' | translate}}</span>
+        </div>
+        <p-avatar icon="pi pi-user" shape="circle" [matMenuTriggerFor]="userProfileMenu" class="avatar"></p-avatar>
+        <mat-menu #userProfileMenu="matMenu">
+            <a routerLink="views/profile">
+                <button mat-menu-item>
+                    <mat-icon>account_circle</mat-icon>
+                    <span>{{loggedInUser}}</span>
+                </button>
+            </a>
+            <button *ngIf="!isSuperAdmin" mat-menu-item (click)="onShopMenuClick()" >
+                <mat-icon>shop</mat-icon>
+                <span>Shop</span>
+            </button>
+            <mat-divider></mat-divider>
+            <a routerLink="../auth/login">
+                <button mat-menu-item (click)="onLogout()" >
+                    <mat-icon>logout</mat-icon>
+                    <span>Logout</span>
+                </button>
+            </a>
+        </mat-menu>
+    </div>
+</nav>

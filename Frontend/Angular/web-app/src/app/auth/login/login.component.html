@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="box">
+        <div class="logo">
+            Welcome To Store
+        </div>
+        <div class="LoginForm">
+            <div>
+                <fa-icon [icon]="faUserLock" size="6x" [styles]="faUserLockStyles"></fa-icon>
+            </div>
+            <span class="p-float-label">
+                <input id="userName-input" [(ngModel)]="userName" type="text" pInputText>
+                <label for="userName-input">Username</label>
+            </span>
+            <span class="p-float-label">
+                <input id="password-input" [(ngModel)]="password" type="password" pInputText>
+                <label for="password-input">Password</label>
+            </span>
+            <br />
+            <button mat-raised-button color="primary" style="width: 100px;" (click)="onSubmit()">Login</button>
+        </div>
+        <div class="forgotPassword">
+            <a routerLink="../registration" >Forgot Password</a>
+            <a routerLink="../registration">Registration</a>
+        </div>
+        <section class="social_media">
+            <div>Copyright © <a href='https://github.com/dkeshri' target='_blank' aria-label='GitHub'>Kirana Store</a>
+                2022
+            </div>
+        </section>
+    </div>
+</div>

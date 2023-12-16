@@ -1,0 +1,64 @@
+<div class="container">
+    <div>
+        <h1 *ngIf="customerId" >Add Invoice</h1>
+        <h1 *ngIf="!customerId" >Invoice</h1>
+    </div>
+    <p-card>
+        <form [formGroup]="invoiceFormGroup">
+            <div class="formDetails">
+                <h2>Orders Details</h2>
+                <div class="row">
+                    <div class="calender-field">
+                        <label>Invoice From</label>
+                        <p-calendar formControlName="from" class="p-inputtext-sm" 
+                        id="from" [showIcon]="true" [showTime]="true" [showSeconds]="true" appendTo="body" 
+                        dateFormat="dd-mm-yy" [disabled]="true" ></p-calendar>
+                    </div>
+                    <div class="calender-field">
+                        <label>Payment Till Date</label>
+                        <p-calendar (ngModelChange)="onOrderDateChange()" formControlName="to" class="p-inputtext-sm" 
+                        id="to" [showIcon]="true" [showTime]="true" [showSeconds]="true" appendTo="body" 
+                        dateFormat="dd-mm-yy" [minDate]="minimumDate" [maxDate]="maxDate" ></p-calendar>
+                    </div>
+                    <div class="p-field">
+                        <div class="inline-item">
+                            <div>
+                                <label>Bill Amount</label>
+                                <span id="billAmount"><b>{{invoiceFormGroup.controls['billAmount'].value}}</b></span>
+                            </div>
+                            +
+                            <div>
+                                <label>{{'Common.PrevArrears' | translate}}</label>
+                                <span id="arrears" style="color:red"><b>{{invoiceFormGroup.controls['prevArrears'].value}}</b></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-field">
+                        <label>{{'Common.TotalAmount' | translate}}</label>
+                        <span id="totalAmount" style="color:green"><b>{{invoiceFormGroup.controls['totalAmount'].value}}</b></span>
+                    </div>
+                    <div class="p-field">
+                        <label>Discount</label>
+                        <input (ngModelChange)="onDiscountChange()" formControlName="discount" id="discount" type="number" class="p-inputtext-sm" pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label>{{'Common.PayAmount' | translate}}</label>
+                        <input formControlName="amountReceived" id="amountReceived" type="number" class="p-inputtext-sm" pInputText />
+                    </div>
+                    <div *ngIf="!customerId" class="p-field">
+                        <label>{{'Common.Arrears' | translate}}</label>
+                        <span id="arrears" style="color:red"><b>{{invoiceFormGroup.controls['arrears'].value}}</b></span>
+                    </div>
+                </div>
+                <div class="action-container">
+                    <button [disabled]="this.invoiceFormGroup.invalid" [disabled]="!customerId" class="btn" (click)="onSave()" mat-raised-button color="primary">{{'Common.PayAmount' | translate}}</button>
+                    <button class="btn" [disabled]="customerId" (click)="downloadPdf()" mat-raised-button color="primary"><mat-icon>picture_as_pdf</mat-icon> &nbsp;&nbsp;{{'Common.Invoice' | translate}}</button>
+                </div>
+                <div>
+                    <app-data-table [columns]="cols" [value]="ordersSummaries"
+                        (RowEditSave)="onRowEditSave($event)"></app-data-table>
+                </div>
+            </div>
+        </form>
+    </p-card>
+</div>

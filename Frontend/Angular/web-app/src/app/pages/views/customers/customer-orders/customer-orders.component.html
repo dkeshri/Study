@@ -1,0 +1,73 @@
+<div class="container">
+    <h1>Customer Orders Details</h1>
+    <p-card>
+        <div class="customerDetail">
+            <div class="personalDetail">
+                <div class="p-field">
+                    <span>{{customer.name}}</span>
+                    <span>{{customer.phone}}</span>
+                    <span>One Stop Kirana Store</span>
+                </div>
+                <div>
+                    <br>
+                    <a routerLink={{this.addInvoiceRouteLink}}>
+                        <button class="btn" mat-raised-button color="primary">
+                            <mat-icon class="tab-icon-margin-right">description</mat-icon>
+                            <span>Create Invoice</span>
+                        </button>
+                    </a>
+                </div>
+                
+            </div>
+            <div class="transation">
+                <div class="p-field">
+                    <h2><u>Total Amount</u></h2>
+                    <span><b style="color:red">₹ {{this.totalUnpaidAmount}}</b></span>
+                </div>
+                <div class="p-field">
+                    <span><u>Last Paid</u></span>
+                    <small>Amount: <b style="color: green; display: inline;">₹ {{this.lastPaymentAmount}}</b></small>
+                    <small>Date: <b style="display: inline;">{{this.lastPaymentDate | datetime}}</b></small>
+                </div>
+            </div>
+        </div>
+        <div class="mat-tab">
+            <mat-tab-group (selectedTabChange)="onTabClick($event)" >
+                <mat-tab [label]="orderMatLabel">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="tab-icon-margin-right">shopping_cart</mat-icon>
+                        Orders
+                    </ng-template>
+                    <div class="customer-order">
+                        <app-data-table [columns]="orderSummaryCols" [value]="ordersSummaries"
+                            [isEditable]="isOrderSummaryEditable"></app-data-table>
+                    </div>
+                </mat-tab>
+                <mat-tab [label]="invoicesMatLabel">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="tab-icon-margin-right">description</mat-icon>
+                        Invoices
+                    </ng-template>
+                    <div class="customer-Invoices">
+                        <app-data-table [columns]="invoiceCols" [value]="invoices"
+                            [defaultSortColIndex]="invoiceColIndex"
+                            [sortOrder]="invoiceSortOrder"
+                            [isEditable]="isInvoiceEditable"></app-data-table>
+                    </div>
+                </mat-tab>
+                <mat-tab [label]="paymentsMatLabel">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="tab-icon-margin-right">paid</mat-icon>
+                        Payments
+                    </ng-template>
+                    <div class="customer-Invoices">
+                        <app-data-table [columns]="paymentCols" [value]="payments"
+                            [defaultSortColIndex]="paymentSortColIndex"
+                            [sortOrder]="paymentSortOrder"
+                            [isEditable]="isPaymentEditable"></app-data-table>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </p-card>
+</div>

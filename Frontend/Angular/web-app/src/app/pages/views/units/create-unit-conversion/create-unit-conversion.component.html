@@ -1,0 +1,16 @@
+<div class="unitConversionDetails">
+    <div class="row">
+        <div class="col">
+            <span>1 {{primariUnitLabel}}</span>
+            <span>=</span>
+        </div>
+        <div class="col">
+            <input [(ngModel)]="conversionRate" class="conversionRateInput" id="rate" type="number"
+                class="p-inputtext-sm" pInputText />
+            <span>{{secUnitLabel}}</span>
+        </div>
+    </div>
+    <div class="action-container" style="margin-top: 25px;">
+        <button class="btn" (click)="onSave()" mat-raised-button color="primary">{{'Common.Save' | translate}}</button>
+    </div>
+</div>

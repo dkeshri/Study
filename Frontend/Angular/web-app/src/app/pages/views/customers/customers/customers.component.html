@@ -1,0 +1,10 @@
+<h1>Customers</h1>
+<div class="content">
+    <div style="width:220px">
+        <input id="barcodeInput" class="p-inputtext-sm" autofocus type="text" pInputText placeholder="Customer Bar Code"
+        (keydown.enter)="onEnterPress($event)" [(ngModel)]="barcode">
+    </div>
+    
+    <app-data-table [columns]="cols" [value]="customers" [isEditable]="isEditable" 
+     (RowEditSave)="onRowEditSave($event)"></app-data-table>   
+</div>

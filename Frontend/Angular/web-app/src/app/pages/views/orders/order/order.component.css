@@ -1,0 +1,43 @@
+.table{
+    margin: 25px 0px;
+}
+.center{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+}
+.caption-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-container{
+    flex:.6;
+}
+.barcode-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex:.4;
+}
+.save-barcode{
+    border : 1px solid green;
+    cursor: pointer;
+    background-color: green;
+}
+.cancel-barcode{
+    border : 1px solid red;
+    cursor: pointer;
+    background-color: red;
+}
+.save-barcode:hover{
+    transform: scale(1.05);
+}
+.cancel-barcode:hover{
+    transform: scale(1.05);
+}
+.customerDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

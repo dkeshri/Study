@@ -1,0 +1,8 @@
+.mainContentSection {
+    position: relative;
+    padding: 20px;
+    height: calc(100vh - var(--navBarHeight) - var(--footerHeight));
+    background-color: rgb(251, 249, 249);
+    scroll-behavior: smooth;
+    overflow-y:scroll;
+}

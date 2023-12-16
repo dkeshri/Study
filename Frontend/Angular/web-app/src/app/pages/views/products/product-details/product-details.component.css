@@ -1,0 +1,17 @@
+.productDetails,
+.productUnit {
+    padding: 10px 0;
+}
+.calender-field * {
+    display: block;
+}
+.twoElement{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.twoElement .conversionRateddl,.secUnitddl{
+    flex: .95;
+    width: 80%;
+}

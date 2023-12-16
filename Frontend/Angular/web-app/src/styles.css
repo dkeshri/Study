@@ -1,1 +1,122 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primaryColor: #373B44;
+  --secondaryColor: #4a4e58;
+  --textSecondary: grey;
+  --scrollColor: #b3b6bb;
+  /*ced1d8*/
+  --scrollBGColor: rgb(236, 229, 229);
+  --scrollBorderColor: #6e6f70;
+  --bannerTextSecondaryColor: #595f6d;
+  --skillBGColor: white;
+  --skillColor: var(--primaryColor);
+  --skillProgressBarBorderColor: #1d8997;
+  --navBarHeight: 3.4rem;
+  --LogoBorderColor: #3f3f72;
+  --footerHeight: 3rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* font-size: 14px; */
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollBGColor);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollColor);
+  border-radius: 15px;
+
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Global page layout*/
+.box {
+  box-shadow:
+    0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+    0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+    0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+  background: white;
+  border-radius: 5px;
+  min-width: 100%;
+  min-height: 100vh;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+  display: block;
+}
+
+.row {
+  padding-left: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  row-gap: .5rem;
+  column-gap: 5rem;
+}
+
+.card-grid-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  row-gap: .5rem;
+  column-gap: 5rem;
+}
+
+.p-field * {
+  display: block;
+}
+.field{
+  background-color: #1d8997;
+}
+
+.p-field label,
+.calender-field label {
+  padding-bottom: 5px;
+}
+
+.action-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: .5rem;
+}
+.action-container > button{
+  margin-left: 10px;
+}
+.permanentAddressTitle{
+  display: flex;
+  justify-content: space-between;
+}
+.formDetails {
+  padding: 10px 0;
+}
+.error{
+  color: red;
+}

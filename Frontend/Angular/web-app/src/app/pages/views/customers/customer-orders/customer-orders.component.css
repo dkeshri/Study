@@ -1,0 +1,22 @@
+.customerDetail{
+    display: flex;
+    justify-content: space-between;
+    height: 150px;
+}
+.transation{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.addresses{
+    display: flex;
+    justify-content: space-around;
+}
+.documents{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.tab-icon-margin-right {
+    margin-right: 8px;
+}

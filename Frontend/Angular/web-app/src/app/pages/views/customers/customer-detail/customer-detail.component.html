@@ -1,0 +1,71 @@
+<div class="container">
+    <h1>Add Customer</h1>
+    <p-card>
+        <form [formGroup]="customerForm">
+            <div class="formDetails">
+                <h2>Customer Details</h2>
+                <div class="row">
+                    <div class="p-field">
+                        <label for="customerName">Customer Name</label>
+                        <input formControlName="customerName" id="customerName" type="text" class="p-inputtext-sm"  pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label for="phoneNumber">Phone</label>
+                        <input formControlName="phoneNumber" id="phoneNumber" type="text" class="p-inputtext-sm" pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label for="shop">Shop</label>
+                        <p-dropdown class="p-dropdown-sm" formControlName="shopId" appendTo="body" [options]="shopOptions" ></p-dropdown>
+                    </div>
+                    <div *ngIf="barcodeImage" class="p-field" >
+                        <label for="barcode">Barcode</label>
+                        <div *ngIf="barcodeImage" id="barcode" class="save-barcode">
+                            <img [src]="barcodeImage" />
+                        </div>
+                    </div>
+                    <div class="p-field">
+                        <label for="isActive">{{customerForm.controls['isActive'].value | activeInactive | translate }}</label>
+                        <p-checkbox inputId="isActive" formControlName="isActive" [binary]="true" ></p-checkbox>
+
+                    </div>
+                </div>
+            </div>
+            <div class="customerAddress">
+                <h2>Address</h2>
+                <h3><u>Current Address</u></h3>
+                <app-address [(address)]="currentAddress" ></app-address>
+                <br/>
+                <div class="permanentAddressTitle">
+                    <h3><u>Permanent Address</u></h3>
+                    <div>
+                        <p-checkbox inputId="isPermanentAddSame" (onChange)="onPermanentAddChkChange($event)" [binary]="true" ></p-checkbox>
+                        <small style="margin-left: 8px;"> ( <b>Is Permanent Address same?</b> )</small>
+                    </div>
+                </div>
+                <app-address [(address)]="permanentAddress" [isPermanent]="true"></app-address>
+            </div>
+            <div class="customerDocument">
+                <h2>Documents</h2>
+                <div class="row" formGroupName="documents" >
+                    <div class="p-field">
+                        <label for="type">Document Type</label>
+                        <input  formControlName="type" type="text" class="p-inputtext-sm"  pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label for="docId">Document Id</label>
+                        <input  formControlName="docId" type="text" class="p-inputtext-sm" pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label for="isDocVerified">IsVerified</label>
+                        <p-checkbox inputId="isDocVerified" formControlName="isVerified" [binary]="true" ></p-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="action-container">
+                <button *ngIf="!showUpdateBtn" [disabled]="this.customerForm.invalid" class="btn" (click)="onSave()" mat-raised-button color="primary">{{'Common.Save' | translate}}</button>
+                <button *ngIf="showUpdateBtn" [disabled]="this.customerForm.invalid" class="btn" (click)="onUpdate()" mat-raised-button color="primary">{{'Common.Update' | translate}}</button>
+                <button *ngIf="showDeleteBtn" [disabled]="this.customerForm.invalid" class="btn" (click)="onDelete()" mat-raised-button color="warn">{{'Common.Delete' | translate}}</button>
+            </div>
+        </form>
+    </p-card>
+</div>

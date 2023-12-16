@@ -1,0 +1,9 @@
+<h1>Invoices</h1>
+<div class="content">
+    <div style="width:220px">
+        <input id="barcodeInput" class="p-inputtext-sm" autofocus type="text" pInputText placeholder="Customer Bar Code"
+            (keydown.enter)="onEnterPress($event)" [(ngModel)]="barcode">
+    </div>
+    <app-data-table [columns]="invoiceCols" [value]="invoices" [isEditable]="isInvoiceEditable">
+    </app-data-table>
+</div>

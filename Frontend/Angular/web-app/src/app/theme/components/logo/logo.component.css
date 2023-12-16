@@ -1,0 +1,17 @@
+.container{
+    background-color: white;
+    color: black;
+    width: 200px;
+    height: var(--navBarHeight);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+    flex-direction: column;
+    border-left: 10px solid var(--LogoBorderColor);
+    border-right: 10px solid var(--LogoBorderColor);
+}
+.h1{
+    font-family: serif;
+    text-shadow: 0px 2px 10px rgb(71 69 69);
+}

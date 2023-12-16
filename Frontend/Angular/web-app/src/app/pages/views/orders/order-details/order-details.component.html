@@ -1,0 +1,8 @@
+<h1>Products</h1>
+<div class="action-container">
+    <button class="btn" (click)="downloadPdf()" mat-raised-button color="primary"><mat-icon>picture_as_pdf</mat-icon> &nbsp;&nbsp;{{'Common.Invoice' | translate}}</button>
+</div>
+<div class="content">
+    <app-data-table [columns]="cols" [value]="orders" [isEditable]="isEditable"
+        (RowEditSave)="onRowEditSave($event)"></app-data-table>
+</div>

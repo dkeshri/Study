@@ -1,0 +1,118 @@
+{
+    "title": "Deepak",
+    "language": "English",
+    "languageLabel":"Language",
+    "Menu": {
+        "Lang": {
+            "English":"English",
+            "Hindi":"Hindi"
+        },
+        "User": {
+            "Profile":"Profile",
+            "Logout":"Logout"
+        },
+        "Nav": {
+            "Home":"Home",
+            "Orders":"Orders",
+            "Order":"Order",
+            "Customers":"Customers",
+            "Customer":"Customer",
+            "Delete":"Delete",
+            "Add_Customer":"Add Customer",
+            "Products":"Products",
+            "Product":"Product",
+            "Add_Product":"Add Product",
+            "Payments":"Payments",
+            "About":"About",
+            "Units":"Units",
+            "Add_Unit":"Add Unit",
+            "Shops":"Shops",
+            "Add_Shop":"Add Shop",
+            "Users":"Users",
+            "Add_User":"Add User",
+            "GeoRegion":"Geo Region",
+            "Countries":"Countries",
+            "Cities":"Cities",
+            "States":"States",
+            "Add_Country":"Add Country",
+            "Add_State":"Add State",
+            "Add_City":"Add City",
+            "Invoices":"Invoices"
+        }
+    },
+    "Table":{
+        "Column":{
+            "Header":{
+                "ProductName":"Product Name",
+                "CustomerName":"Customer Name",
+                "OrderId":"Order Id",
+                "CustomerId":"Customer Id",
+                "TotalAmount":"Total Amount"
+            }
+        }
+    },
+    "Form":{
+        "Label":{
+            "Customers":"Customers",
+            "Order":"Order",
+            "Orders":"Orders",
+            "Users":"Users",
+            "Countries":"Countries",
+            "Cities":"Cities",
+            "States":"States",
+            "Country":"Country",
+            "State":"State",
+            "City":"City",
+            "User":"User",
+            "AddUser":"Add User",
+            "SelectCity":"Select City",
+            "SelectState":"Select State",
+            "SelectCountry":"Select Country",
+            "UserDetails":"User Details",
+            "Address":"Address",
+            "CurrentAddress":"Current Address",
+            "PermanentAddress":"Permanent Address",
+            "Name":"Name",
+            "PhoneNumber":"Phone Number",
+            "UserName":"User Name",
+            "Password":"Password",
+            "UserRole":"User Role",
+            "Address1":"Address 1",
+            "Address2":"Address 2",
+            "Landmark":"Landmark",
+            "Pincode":"Pincode",
+            "IsPermanentAddressSame":"Is Permanent Address same",
+            "ShopName":"Shop Name",
+            "ShopDetails":"Shop's Details",
+            "SelectSecUnit":"Select secondary unit",
+            "SelectUnit":"Select unit",
+            "SelectUnitConversion":"Select conversion"
+
+        }
+    },
+    "Common":{
+        "Save":"Save",
+        "Delete":"Delete",
+        "Update":"Update",
+        "Total":"Total",
+        "Price":"Price",
+        "Unit":"Unit",
+        "Barcode":"Barcode",
+        "Amount":"Amount",
+        "Action":"Action",
+        "Edit":"Edit",
+        "Quantity":"Quantity",
+        "SNo":"S.No",
+        "Active":"Active",
+        "InActive":"InActive",
+        "PayAmount":"Pay Amount",
+        "Paid":"Paid",
+        "Arrears":"Arrears",
+        "PrevArrears":"Prev. Arrears",
+        "CurrentAmount":"Current Amount",
+        "TotalAmount" :"Total Amount",
+        "Download":"Download",
+        "Pdf":"Pdf",
+        "Invoice":"Invoice"
+    }
+}

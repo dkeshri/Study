@@ -1,0 +1,149 @@
+<h1>{{'Form.Label.Orders' | translate}}</h1>
+<div class="content">
+    <div class="customerDiv">
+        <div style="width:220px">
+            <app-barcode-input [(barcode)]="customerBarcode" placeholder="Customer Barcode" (EnterKeyPressed)="onCustomerBarcodeEnterPress($event)"></app-barcode-input>
+        </div>
+        <div class="customerDetails">
+            <div *ngIf="customer" >
+                <span>Name: </span>
+                <span>{{customer.name}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mat-elevation-z1">
+        <div class="table">
+            <p-table responsiveLayout="scroll" [dataKey]="columns[0].field" [columns]="columns" [value]="orderItems"
+                styleClass="p-datatable-sm p-datatable-striped" [tableStyle]="{'min-width': '50rem'}" [paginator]="true"
+                [rows]="10" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowsPerPageOptions]="[30,60,120,240]" editMode="row" #dt>
+                <ng-template pTemplate="caption">
+                    <div class="caption-container">
+                        <div class="search-container">
+                            <app-barcode-input [(barcode)]="barcode" placeholder="Product Barcode" (EnterKeyPressed)="onProductBarcodeEnterPress($event)"></app-barcode-input>
+                        </div>
+                        <div class="barcode-container">
+                            <div *ngIf="saveImage" class="save-barcode">
+                                <img [src]="saveImage" (click)="onSave()" />
+                            </div>
+                            <div *ngIf="cancelImage" class="cancel-barcode">
+                                <img [src]="cancelImage" (click)="onCancel()" />
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>
+                            <div class="center">
+                                <div>
+                                    {{'Common.SNo' | translate}}
+                                </div>
+                            </div>
+                        </th>
+                        <th *ngFor="let col of columns" [pSortableColumnDisabled]="!col.sortable ? true : false"
+                            [pSortableColumn]="col.field">
+                            <div class="center">
+                                <div>
+                                    {{col.header | translate}}
+                                </div>
+                                <p-sortIcon *ngIf="col.sortable" [field]="col.field"></p-sortIcon>
+                                <p-columnFilter *ngIf="col.filtrable" type="text" [field]="col.field"
+                                    display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <ng-template [ngIf]="isEditable">
+                            <th>
+                                <div class="center">
+                                    {{'Common.Action' | translate}}
+                                </div>
+
+                            </th>
+                        </ng-template>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-editing="editing"
+                    let-rowIndex="rowIndex">
+                    <tr [pEditableRow]="rowData">
+                        <td>
+                            <div class="center"><b>{{rowIndex + 1}}</b></div>
+                        </td>
+                        <td *ngFor="let col of columns">
+                            <div [ngSwitch]="col.type" class="center">
+                                <ng-template [ngSwitchCase]="ColumnType.Link">
+                                    <a routerLink={{rowData[col.field]}}>{{rowData[col.field]}}</a>
+                                </ng-template>
+                                <ng-template [ngSwitchCase]="ColumnType.Barcode">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText style="text-align:center" placeholder="Product Barcode"
+                                                class="p-inputtext-sm" type="text" [(ngModel)]="rowData[col.field]" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData[col.field]}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </ng-template>
+                                <ng-template [ngSwitchCase]="ColumnType.EditBox">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText style="text-align:center" class="p-inputtext-sm"
+                                                type="number" [(ngModel)]="rowData[col.field]" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData[col.field]}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </ng-template>
+                                <ng-template [ngSwitchCase]="ColumnType.DropDown">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-dropdown [options]="rowData['units']" appendTo="body"
+                                                [(ngModel)]="rowData[col.field]" [style]="{width:'150px'}">
+                                            </p-dropdown>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            <p-dropdown [options]="rowData['units']" appendTo="body"
+                                                [(ngModel)]="rowData[col.field]" [style]="{width:'150px'}"
+                                                [disabled]="true"
+                                                >
+                                            </p-dropdown>
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </ng-template>
+                                <ng-template ngSwitchDefault>
+                                    {{rowData[col.field]}}
+                                </ng-template>
+                            </div>
+                        </td>
+                        <td *ngIf="isEditable">
+                            <div class="center">
+                                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow
+                                    icon="pi pi-pencil" (click)="onRowEditInit(rowData)"
+                                    class="p-button-rounded p-button-text">
+                                </button>
+                                <button *ngIf="!editing" pButton pRipple type="button" icon="pi pi-trash"
+                                    (click)="onRowDelete(rowData)" class="p-button-rounded p-button-text">
+                                </button>
+                                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
+                                    icon="pi pi-check" (click)="onRowEditSave(rowData)" class="p-button-rounded
+                                                    p-button-text
+                                                    p-button-success mr-2">
+                                </button>
+                                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
+                                    icon="pi pi-times" (click)="onRowEditCancel(rowData)" class="p-button-rounded
+                                                    p-button-text
+                                                    p-button-danger">
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

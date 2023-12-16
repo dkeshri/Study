@@ -1,0 +1,98 @@
+<div class="container">
+    <h1>Add Product</h1>
+    <p-card>
+        <form [formGroup]="productFormGroup">
+            <div class="formDetails">
+                <h2>Product Details</h2>
+                <div class="row">
+                    <div class="p-field">
+                        <label for="barcode">Product Barcode</label>
+                        <input formControlName="barcode" id="barcode" type="text" class="p-inputtext-sm" pInputText />
+                        <small class="error" *ngIf="barcodeControl.errors?.['required']
+                             && (barcodeControl.touched || barcodeControl.dirty)
+                                        ">Barcode can not be blank</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="productName">Product Name</label>
+                        <input formControlName="name" id="productName" type="text" class="p-inputtext-sm" pInputText />
+                        <small class="error" *ngIf="nameControl.errors?.['required']
+                             && (nameControl.touched || nameControl.dirty)
+                                        ">Product name can not be blank</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="costPrice">Cost Price</label>
+                        <input formControlName="costPrice" id="costPrice" type="text" class="p-inputtext-sm" pInputText />
+                        <small class="error" *ngIf="costPriceControl.errors?.['required']
+                            && (costPriceControl.touched || costPriceControl.dirty)
+                                    ">Cost price can not be blank</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="sellPrice">Sell Price</label>
+                        <input formControlName="price" id="sellPrice" type="text" class="p-inputtext-sm" pInputText />
+                        <small class="error" *ngIf="priceControl.errors?.['required']
+                            && (priceControl.touched || priceControl.dirty)
+                                    ">Price can not be blank</small>
+                    </div>
+                    <div class="calender-field">
+                        <label for="expireOn">Product Expire On</label>
+                        <p-calendar formControlName="expireOn" class="p-inputtext-sm" id="expireOn" [showIcon]="true"
+                            [showTime]="true" appendTo="body" dateFormat="dd-mm-yy"></p-calendar>
+                    </div>
+                    <div class="p-field">
+                        <label for="unit">Unit</label>
+                        <p-dropdown placeholder="{{'Form.Label.SelectUnit' | translate }}" formControlName="unit"
+                            appendTo="body" (onChange)="onPrimaryUnitChange()" [options]="unitOptions"></p-dropdown>
+                    </div>
+                    <div class="p-field">
+                        <label for="secUnit">Secondary Unit</label>
+                        <div class="twoElement">
+                            <p-dropdown placeholder="{{'Form.Label.SelectSecUnit' | translate }}"
+                                class="p-dropdown-sm secUnitddl" (onChange)="onSecUnitChange()"
+                                formControlName="secUnit" appendTo="body" [options]="secUnitOptions"></p-dropdown>
+                            <p-checkbox inputId="secUnitChk" formControlName="secUnitChk"
+                                (onChange)="onSecUnitChkChange()" [binary]="true"></p-checkbox>
+                        </div>
+                    </div>
+                    <div class="p-field">
+                        <label for="unitConversion">Conversion Rate</label>
+                        <div class="twoElement">
+                            <p-dropdown placeholder="{{'Form.Label.SelectUnitConversion' | translate }}"
+                                class="p-dropdown-sm conversionRateddl" formControlName="unitConversion" appendTo="body"
+                                [options]="unitConversionOptions"></p-dropdown>
+                            <button [disabled]="isUnitConversionBtnDisabled" (click)="onConversionRateAdd()"
+                                mat-mini-fab color="primary">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-field">
+                        <label
+                            for="binary">{{productFormGroup.controls['isActive'].value==true?'Active':'Inactive'}}</label>
+                        <p-checkbox inputId="binary" formControlName="isActive" [binary]="true"></p-checkbox>
+
+                    </div>
+                </div>
+            </div>
+            <div class="productUnit">
+                <h2>Create Unit</h2>
+                <div class="row">
+                    <div class="p-field">
+                        <label>Action(Add/Delete)</label>
+                        <button id="createUnit" class="btn" (click)="onShowUnitDialog()" mat-raised-button
+                            color="primary">Create Unit</button>
+                        <small>Note: If Unit is not Please add !</small>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="action-container">
+                <button *ngIf="!showUpdateBtn" [disabled]="this.productFormGroup.invalid" class="btn" (click)="onSave()"
+                    mat-raised-button color="primary">{{'Common.Save' | translate}}</button>
+                <button *ngIf="showUpdateBtn" [disabled]="this.productFormGroup.invalid" class="btn"
+                    (click)="onUpdate()" mat-raised-button color="primary">{{'Common.Update' | translate}}</button>
+                <button *ngIf="showDeleteBtn" [disabled]="this.productFormGroup.invalid" class="btn"
+                    (click)="onDelete()" mat-raised-button color="warn">{{'Common.Delete' | translate}}</button>
+            </div>
+        </form>
+    </p-card>
+</div>

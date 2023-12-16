@@ -1,0 +1,17 @@
+<div class="container">
+    <p-divider></p-divider>
+    <div class="card-grid-row">
+        <ng-container *ngFor="let shop of shops;">
+            <div class="shopCard">
+                <p-card header={{shop.name}} [style]="{  height:'200px'}" (click)="onCardClick(shop.id,shop.name)" >
+                    <div>
+                        <label><b>Phone: </b></label><h4>{{shop.phone}}</h4>
+                    </div>
+
+
+                </p-card>
+            </div>
+         </ng-container>
+    </div>
+</div>
+

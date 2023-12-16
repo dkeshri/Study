@@ -1,0 +1,9 @@
+<div class="container">
+    <div class="barcodeInput">
+        <input id="barcodeInput" autofocus type="text" style="width: 50%"
+            pInputText placeholder="Customer Bar Code"
+            (keydown.enter)="onEnterPress($event)"
+            [(ngModel)] = "barcode"
+        >
+    </div>
+</div>

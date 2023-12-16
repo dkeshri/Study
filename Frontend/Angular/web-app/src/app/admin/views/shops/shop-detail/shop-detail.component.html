@@ -1,0 +1,47 @@
+<div class="container">
+    <h1>Add Shop</h1>
+    <p-card>
+        <form [formGroup]="shopFormGroup">
+            <div class="formDetails">
+                <h2>{{'Form.Label.ShopDetails' | translate}}</h2>
+                <div class="row">
+                    <div class="p-field">
+                        <label for="shopName">{{'Form.Label.ShopName' | translate}}</label>
+                        <input formControlName="shopName" type="text" class="p-inputtext-sm" pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label for="phone">{{'Form.Label.PhoneNumber' | translate}}</label>
+                        <input formControlName="phone" type="text" class="p-inputtext-sm" pInputText />
+                    </div>
+                    <div class="p-field">
+                        <label for="userId">{{'Form.Label.User' | translate}}</label>
+                        <p-dropdown class="p-dropdown-sm" formControlName="userId" appendTo="body" [options]="usersOptions"></p-dropdown>
+                    </div>
+                    <div class="p-field">
+                        <label for="isActive">{{shopFormGroup.controls['isActive'].value | activeInactive | translate}}</label>
+                        <p-checkbox inputId="isActive" formControlName="isActive" [binary]="true" ></p-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="customerAddress">
+                <h2>{{'Form.Label.Address' | translate}}</h2>
+                <h3><u>{{'Form.Label.CurrentAddress' | translate}}</u></h3>
+                <app-address [(address)]="currentAddress" ></app-address>
+                <br/>
+                <div class="permanentAddressTitle">
+                    <h3><u>{{'Form.Label.PermanentAddress' | translate}}</u></h3>
+                    <div>
+                        <p-checkbox inputId="isPermanentAddSame" (onChange)="onPermanentAddChkChange($event)" [binary]="true" ></p-checkbox>
+                        <small style="margin-left: 8px;"> ( <b>{{'Form.Label.IsPermanentAddressSame' | translate}}?</b> )</small>
+                    </div>
+                </div>
+                <app-address [(address)]="permanentAddress" [isPermanent]="true"></app-address>
+            </div>
+            <div class="action-container">
+                <button *ngIf="!showUpdateBtn" [disabled]="this.shopFormGroup.invalid" class="btn" (click)="onSave()" mat-raised-button color="primary">{{'Common.Save' | translate}}</button>
+                <button *ngIf="showUpdateBtn" [disabled]="this.shopFormGroup.invalid" class="btn" (click)="onUpdate()" mat-raised-button color="primary">{{'Common.Update' | translate}}</button>
+                <button *ngIf="showDeleteBtn" [disabled]="this.shopFormGroup.invalid" class="btn" (click)="onDelete()" mat-raised-button color="warn">{{'Common.Delete' | translate}}</button>
+            </div>
+        </form>
+    </p-card>
+</div>

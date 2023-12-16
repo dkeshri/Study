@@ -1,0 +1,23 @@
+::ng-deep .p-datepicker table td {
+    padding: 0.13rem;
+}
+
+::ng-deep .p-calendar {
+    width: 100%;
+}
+
+::ng-deep .p-inputtext {
+    width: 100%;
+}
+
+
+
+::ng-deep .p-dropdown {
+    width: 100%;
+}
+
+@media screen and (max-width: 960px) {
+    ::ng-deep .p-menubar .p-menubar-root-list {
+        width: auto;
+    }
+}

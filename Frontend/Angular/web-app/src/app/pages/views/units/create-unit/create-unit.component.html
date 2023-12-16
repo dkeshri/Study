@@ -1,0 +1,27 @@
+<form [formGroup]="unitForm">
+    <div class="unitDetails">
+        <h2>Unit Details</h2>
+        <div class="row">
+            <div class="p-field">
+                <label for="unitName">Unit Name</label>
+                <input formControlName="name" id="unitName" type="text" class="p-inputtext-sm" pInputText />
+                <small style="color:red" *ngIf="unitName.errors?.['required']
+                    && (unitName.touched || unitName.dirty)
+                ">Name can not be blank</small>
+            </div>
+            <div class="p-field">
+                <label for="shortName">Short Name</label>
+                <input formControlName="shortName" id="shortName" type="text" class="p-inputtext-sm" pInputText />
+            </div>
+            <div class="p-field">
+                <label for="binary">Active</label>
+                <p-checkbox inputId="binary" formControlName="isActive" [binary]="true"></p-checkbox>
+            </div>
+        </div>
+    </div>
+    <div class="action-container">
+        <button *ngIf="!showUpdatebtn" [disabled]="this.unitForm.invalid" class="btn" (click)="onSave()" mat-raised-button color="primary">{{'Common.Save' | translate}}</button>
+        <button *ngIf="showUpdatebtn" [disabled]="this.unitForm.invalid" class="btn" (click)="onUpdate()" mat-raised-button color="primary">{{'Common.Update' | translate}}</button>
+        <button *ngIf="showDeletebtn" [disabled]="this.unitForm.invalid" class="btn" (click)="onDelete()" mat-raised-button color="warn">{{'Common.Delete' | translate}}</button>
+    </div>
+</form>

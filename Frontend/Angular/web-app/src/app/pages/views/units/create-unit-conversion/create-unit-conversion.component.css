@@ -1,0 +1,11 @@
+.unitConversionDetails{
+    margin-top: 10px;
+}
+.col{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.col input{
+    flex: .7;
+}

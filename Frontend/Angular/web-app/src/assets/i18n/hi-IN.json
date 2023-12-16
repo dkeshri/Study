@@ -1,0 +1,118 @@
+{
+    "title":"दीपक",
+    "language":"हिंदी",
+    "languageLabel":"भाषा",
+    "Menu": {
+        "Lang": {
+            "English":"अंग्रेज़ी",
+            "Hindi":"हिंदी"
+        },
+        "User": {
+            "Profile":"प्रोफ़ाइल",
+            "Logout":"लॉग आउट"
+        },
+        "Nav": {
+            "Home":"घर",
+            "Orders":"ऑर्डरस",
+            "Order":"ऑर्डर",
+            "Customers":"ग्राहकों",
+            "Customer":"ग्राहक",
+            "Delete":"मिटाना",
+            "Add_Customer":"ग्राहक जोड़ें",
+            "Products":"उत्पादों",
+            "Product":"उत्पाद",
+            "Add_Product":"उत्पाद जोड़ें",
+            "Payments":"भुगतान",
+            "About":"बारे में",
+            "Units":"इकाइयों",
+            "Add_Unit":"इकाई जोड़ें",
+            "Shops":"दुकानें",
+            "Add_Shop":"दुकानें जोड़ें",
+            "Users":"उपयोगकर्ताओं",
+            "Add_User":"उपयोगकर्ता जोड़ें",
+            "GeoRegion":"भू क्षेत्र",
+            "Countries":"देशों",
+            "Cities":"शहरों",
+            "States":"राज्य",
+            "City":"शहर",
+            "Add_Country":"जोड़ें देश",
+            "Add_State":"जोड़ें राज्य",
+            "Add_City":"जोड़ें शहर",
+            "Invoices":"बिल"
+        }
+    },
+    "Table":{
+        "Column":{
+            "Header":{
+                "ProductName":"उत्पाद का नाम",
+                "CustomerName":"ग्राहक का नाम",
+                "OrderId":"Order Id",
+                "CustomerId":"ग्राहक पहचान",
+                "TotalAmount":"कुल रकम"
+            }
+        }
+    },
+    "Form":{
+        "Label":{
+            "Customers":"ग्राहकों",
+            "Order":"ऑर्डर",
+            "Orders":"ऑर्डरस",
+            "Users":"उपयोगकर्ताओं",
+            "Countries":"शहरों",
+            "Cities":"शहरों",
+            "States":"राज्यों",
+            "Country":"देश",
+            "State":"राज्य",
+            "City":"शहर",
+            "User":"उपयोगकर्ता",
+            "Select":"चुनना",
+            "AddUser":"उपयोगकर्ता जोड़ें",
+            "SelectCity":"शहर चुनें",
+            "SelectState":"राज्य चुनें",
+            "SelectCountry":"देश चुनें",
+            "UserDetails":"उपयोगकर्ता विवरण",
+            "Address":"पता",
+            "CurrentAddress":"वर्त्तमान पता",
+            "PermanentAddress":"स्थायी पता",
+            "Name":"नाम",
+            "PhoneNumber":"फ़ोन नंबर",
+            "UserName":"उपयोगकर्ता नाम",
+            "Password":"पासवर्ड",
+            "UserRole":"उपयोगकर्ता भूमिका",
+            "Address1":"पता 1",
+            "Address2":"पता 2",
+            "Landmark":"सीमाचिह्न",
+            "Pincode":"पिन कोड",
+            "IsPermanentAddressSame":"क्या स्थायी पता वही है",
+            "ShopName":"दुकान का नाम",
+            "ShopDetails":"दुकान का विवरण",
+            "SelectSecUnit":"द्वितीयक इकाई का चयन करें",
+            "SelectUnit":"इकाई का चयन करें",
+            "SelectUnitConversion":"रूपांतरण का चयन करें"
+        }
+    },
+    "Common":{
+        "Save":"सुरक्षित",
+        "Delete":"मिटाना",
+        "Update":"नवीनतम",
+        "Total":"कुल",
+        "Price":"रेट",
+        "Unit":"इकाई ",
+        "Barcode":"बारकोड",
+        "Amount":"रकम",
+        "Action":"कार्य",
+        "Edit":"संपादन",
+        "Quantity":"मात्रा",
+        "SNo":"क्र.सं",
+        "Active":"सक्रिय",
+        "PayAmount":"भुगतान राशि",
+        "Paid":"चुकाया गया",
+        "Arrears":"बकाया",
+        "PrevArrears":"पिछला बकाया",
+        "CurrentAmount":"वर्तमान राशि",
+        "TotalAmount" :"कुल राशि",
+        "Download":"डाउनलोड",
+        "Pdf":"पीडीएफ",
+        "Invoice":"रसीद"
+    }
+}

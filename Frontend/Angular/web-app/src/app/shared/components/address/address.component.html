@@ -1,0 +1,30 @@
+<div class="row" [formGroup]="addressFormGroup" >
+    <div class="p-field">
+        <label for="address1">{{'Form.Label.Address1' | translate}}</label>
+        <input formControlName="address1" (change)="onAddressChange()" type="text" class="p-inputtext-sm"  pInputText />
+    </div>
+    <div class="p-field">
+        <label for="address2">{{'Form.Label.Address2' | translate}}</label>
+        <input  formControlName="address2" (change)="onAddressChange()" type="text" class="p-inputtext-sm" pInputText />
+    </div>
+    <div class="p-field">
+        <label for="landmark">{{'Form.Label.Landmark' | translate}}</label>
+        <input  formControlName="landmark" (change)="onAddressChange()" type="text" class="p-inputtext-sm" pInputText />
+    </div>
+    <div class="p-field">
+        <label for="pincode">{{'Form.Label.Pincode' | translate}}</label>
+        <input  formControlName="pincode" (change)="onAddressChange()" type="number" class="p-inputtext-sm" pInputText />
+    </div>
+    <div class="p-field">
+        <label for="city">{{'Form.Label.City' | translate}}</label>
+        <p-dropdown class="p-dropdown-sm" formControlName="city" placeholder="{{'Form.Label.SelectCity' | translate }}" (onChange)="onAddressChange()" appendTo="body" [options]="this.addressGeoRegoinOption.city" ></p-dropdown>
+    </div>
+    <div class="p-field">
+        <label for="state">{{'Form.Label.State' | translate}}</label>
+        <p-dropdown class="p-dropdown-sm" formControlName="state" placeholder="{{'Form.Label.SelectState' | translate }}" (onChange)="getCurrentAddCities()" appendTo="body" [options]="this.addressGeoRegoinOption.state" ></p-dropdown>
+    </div>
+    <div class="p-field">
+        <label for="country">{{'Form.Label.Country' | translate}}</label>
+        <p-dropdown class="p-dropdown-sm" placeholder="{{'Form.Label.SelectCountry' | translate }}" formControlName="country" (onChange)="getCurrentAddStates()" appendTo="body" [options]="this.addressGeoRegoinOption.country" ></p-dropdown>
+    </div>
+</div>
