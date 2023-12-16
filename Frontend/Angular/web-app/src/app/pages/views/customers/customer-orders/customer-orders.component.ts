@@ -10,7 +10,7 @@ import { Invoice } from 'src/app/services/models/invoice.model';
 import { PaymentService } from 'src/app/services/payment.service';
 import { Payment } from 'src/app/services/models/payment.model';
 import { Format, RouteAction, TableProperty } from 'src/app/shared/models/app-constants';
-import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 @Component({
   selector: 'app-customer-orders',
   templateUrl: './customer-orders.component.html',
