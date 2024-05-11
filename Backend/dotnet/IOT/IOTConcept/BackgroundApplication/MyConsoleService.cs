@@ -13,27 +13,28 @@ namespace BackgroundApplication
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Service is starting.");
+            Console.WriteLine("My console Service is starting.");
 
             // Your application logic goes here
             await Task.Delay(1000);
 
-            Console.WriteLine("Service has started.");
+            Console.WriteLine("My console Service has started.");
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Service is stopping.");
+            Console.WriteLine("My Console Service is stopping.");
 
             // Your clean-up logic goes here
             await Task.Delay(1000);
 
-            Console.WriteLine("Service has stopped.");
+            Console.WriteLine("My Console Service has stopped.");
         }
 
         public void Dispose()
         {
-            _stoppingCts.Cancel();
+            _stoppingCts?.Cancel();
+            _stoppingCts?.Dispose();
         }
     }
 }
