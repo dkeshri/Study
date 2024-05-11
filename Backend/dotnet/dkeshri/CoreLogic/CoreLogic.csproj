@@ -14,8 +14,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreLogic.Data.Interfaces\CoreLogic.Data.Interfaces.csproj" />
+    <ProjectReference Include="..\CoreLogic.Data.Logic\CoreLogic.Data.Logic.csproj" />
     <ProjectReference Include="..\CoreLogic.Extensibility\CoreLogic.Extensibility.csproj" />
     <ProjectReference Include="..\CoreLogic.Service.Interfaces\CoreLogic.Service.Interfaces.csproj" />
+    <ProjectReference Include="..\CoreLogic.Service.Logic\CoreLogic.Service.Logic.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using CoreLogic.Data.Interfaces.Interfaces;
+using CoreLogic.Data.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace CoreLogic.Dtos
     {
         public DataLogin(IAddress address)
         {
-            //Address address1 = new Address();
+            Address address1 = new Address();
         }
     }
 }

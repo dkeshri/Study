@@ -1,4 +1,5 @@
 ﻿using CoreLogic.Service.Interfaces.Interfaces;
+using CoreLogic.Service.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace CoreLogic.Dtos
     {
         public ServiceLogic(IPublicService publicService)
         {
-            //PublicService publicService1 = new PublicService();
+            PublicService publicService1 = new PublicService();
         }
     }
 }
