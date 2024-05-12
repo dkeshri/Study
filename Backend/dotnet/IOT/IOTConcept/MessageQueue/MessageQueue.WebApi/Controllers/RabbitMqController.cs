@@ -1,5 +1,6 @@
 ﻿using MessageQueue.RabbitMq.Interfaces;
 using MessageQueue.RabbitMq.Logic;
+using MessageQueue.WebApi.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
@@ -28,10 +29,13 @@ namespace MessageQueue.WebApi.Controllers
         }
 
         [HttpPost("sendToDirectExchange")]
-        public IActionResult SendMessageToDirectExchange([FromBody] string message)
+        public IActionResult SendMessageToDirectExchange([FromBody] MessageDto messageDto)
         {
-            sendMessage.SendToExchange(message);
-            return Ok("Message sent");
+            string message = messageDto.Message ?? string.Empty;
+            string routingkey = messageDto.RoutingKey?? string.Empty;
+            
+            sendMessage.SendToExchange(message, routingkey);
+            return Ok("Exchange Message sent");
         }
     }
 }

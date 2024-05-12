@@ -11,10 +11,12 @@ namespace MessageQueue.RabbitMq.Logic
     public class SendMessage : ISendMessage
     {
         private readonly IConnection _connection;
+        private readonly string directExchangeName = "weather_direct";
         public SendMessage(IConnection connection)
         {
             _connection = connection;
         }
+
         public void SendToQueue(string message)
         {
             using var channel = _connection.CreateModel();
@@ -25,6 +27,14 @@ namespace MessageQueue.RabbitMq.Logic
                      arguments: null);
             PublishMessage(channel, message);
         }
+
+        public void SendToExchange(string message,string?routingKey)
+        {
+            using var channel = _connection.CreateModel();
+            channel.ExchangeDeclare(directExchangeName,ExchangeType.Direct);
+            PublishMessage(channel, message,directExchangeName,routingKey ?? string.Empty);
+        }
+
         private void PublishMessage(IModel channel, string message)
         {
             var body = Encoding.UTF8.GetBytes(message);
@@ -34,10 +44,14 @@ namespace MessageQueue.RabbitMq.Logic
                                 body: body);
 
         }
-
-        public void SendToExchange(string message)
+        private void PublishMessage(IModel channel, string message, string exchangeName, string routingKey)
         {
-            throw new NotImplementedException();
+            var body = Encoding.UTF8.GetBytes(message);
+            channel.BasicPublish(exchange: exchangeName,
+                                routingKey: routingKey,
+                                basicProperties: null,
+                                body: body);
+
         }
     }
 }

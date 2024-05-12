@@ -9,7 +9,7 @@ namespace MessageQueue.RabbitMq.Interfaces
     public interface ISendMessage
     {
         public void SendToQueue(string message);
-        public void SendToExchange(string message);
+        public void SendToExchange(string message, string? routingKey);
     }
     
 }

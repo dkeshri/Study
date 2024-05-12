@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class ReciveMessageFromQueueService : IHostedService, IDisposable
+    public class ReceiveMessageFromQueueService : IHostedService, IDisposable
     {
         private readonly IConnection _connection;
         private IModel channel;
         private bool _isDisposing = false;
         private bool isAutoAck = false;
-        public ReciveMessageFromQueueService(IConnection connection)
+        public ReceiveMessageFromQueueService(IConnection connection)
         {
             _connection = connection;
             channel = _connection.CreateModel();
