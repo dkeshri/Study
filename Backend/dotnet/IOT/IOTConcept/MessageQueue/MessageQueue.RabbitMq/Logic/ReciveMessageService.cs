@@ -33,6 +33,7 @@ namespace MessageQueue.RabbitMq.Logic
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
+            Console.WriteLine("Shutdown RabbitMq Reciver Hosted Service");
             return Task.CompletedTask;
 
         }
