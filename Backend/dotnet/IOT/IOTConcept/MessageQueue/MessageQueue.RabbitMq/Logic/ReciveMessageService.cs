@@ -14,7 +14,7 @@ namespace MessageQueue.RabbitMq.Logic
     {
         private readonly IConnection _connection;
         private IModel channel;
-        private bool _isDisposing= false;
+        private bool _isDisposing = false;
         public ReciveMessageService(IConnection connection)
         {
             _connection = connection;

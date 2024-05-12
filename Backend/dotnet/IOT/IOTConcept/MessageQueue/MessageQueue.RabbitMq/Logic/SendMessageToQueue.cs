@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class SendMessage : ISendMessage
+    public class SendMessageToQueue : ISendMessage
     {
         private readonly IConnection _connection;
-        public SendMessage(IConnection connection)
+        public SendMessageToQueue(IConnection connection)
         {
             _connection = connection;
         }
@@ -25,6 +25,10 @@ namespace MessageQueue.RabbitMq.Logic
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
+            publishMessage(channel, message);
+        }
+        void publishMessage(IModel channel,string message)
+        {
             var body = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(exchange: string.Empty,
                                  routingKey: "hello",

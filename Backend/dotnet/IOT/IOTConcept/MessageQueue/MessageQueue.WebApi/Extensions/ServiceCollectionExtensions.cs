@@ -10,7 +10,7 @@ namespace MessageQueue.WebApi.Extensions
         {
             services.AddSingleton<RabbitMqConnection>();
             services.AddSingleton<IConnection>(sp => sp.GetRequiredService<RabbitMqConnection>().CreateConnection());
-            services.AddScoped<ISendMessage, SendMessage>();
+            services.AddScoped<ISendMessage, SendMessageToQueue>();
             services.AddHostedService<ReciveMessageService>();
         }
     }
