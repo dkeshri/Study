@@ -12,13 +12,13 @@ namespace MessageQueue.RabbitMq.Logic
 {
     public class ReciveMessageService : IHostedService, IDisposable
     {
-        private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IConnection _connection;
+        private IModel channel;
+        private bool _isDisposing= false;
         public ReciveMessageService(IConnection connection)
         {
-            _cancellationTokenSource = new CancellationTokenSource();
             _connection = connection;
-
+            channel = _connection.CreateModel();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -31,8 +31,7 @@ namespace MessageQueue.RabbitMq.Logic
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            Dispose(true);
             Console.WriteLine("Shutdown RabbitMq Reciver Hosted Service");
             return Task.CompletedTask;
 
@@ -40,7 +39,6 @@ namespace MessageQueue.RabbitMq.Logic
 
         private void InitMessageReciver()
         {
-            var channel = _connection.CreateModel();
             channel.QueueDeclare(queue: "hello",
                      durable: false,
                      exclusive: false,
@@ -60,8 +58,25 @@ namespace MessageQueue.RabbitMq.Logic
         }
         public void Dispose()
         {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
+
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposing)
+            {
+                return;
+            }
+            if (disposing)
+            {
+                if (channel.IsOpen)
+                {
+                    channel.Close();
+                    channel.Dispose();
+                }
+            }
+            _isDisposing = true;
         }
     }
 }
