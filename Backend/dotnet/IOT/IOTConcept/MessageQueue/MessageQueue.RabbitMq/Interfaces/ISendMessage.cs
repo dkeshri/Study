@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Interfaces
 {
-    public interface IRabbitMqConnection
+    public interface ISendMessage
     {
+        public void Send(string message);
     }
 }
