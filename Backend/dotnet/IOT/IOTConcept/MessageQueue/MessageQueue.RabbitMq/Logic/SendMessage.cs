@@ -19,7 +19,7 @@ namespace MessageQueue.RabbitMq.Logic
 
         public void Send(string message)
         {
-            var channel = _connection.CreateModel();
+            using var channel = _connection.CreateModel();
             channel.QueueDeclare(queue: "hello",
                      durable: false,
                      exclusive: false,
