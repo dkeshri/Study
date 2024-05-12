@@ -10,4 +10,14 @@ namespace MessageQueue.RabbitMq.Interfaces
     {
         public void Send(string message);
     }
+    public interface ISendMessageToQueue : ISendMessage
+    {
+
+    }
+    public interface ISendMessageToDirectExchange : ISendMessage
+    {
+
+    }
+   
+
 }

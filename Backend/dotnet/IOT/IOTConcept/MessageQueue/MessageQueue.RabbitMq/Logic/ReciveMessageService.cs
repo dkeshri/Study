@@ -24,7 +24,9 @@ namespace MessageQueue.RabbitMq.Logic
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Rabbit MQ Message Reciver Service is starting");
-            InitMessageReciver();
+
+            //InitMessageReciverAutoAck();
+            InitMessageReciverWithAck();
             Console.WriteLine("Rabbit MQ Message Reciver Service has started");
             return Task.CompletedTask;
         }
@@ -37,7 +39,7 @@ namespace MessageQueue.RabbitMq.Logic
 
         }
 
-        private void InitMessageReciver()
+        private void InitMessageReciverAutoAck()
         {
             channel.QueueDeclare(queue: "hello",
                      durable: false,
@@ -53,6 +55,38 @@ namespace MessageQueue.RabbitMq.Logic
             };
             channel.BasicConsume(queue: "hello",
                                  autoAck: true,
+                                 consumer: consumer);
+
+        }
+
+        private void InitMessageReciverWithAck()
+        {
+            channel.QueueDeclare(queue: "hello",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+            channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+            var consumer = new EventingBasicConsumer(channel);
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+                Console.WriteLine($" [x] Received {message}");
+                if (message.Contains("error"))
+                {
+                    Console.WriteLine("Error in response so rejecting it.");
+                    channel.BasicReject(ea.DeliveryTag,false);
+                    throw new Exception("Error in code");
+                }
+                Console.WriteLine($"Processed Message: {message}");
+                channel.BasicAck(ea.DeliveryTag, false); 
+            };
+
+            channel.BasicConsume(queue: "hello",
+                                 autoAck: false,
                                  consumer: consumer);
 
         }

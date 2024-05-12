@@ -14,7 +14,7 @@ namespace MessageQueue.WebApi.Controllers
 
         private readonly ILogger<RabbitMqController> _logger;
         private readonly ISendMessage sendMessage;
-        public RabbitMqController(ILogger<RabbitMqController> logger,ISendMessage sendMessage)
+        public RabbitMqController(ILogger<RabbitMqController> logger,ISendMessageToQueue sendMessage)
         {
             _logger = logger;
             this.sendMessage = sendMessage;
