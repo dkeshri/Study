@@ -14,16 +14,23 @@ namespace MessageQueue.WebApi.Controllers
 
         private readonly ILogger<RabbitMqController> _logger;
         private readonly ISendMessage sendMessage;
-        public RabbitMqController(ILogger<RabbitMqController> logger,ISendMessageToQueue sendMessage)
+        public RabbitMqController(ILogger<RabbitMqController> logger,ISendMessage sendMessage)
         {
             _logger = logger;
             this.sendMessage = sendMessage;
         }
 
-        [HttpPost("send")]
-        public IActionResult SendMessage([FromBody] string message)
+        [HttpPost("sendToQueue")]
+        public IActionResult SendMessageToQueue([FromBody] string message)
         {
-            sendMessage.Send(message);
+            sendMessage.SendToQueue(message);
+            return Ok("Message sent");
+        }
+
+        [HttpPost("sendToDirectExchange")]
+        public IActionResult SendMessageToDirectExchange([FromBody] string message)
+        {
+            sendMessage.SendToExchange(message);
             return Ok("Message sent");
         }
     }

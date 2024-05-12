@@ -8,16 +8,8 @@ namespace MessageQueue.RabbitMq.Interfaces
 {
     public interface ISendMessage
     {
-        public void Send(string message);
+        public void SendToQueue(string message);
+        public void SendToExchange(string message);
     }
-    public interface ISendMessageToQueue : ISendMessage
-    {
-
-    }
-    public interface ISendMessageToDirectExchange : ISendMessage
-    {
-
-    }
-   
-
+    
 }

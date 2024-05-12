@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class ReciveMessageService : IHostedService, IDisposable
+    public class ReciveMessageFromQueueService : IHostedService, IDisposable
     {
         private readonly IConnection _connection;
         private IModel channel;
         private bool _isDisposing = false;
-        public ReciveMessageService(IConnection connection)
+        private bool isAutoAck = false;
+        public ReciveMessageFromQueueService(IConnection connection)
         {
             _connection = connection;
             channel = _connection.CreateModel();
@@ -24,9 +25,15 @@ namespace MessageQueue.RabbitMq.Logic
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Rabbit MQ Message Reciver Service is starting");
-
-            //InitMessageReciverAutoAck();
-            InitMessageReciverWithAck();
+            if (isAutoAck)
+            {
+                InitMessageReciverAutoAck();
+            }
+            else
+            {
+                InitMessageReciverWithAck();
+            }
+            
             Console.WriteLine("Rabbit MQ Message Reciver Service has started");
             return Task.CompletedTask;
         }
