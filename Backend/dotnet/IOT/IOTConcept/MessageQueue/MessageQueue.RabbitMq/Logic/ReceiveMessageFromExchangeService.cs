@@ -57,7 +57,7 @@ namespace MessageQueue.RabbitMq.Logic
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                Console.WriteLine($" [x] Received {message}");
+                Console.WriteLine($"{nameof(ReceiveMessageFromExchangeService)} [x] Received {message}");
                 if (message.Contains("error"))
                 {
                     Console.WriteLine("Error in response so rejecting it.");
