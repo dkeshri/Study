@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MessageQueue.RabbitMq.Extensions;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System.Data.Common;
 using System.Runtime.InteropServices;
@@ -10,12 +11,21 @@ namespace MessageQueue.RabbitMq.Logic
     public class RabbitMqConnection
     {
         private readonly IConnectionFactory _connectionFactory;
-        private readonly IConfiguration _configuration;
         private readonly string directExchangeName = "weather_direct";
         public RabbitMqConnection(IConfiguration configuration)
         {
-            _configuration = configuration;
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            string HostName = configuration.GetRabbitMqHostName();
+            string UserName = configuration.GetRabbitMqUserName();
+            string Password = configuration.GetRabbitMqPassword();
+            int Port = configuration.GetRabbitMqPort();
+            var factory = new ConnectionFactory()
+            {
+                HostName = HostName,
+                Port = Port,
+                UserName = UserName,
+                Password = Password
+            };
+            factory.ClientProvidedName = "Sender/Receiver";
             _connectionFactory = factory;
         }
         public IConnection CreateConnection()
