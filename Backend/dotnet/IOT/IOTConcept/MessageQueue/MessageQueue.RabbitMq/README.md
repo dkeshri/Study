@@ -1,5 +1,19 @@
 ﻿# RabbitMQ
 
+## Project Summary
+
+Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
+best practice to implement RabbitMq Configuration is to have one __Connection__ per `Process` Or `Application` and one __Channel__ per thread.
+
+> We follow this convention to have one connection per process and one channel per thread.
+
+So in our current implimentation sender and reciver are on same application so we share one connection to both sender and reciver of message queue.
+and also we have one channel through of application.
+
+but we can also create two channel one for sender and one for reciver.
+
+> Note: If our sender and receiver have two application then we also create two connection. and each connection have there respective channels depending upon there need. 
+
 ## Docker Container Creation
 
 > Run below command to create RabbitMq Docker container
@@ -20,21 +34,4 @@ Port `5672` is use in communication during producing and consuming of message.
 > Default login crediential if we not specifiy during creation of docker container
 
 <small style='color:green'>_Username_</small> `guest` and <small style='color:green'>_Password_</small> `guest`
-
-
-## Project Summary
-
-Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
-best practice to implement RabbitMq is to have one connection per Application/Process and one channel per thread.
-
-> We follow this convention to have one connection per process and one channel per thread.
-
-So in our current implimentation sender and reciver are on same application so we share one connection to both sender and reciver of message queue.
-and also we have one channel through of application.
-
-but we can create two channel one for sender and one for reciver.
-
-
-
-> Note: If our sender and receiver have two application then we also create two connection. and each connection have there respective channels depending upon there need. 
 
