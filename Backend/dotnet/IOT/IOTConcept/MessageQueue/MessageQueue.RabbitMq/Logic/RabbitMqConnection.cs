@@ -2,18 +2,16 @@
 using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using System.Data.Common;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Threading.Channels;
+
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class RabbitMqConnection : IRabbitMqConnection
+    public sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
     {
         private readonly IConnection _connection;
         private IModel _channel;
         private string _exchangeName;
+        private bool _isDisposing = false;
         public IModel Channel { get => CreateChannelIfClosed(_connection); }
         public string ExchangeName { get => _exchangeName; }
         public RabbitMqConnection(IConfiguration configuration)
@@ -50,6 +48,33 @@ namespace MessageQueue.RabbitMq.Logic
                 return _channel;
             _channel = connection.CreateModel();
             return _channel;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private void Dispose(bool disposing)
+        {
+            if (_isDisposing)
+            {
+                return;
+            }
+            if (disposing)
+            {
+                if(_channel.IsOpen)
+                {
+                    _channel.Close();
+                    _channel.Dispose();
+                }
+                if (_connection.IsOpen)
+                {
+                    _connection.Close();
+                    _connection.Dispose();
+                }
+            }
+            _isDisposing = true;
         }
     }
 }
