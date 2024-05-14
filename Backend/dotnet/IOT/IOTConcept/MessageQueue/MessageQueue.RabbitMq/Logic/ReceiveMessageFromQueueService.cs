@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using MessageQueue.RabbitMq.Interfaces;
+using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -12,14 +13,12 @@ namespace MessageQueue.RabbitMq.Logic
 {
     public class ReceiveMessageFromQueueService : IHostedService, IDisposable
     {
-        private readonly IConnection _connection;
         private IModel channel;
         private bool _isDisposing = false;
         private bool isAutoAck = false;
-        public ReceiveMessageFromQueueService(IConnection connection)
+        public ReceiveMessageFromQueueService(IRabbitMqConnection rabbitMqConnection)
         {
-            _connection = connection;
-            channel = _connection.CreateModel();
+            channel = rabbitMqConnection.Channel;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

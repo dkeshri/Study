@@ -7,21 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
+using MessageQueue.RabbitMq.Interfaces;
 
 namespace MessageQueue.RabbitMq.Logic
 {
     public class ReceiveMessageFromExchangeService : IHostedService, IDisposable
     {
-        private readonly IConnection _connection;
         private IModel channel;
         private bool _isDisposing = false;
         private readonly string directExchangeName = "weather_direct";
         private readonly string queueName = "directExchangeQueue";
         private string[] routingkeys = { "key1", "key2", string.Empty };
-        public ReceiveMessageFromExchangeService(IConnection connection)
+        public ReceiveMessageFromExchangeService(IRabbitMqConnection rabbitMqConnection)
         {
-            _connection = connection;
-            channel = _connection.CreateModel();
+            channel = rabbitMqConnection.Channel;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
 ﻿using MessageQueue.RabbitMq.Interfaces;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -10,29 +11,28 @@ namespace MessageQueue.RabbitMq.Logic
 {
     public class SendMessage : ISendMessage
     {
-        private readonly IConnection _connection;
-        private readonly string directExchangeName = "weather_direct";
-        public SendMessage(IConnection connection)
+        private readonly IModel _channel;
+        private readonly string _exchangeName; 
+        public SendMessage(IRabbitMqConnection rabbitMqConnection)
         {
-            _connection = connection;
+            _channel = rabbitMqConnection.Channel;
+            _exchangeName = rabbitMqConnection.ExchangeName;
         }
 
         public void SendToQueue(string message)
         {
-            using var channel = _connection.CreateModel();
-            channel.QueueDeclare(queue: "hello",
+            _channel.QueueDeclare(queue: "hello",
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-            PublishMessage(channel, message);
+            PublishMessage(_channel, message);
         }
 
         public void SendToExchange(string message,string?routingKey)
         {
-            using var channel = _connection.CreateModel();
-            channel.ExchangeDeclare(directExchangeName,ExchangeType.Direct);
-            PublishMessage(channel, message,directExchangeName,routingKey ?? string.Empty);
+            _channel.ExchangeDeclare(_exchangeName,ExchangeType.Direct);
+            PublishMessage(_channel, message,_exchangeName,routingKey ?? string.Empty);
         }
 
         private void PublishMessage(IModel channel, string message)

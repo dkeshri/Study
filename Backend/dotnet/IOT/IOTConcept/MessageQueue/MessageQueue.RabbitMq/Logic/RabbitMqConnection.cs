@@ -1,4 +1,5 @@
 ﻿using MessageQueue.RabbitMq.Extensions;
+using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System.Data.Common;
@@ -8,42 +9,47 @@ using System.Threading.Channels;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class RabbitMqConnection
+    public class RabbitMqConnection : IRabbitMqConnection
     {
-        private readonly IConnectionFactory _connectionFactory;
-        private readonly string directExchangeName = "weather_direct";
+        private readonly IConnection _connection;
+        private IModel _channel;
+        private string _exchangeName;
+        public IModel Channel { get => CreateChannelIfClosed(_connection); }
+        public string ExchangeName { get => _exchangeName; }
         public RabbitMqConnection(IConfiguration configuration)
         {
-            string HostName = configuration.GetRabbitMqHostName();
-            string UserName = configuration.GetRabbitMqUserName();
-            string Password = configuration.GetRabbitMqPassword();
-            int Port = configuration.GetRabbitMqPort();
+            string hostName = configuration.GetRabbitMqHostName();
+            string userName = configuration.GetRabbitMqUserName();
+            string password = configuration.GetRabbitMqPassword();
+            _exchangeName = configuration.GetRabbitMqExchangeName();
+            int port = configuration.GetRabbitMqPort();
+            string clientProvidedName = configuration.GetRabbitMqClientProvidedName();
+
             var factory = new ConnectionFactory()
             {
-                HostName = HostName,
-                Port = Port,
-                UserName = UserName,
-                Password = Password
+                HostName = hostName,
+                Port = port,
+                UserName = userName,
+                Password = password
             };
-            factory.ClientProvidedName = "Sender/Receiver";
-            _connectionFactory = factory;
-        }
-        public IConnection CreateConnection()
-        {
-            var connection = _connectionFactory.CreateConnection();
-            createDirectExchange(connection);
-            return connection;
+
+            factory.ClientProvidedName = clientProvidedName;
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
+            createDirectExchange(_channel, _exchangeName);
         }
         
-        private void createDirectExchange(IConnection connection)
+        private void createDirectExchange(IModel channel,string exchangeName)
         {
-            using var channel = connection.CreateModel();
-            channel.ExchangeDeclare(directExchangeName, ExchangeType.Direct);
-            if (channel.IsOpen)
-            {
-                channel.Close();
-                channel.Dispose();
-            }
+            channel.ExchangeDeclare(exchangeName, ExchangeType.Direct);
+        }
+
+        private IModel CreateChannelIfClosed(IConnection connection)
+        {
+            if(_channel.IsOpen)
+                return _channel;
+            _channel = connection.CreateModel();
+            return _channel;
         }
     }
 }

@@ -21,6 +21,14 @@ namespace MessageQueue.RabbitMq.Extensions
         {
             return configuration.GetSection("MessageQueues:RabbitMq:Server:Password").Value;
         }
+        public static string GetRabbitMqExchangeName(this IConfiguration configuration)
+        {
+            return configuration.GetSection("MessageQueues:RabbitMq:Server:ExchangeName").Value;
+        }
+        public static string GetRabbitMqClientProvidedName(this IConfiguration configuration)
+        {
+            return configuration.GetSection("MessageQueues:RabbitMq:Server:ClientProvidedName").Value;
+        }
         public static int GetRabbitMqPort(this IConfiguration configuration)
         {
             string value = configuration.GetSection("MessageQueues:RabbitMq:Server:Port").Value;

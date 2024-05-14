@@ -8,8 +8,7 @@ namespace MessageQueue.WebApi.Extensions
     {
         public static void AddRbbitMqConfiguration(this IServiceCollection services)
         {
-            services.AddSingleton<RabbitMqConnection>();
-            services.AddSingleton<IConnection>(sp => sp.GetRequiredService<RabbitMqConnection>().CreateConnection());
+            services.AddSingleton<IRabbitMqConnection,RabbitMqConnection>();
             services.AddScoped<ISendMessage, SendMessage>();
             services.AddHostedService<ReceiveMessageFromQueueService>();
             services.AddHostedService<ReceiveMessageFromExchangeService>();
