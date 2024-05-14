@@ -15,12 +15,13 @@ namespace MessageQueue.RabbitMq.Logic
     {
         private IModel channel;
         private bool _isDisposing = false;
-        private readonly string directExchangeName = "weather_direct";
+        private readonly string _directExchangeName;
         private readonly string queueName = "directExchangeQueue";
         private string[] routingkeys = { "key1", "key2", string.Empty };
         public ReceiveMessageFromExchangeService(IRabbitMqConnection rabbitMqConnection)
         {
             channel = rabbitMqConnection.Channel;
+            _directExchangeName = rabbitMqConnection.ExchangeName;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -45,7 +46,7 @@ namespace MessageQueue.RabbitMq.Logic
 
             foreach (string routingkey in routingkeys)
             {
-                channel.QueueBind(queueName, directExchangeName, routingkey);
+                channel.QueueBind(queueName, _directExchangeName, routingkey);
             }
 
             channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
