@@ -27,7 +27,7 @@ Port `5672` is use in communication during producing and consuming of message.
 Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
 best practice to implement RabbitMq is to have one connection per Application/Process and one channel per thread.
 
-We follow this convention to have one connection per process and one channel per thread.
+> We follow this convention to have one connection per process and one channel per thread.
 
 So in our current implimentation sender and reciver are on same application so we share one connection to both sender and reciver of message queue.
 and also we have one channel through of application.
