@@ -1,4 +1,5 @@
 using MessageQueue.WebApi.Extensions;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMetricServer(options =>
+{
+    //options.Port = 1234;
+});
 
 builder.Services.AddRbbitMqConfiguration();
 
@@ -26,6 +31,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseHttpMetrics();
+
 app.MapControllers();
+
+app.MapMetrics();
 
 app.Run();

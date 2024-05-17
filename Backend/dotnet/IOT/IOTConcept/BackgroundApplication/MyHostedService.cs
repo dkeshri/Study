@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackgroundApplication
 {
-    public class MyConsoleService : IHostedService, IDisposable
+    public class MyHostedService : IHostedService, IDisposable
     {
         private readonly CancellationTokenSource _stoppingCts = new CancellationTokenSource();
 
