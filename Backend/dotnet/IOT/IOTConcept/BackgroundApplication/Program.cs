@@ -7,7 +7,7 @@ var builder = Host.CreateDefaultBuilder(args);
 
 builder.ConfigureServices((hostContext, services) =>
 {
-    services.AddHostedService<MyConsoleService>();
+    services.AddHostedService<MyHostedService>();
     services.AddHostedService<ScheduledHostedService>();
 });
 
