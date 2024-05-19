@@ -17,8 +17,17 @@ namespace IOTConcept.WebApi.Controllers
         }
 
         [HttpPost("write")]
-        public IActionResult WriteMessage(Message message)
+        public IActionResult WriteMessage(InfluxDto influxDto)
         {
+            Random rnd = new Random();
+            int anyNumber = rnd.Next(10000); // generate number between  0 and 10000
+
+            
+            Message message = new Message()
+            {
+                Tag = influxDto.Tag,
+                Value = anyNumber
+            };
             influxDbMessageProcessor.WriteMessage(message);
             return Ok("Message sent");
         }
