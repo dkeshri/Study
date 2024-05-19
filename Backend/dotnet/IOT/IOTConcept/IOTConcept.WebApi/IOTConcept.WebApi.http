@@ -1,0 +1,6 @@
+@IOTConcept.WebApi_HostAddress = http://localhost:5128
+
+GET {{IOTConcept.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

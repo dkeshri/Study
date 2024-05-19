@@ -7,13 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundServices", "Backg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundApplication", "BackgroundApplication\BackgroundApplication.csproj", "{956AE4C4-9956-47CD-B4DA-4D2672C37041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageQueue.WebApi", "MessageQueue\MessageQueue.WebApi\MessageQueue.WebApi.csproj", "{E0704CEB-22EC-4ADC-949D-470D843E5399}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageQueue", "MessageQueue", "{C8D1D584-0931-48A7-AE24-60B27176E94A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMq", "RabbitMq", "{76F3BDA0-DE23-43C7-9668-73C1DB8E1E03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageQueue.RabbitMq", "MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj", "{CF7D04B6-48CE-44EB-90DC-3197648FE684}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageQueue.RabbitMq", "MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj", "{CF7D04B6-48CE-44EB-90DC-3197648FE684}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplication", "{D7EAC96D-9135-41BB-9B8A-89A8A18D64B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTConcept.WebApi", "IOTConcept.WebApi\IOTConcept.WebApi.csproj", "{4C1A585C-9F0D-4484-A301-8548D1838D74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTConcept.Influxdb", "IOTConcept.Influxdb\IOTConcept.Influxdb.csproj", "{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,23 +29,27 @@ Global
 		{956AE4C4-9956-47CD-B4DA-4D2672C37041}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{956AE4C4-9956-47CD-B4DA-4D2672C37041}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{956AE4C4-9956-47CD-B4DA-4D2672C37041}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0704CEB-22EC-4ADC-949D-470D843E5399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0704CEB-22EC-4ADC-949D-470D843E5399}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0704CEB-22EC-4ADC-949D-470D843E5399}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0704CEB-22EC-4ADC-949D-470D843E5399}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF7D04B6-48CE-44EB-90DC-3197648FE684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF7D04B6-48CE-44EB-90DC-3197648FE684}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF7D04B6-48CE-44EB-90DC-3197648FE684}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF7D04B6-48CE-44EB-90DC-3197648FE684}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C1A585C-9F0D-4484-A301-8548D1838D74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C1A585C-9F0D-4484-A301-8548D1838D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C1A585C-9F0D-4484-A301-8548D1838D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C1A585C-9F0D-4484-A301-8548D1838D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{956AE4C4-9956-47CD-B4DA-4D2672C37041} = {C7186BD7-6F44-4817-9E6C-7EA7E9A209A0}
-		{E0704CEB-22EC-4ADC-949D-470D843E5399} = {C8D1D584-0931-48A7-AE24-60B27176E94A}
 		{76F3BDA0-DE23-43C7-9668-73C1DB8E1E03} = {C8D1D584-0931-48A7-AE24-60B27176E94A}
 		{CF7D04B6-48CE-44EB-90DC-3197648FE684} = {76F3BDA0-DE23-43C7-9668-73C1DB8E1E03}
+		{4C1A585C-9F0D-4484-A301-8548D1838D74} = {D7EAC96D-9135-41BB-9B8A-89A8A18D64B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9C132D5-5122-4CF1-84B0-E87BADB9F52E}
