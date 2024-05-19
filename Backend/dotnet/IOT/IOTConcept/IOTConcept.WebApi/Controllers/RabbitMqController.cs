@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOTConcept.WebApi.Controllers
 {
-    
-    [Route("[controller]")]
     public class RabbitMqController : IotConceptControllerBase
     {
         private readonly ILogger<RabbitMqController> _logger;

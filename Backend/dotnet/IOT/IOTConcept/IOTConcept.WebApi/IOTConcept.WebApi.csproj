@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IOTConcept.Influxdb\IOTConcept.Influxdb.csproj" />
     <ProjectReference Include="..\MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj" />
   </ItemGroup>
 
