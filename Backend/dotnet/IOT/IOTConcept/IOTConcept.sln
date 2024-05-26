@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageQueue.RabbitMq", "Me
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplication", "{D7EAC96D-9135-41BB-9B8A-89A8A18D64B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTConcept.WebApi", "IOTConcept.WebApi\IOTConcept.WebApi.csproj", "{4C1A585C-9F0D-4484-A301-8548D1838D74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTConcept.WebApi", "IOTConcept.WebApi\IOTConcept.WebApi.csproj", "{4C1A585C-9F0D-4484-A301-8548D1838D74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTConcept.Influxdb", "IOTConcept.Influxdb\IOTConcept.Influxdb.csproj", "{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTConcept.Influxdb", "IOTConcept.Influxdb\IOTConcept.Influxdb.csproj", "{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTConcept.MediatR", "IOTConcept.MediatR\IOTConcept.MediatR.csproj", "{7FA99E74-EAD5-4E35-A5B1-1127D70BCC4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BFADB07-E5FF-497C-A885-C63D2CACFF4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA99E74-EAD5-4E35-A5B1-1127D70BCC4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA99E74-EAD5-4E35-A5B1-1127D70BCC4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA99E74-EAD5-4E35-A5B1-1127D70BCC4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA99E74-EAD5-4E35-A5B1-1127D70BCC4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

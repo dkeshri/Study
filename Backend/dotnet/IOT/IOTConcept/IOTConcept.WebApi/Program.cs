@@ -9,8 +9,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddRbbitMqServices();
-builder.Services.AddInfluxDbClient();
+builder.Services.AddRbbitMq();
+builder.Services.AddInfluxDb();
 builder.Services.AddMetricServer(options =>
 {
     //options.Port = 1234;
