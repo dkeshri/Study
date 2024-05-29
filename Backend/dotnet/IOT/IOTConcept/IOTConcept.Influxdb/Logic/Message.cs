@@ -8,7 +8,8 @@ namespace IOTConcept.Influxdb.Logic
 {
     public class Message
     {
-        public string? Tag { get; set; }
+        public string? Country { get; set; }
+        public string? City { get; set; }
         public double Value { get; set; }
     }
 }

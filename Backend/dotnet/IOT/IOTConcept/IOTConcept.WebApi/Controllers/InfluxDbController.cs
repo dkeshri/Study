@@ -25,7 +25,8 @@ namespace IOTConcept.WebApi.Controllers
             
             Message message = new Message()
             {
-                Tag = influxDto.Tag,
+                Country = influxDto.Country,
+                City = influxDto.City,
                 Value = anyNumber
             };
             influxDbMessageProcessor.WriteMessage(message);
