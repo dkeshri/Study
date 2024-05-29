@@ -24,9 +24,9 @@ namespace IOTConcept.Influxdb.Logic
 
         public void WriteMessage(Message message)
         {
-            var temperature = new Temperature { Location = message.Tag, Value = message.Value, Time = DateTime.UtcNow };
+            var temperature = new Temperature { Country = message.Country, City= message.City, Value = message.Value };
             _influxDBClient.GetWriteApi()
-                .WriteMeasurement<Temperature>(temperature, WritePrecision.Ns, _bucket, _org);
+                .WriteMeasurement(temperature, WritePrecision.Ns, _bucket, _org);
         }
 
         public async Task ReadMessage()
