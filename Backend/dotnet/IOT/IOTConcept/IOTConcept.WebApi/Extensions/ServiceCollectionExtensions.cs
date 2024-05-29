@@ -9,17 +9,18 @@ namespace IOTConcept.WebApi.Extensions
         {
             try
             {
-                services.AddRbbitMqServices();
-            }catch (Exception)
+                //services.AddRbbitMqServices(); // Please comment this if you don't run/start rabbit MQ Service otherwise it will throw exception.
+            }
+            catch (Exception)
             {
 
             }
             
         }
 
-        public static void AddInfluxDb(this IServiceCollection services)
+        public static void AddInfluxDb(this IServiceCollection services,IConfiguration configuration)
         {
-            services.AddInfluxDbClient();
+            services.AddInfluxDbClient(configuration);
         }
 
         public static void AddMediatR(this IServiceCollection services)

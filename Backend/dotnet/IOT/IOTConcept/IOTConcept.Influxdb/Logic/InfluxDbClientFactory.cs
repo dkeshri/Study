@@ -3,6 +3,7 @@ using InfluxDB.Client.Api.Domain;
 using IOTConcept.Influxdb.Interfaces;
 using IOTConcept.Influxdb.Measurements;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,29 +14,24 @@ namespace IOTConcept.Influxdb.Logic
 {
     public sealed class InfluxDbClientFactory : IInfluxDbClientFactory
     {
-        private readonly string host = InfluxDbConfiguration.INFLUX_DB_HOST_URL;
-        private readonly string username = InfluxDbConfiguration.USERNAME;
-        private readonly string password = InfluxDbConfiguration.USER_PASSWORD;
-        private readonly string org = InfluxDbConfiguration.ORG;
-        private readonly string token = InfluxDbConfiguration.TOKEN;
-        private readonly string bucket = InfluxDbConfiguration.BUCKET_NAME;
-
+        private InfluxDbConfigurationOptions _influxDbConfig;
         private readonly IInfluxDBClient _influxDBClient;
         public IInfluxDBClient InfluxDBClient { get => _influxDBClient; }
-        public string Bucket { get => bucket; }
-        public string Org { get => org; }
-        public InfluxDbClientFactory(IConfiguration configuration)
+        public string Bucket { get => _influxDbConfig.BucketName; }
+        public string Org { get => _influxDbConfig.Org; }
+        public InfluxDbClientFactory(IOptions<InfluxDbConfigurationOptions> options)
         {
+            _influxDbConfig = options.Value;
             _influxDBClient = GetAuthenticatedClient();
         }
         
         private InfluxDBClient GetAuthenticatedClient()
         {
             var option = new InfluxDBClientOptions.Builder()
-                .Url(host)
-                .AuthenticateToken(token)
-                .Org(org)
-                .Bucket(bucket)
+                .Url(_influxDbConfig.InfluxUrl)
+                .AuthenticateToken(_influxDbConfig.Token)
+                .Org(_influxDbConfig.Org)
+                .Bucket(_influxDbConfig.BucketName)
             .Build();
 
             var client = new InfluxDBClient(option);
