@@ -1,4 +1,4 @@
-# KiranaStore
+# Study
 ## Table of content
 
 * Backend

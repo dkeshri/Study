@@ -1,0 +1,6 @@
+@Dkeshri.WebApi_HostAddress = http://localhost:5265
+
+GET {{Dkeshri.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
