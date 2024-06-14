@@ -8,3 +8,4 @@
 *.user
 **/Release
 
+/Backend/dotnet/dkeshri/Dkeshri.WebApi/Logs
