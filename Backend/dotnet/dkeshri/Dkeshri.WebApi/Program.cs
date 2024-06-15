@@ -1,14 +1,13 @@
 using Dkeshri.WebApi.Extensions;
 using Serilog;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
     // Add logging
-    Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(builder.Configuration)
-            .CreateLogger();
-    builder.Host.UseSerilog();
+    builder.Host.AddSerilog(builder.Configuration);
 
     Log.Information("Serilog configured");
     // Add services to the container.
