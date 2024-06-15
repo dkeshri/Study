@@ -19,6 +19,7 @@ namespace Dkeshri.WebApi.Extensions
             var userEnricher = new UserEnricher("System", 123);
             Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(configuration)
+                    .Enrich.FromLogContext()
                     .Enrich.With(userEnricher)
                     .WriteTo.MSSqlServer(
                 connectionString: configuration.GetConnectionString("DefaultConnection"),

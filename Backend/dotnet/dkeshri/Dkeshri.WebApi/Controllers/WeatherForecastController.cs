@@ -26,7 +26,7 @@ namespace Dkeshri.WebApi.Controllers
             using (LogContext.PushProperty("UserId", 122))
             {
                 _logger.LogInformation("Weather controller Get request");
-            
+            }
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -34,7 +34,7 @@ namespace Dkeshri.WebApi.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-            }
+            
         }
     }
 }
