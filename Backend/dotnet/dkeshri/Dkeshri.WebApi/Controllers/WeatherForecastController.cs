@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Serilog.Context;
 
 namespace Dkeshri.WebApi.Controllers
 {
@@ -21,7 +22,11 @@ namespace Dkeshri.WebApi.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            _logger.LogInformation("Weather controller Get request");
+            using (LogContext.PushProperty("UserName", "user"))
+            using (LogContext.PushProperty("UserId", 122))
+            {
+                _logger.LogInformation("Weather controller Get request");
+            
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -29,6 +34,7 @@ namespace Dkeshri.WebApi.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+            }
         }
     }
 }
