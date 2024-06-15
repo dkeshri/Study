@@ -1,17 +1,16 @@
+using Dkeshri.WebApi.Extensions;
 using Serilog;
-Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information() // Set the minimum log level
-            .WriteTo.Console() // Configure a sink, e.g., Console
-            .CreateLogger();
+
 try
 {
-    Log.Information("Init Main");
     var builder = WebApplication.CreateBuilder(args);
-
     // Add logging
+    Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger();
     builder.Host.UseSerilog();
 
-
+    Log.Information("Serilog configured");
     // Add services to the container.
 
     builder.Services.AddControllers();
@@ -19,18 +18,18 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     
-
+    builder.Services.AddLogLevelTest();
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        
     }
 
-    
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.UseHttpsRedirection();
 
