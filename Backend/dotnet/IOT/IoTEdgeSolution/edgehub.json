@@ -1,0 +1,6 @@
+{
+    "certPath": "C:\\ProgramData\\iotedgehubdev\\data\\certs",
+    "connectionString": "HostName=mydummyhub.azure-devices.net;DeviceId=mydummydevice;SharedAccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890=",
+    "gatewayhost": "host.docker.internal",
+    "iothubConnectionString": "HostName=mydummyhub.azure-devices.net;DeviceId=mydummydevice;SharedAccessKey=ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890="
+}
