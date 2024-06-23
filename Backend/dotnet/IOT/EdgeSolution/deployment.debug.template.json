@@ -51,56 +51,24 @@
           }
         },
         "modules": {
-          "AzureSQLEdge": {
+          "TestModule": {
             "version": "1.0",
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mcr.microsoft.com/azure-sql-edge/developer:latest",
-              "createOptions": {
-                "HostConfig": {
-                  "CapAdd": [
-                    "SYS_PTRACE"
-                  ],
-                  "Binds": [
-                    "sqlvolume:/sqlvolume"
-                  ],
-                  "PortBindings": {
-                    "1433/tcp": [
-                      {
-                        "HostPort": "1433"
-                      }
-                    ]
-                  },
-                  "Mounts": [
-                    {
-                      "Type": "volume",
-                      "Source": "sqlvolume",
-                      "Target": "/var/opt/mssql"
-                    }
-                  ]
-                },
-                "Env": [
-                  "MSSQL_AGENT_ENABLED=TRUE",
-                  "ClientTransportType=AMQP_TCP_Only",
-                  "PlanId=asde-developer-on-iot-edge"
-                ]
-              }
-            },
-            "env": {
-              "ACCEPT_EULA": {
-                "value": "Y"
-              },
-              "MSSQL_SA_PASSWORD": {
-                "value": "<Default_MSSQL_SA_Password>"
-              },
-              "MSSQL_LCID": {
-                "value": "1033"
-              },
-              "MSSQL_COLLATION": {
-                "value": "SQL_Latin1_General_CP1_CI_AS"
-              }
+              "image": "${MODULES.TestModule.debug}",
+              "createOptions": {}
+            }
+          },
+          "SimulatedTemperatureSensor": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.4",
+              "createOptions": {}
             }
           }
         }
@@ -110,7 +78,8 @@
       "properties.desired": {
         "schemaVersion": "1.1",
         "routes": {
-          "AzureSQLEdgeToIoTHub": "FROM /messages/modules/AzureSQLEdge/outputs/* INTO $upstream"
+          "TestModuleToIoTHub": "FROM /messages/modules/TestModule/outputs/* INTO $upstream",
+          "sensorToTestModule": "FROM /messages/modules/SimulatedTemperatureSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/TestModule/inputs/input1\")"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200

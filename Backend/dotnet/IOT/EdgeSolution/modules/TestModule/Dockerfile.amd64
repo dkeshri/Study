@@ -1,0 +1,13 @@
+# Build Stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /Source
+COPY . .
+RUN dotnet restore "./TestModule.csproj" --disable-parallel
+RUN dotnet publish "./TestModule.csproj" -c release -o /out --no-restore
+
+# Serve Stage
+FROM mcr.microsoft.com/dotnet/runtime:8.0
+WORKDIR /app
+COPY --from=build /out .
+
+ENTRYPOINT [ "dotnet", "TestModule.dll" ]
