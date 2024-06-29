@@ -1,7 +1,5 @@
 using Dkeshri.WebApi.Extensions;
 using Serilog;
-using Serilog.Sinks.MSSqlServer;
-using System.Collections.ObjectModel;
 
 try
 {

@@ -23,7 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLogic.Service.Interface
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplication", "{7E2EA53B-7DBA-46CE-B85C-9D048D39E5B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dkeshri.WebApi", "Dkeshri.WebApi\Dkeshri.WebApi.csproj", "{3929C7F4-D7C7-4531-B989-209C03A96F19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dkeshri.WebApi", "Dkeshri.WebApi\Dkeshri.WebApi.csproj", "{3929C7F4-D7C7-4531-B989-209C03A96F19}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemDesign", "SystemDesign", "{30EDD73B-31D8-4BCA-8D63-4C0ACFB5B997}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LowLevel", "LowLevel", "{F0F867EE-EC33-44A2-9880-4856490C8453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dkeshri.SystemDesign.LowLevel", "SystemDesign\Dkeshri.SystemDesign.LowLevel\Dkeshri.SystemDesign.LowLevel.csproj", "{26E4C105-3647-4799-BDE6-C3DFEAB990EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +65,10 @@ Global
 		{3929C7F4-D7C7-4531-B989-209C03A96F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3929C7F4-D7C7-4531-B989-209C03A96F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3929C7F4-D7C7-4531-B989-209C03A96F19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26E4C105-3647-4799-BDE6-C3DFEAB990EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E4C105-3647-4799-BDE6-C3DFEAB990EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26E4C105-3647-4799-BDE6-C3DFEAB990EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26E4C105-3647-4799-BDE6-C3DFEAB990EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +83,8 @@ Global
 		{59857E8F-F3B6-42D5-8AF0-8BCFA32AC391} = {A2BA3A70-7607-4511-965A-6AD8D1CC3B0F}
 		{E802F087-4BC8-4C43-A646-542D65360457} = {59857E8F-F3B6-42D5-8AF0-8BCFA32AC391}
 		{3929C7F4-D7C7-4531-B989-209C03A96F19} = {7E2EA53B-7DBA-46CE-B85C-9D048D39E5B0}
+		{F0F867EE-EC33-44A2-9880-4856490C8453} = {30EDD73B-31D8-4BCA-8D63-4C0ACFB5B997}
+		{26E4C105-3647-4799-BDE6-C3DFEAB990EE} = {F0F867EE-EC33-44A2-9880-4856490C8453}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {980EACD2-F298-4BB6-8DC2-14CE1187888D}
