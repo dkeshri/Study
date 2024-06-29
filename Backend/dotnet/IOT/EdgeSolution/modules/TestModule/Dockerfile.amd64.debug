@@ -2,12 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /Source
 COPY . .
-RUN dotnet restore "./TestModule.csproj" --disable-parallel
-RUN dotnet publish "./TestModule.csproj" -c debug -o /out --no-restore
+RUN dotnet restore "./TestModule.csproj"
+RUN dotnet publish "./TestModule.csproj" --os linux --arch x64 -c Release -o /out
 
 # Serve Stage
 FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app
 COPY --from=build /out .
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        unzip \
+        procps \
+        curl \
+        && \
+    curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/vsdbg
 
 ENTRYPOINT [ "dotnet", "TestModule.dll" ]
