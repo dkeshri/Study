@@ -4,8 +4,12 @@ services:
   opc_publisher:
     image: mcr.microsoft.com/iotedge/opc-publisher:latest
     container_name: opc_publisher
-    environment:
-      - PUBLISHER_LOGLEVEL=verbose
     volumes:
       - ./pn.json:/appdata/pn.json
-    command: ["--pf=/appdata/pn.json", "--aa", "--si=10", "-v","--di=2"]
+      - ./publisher.log:/appdata/publisher.log:rw
+    command: [
+      "--pf=/appdata/pn.json", 
+      "--aa", 
+      "--si=10",
+      "--ll=Trace"
+      ]
