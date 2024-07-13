@@ -10,7 +10,7 @@ namespace Dkeshri.WebApi.Controllers.SystemDesign.LowLevel.DesignPatterns
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [HttpGet(Name = "TemplateMethod")]
+        [HttpGet("TemplateMethod")]
         public IEnumerable<WeatherForecast> Get()
         {
 
@@ -24,7 +24,7 @@ namespace Dkeshri.WebApi.Controllers.SystemDesign.LowLevel.DesignPatterns
 
         }
 
-        [HttpGet(Name = "TemplateMethodTest")]
+        [HttpGet("TemplateMethodTest")]
         public IEnumerable<WeatherForecast> GetTest()
         {
 
@@ -37,5 +37,6 @@ namespace Dkeshri.WebApi.Controllers.SystemDesign.LowLevel.DesignPatterns
             .ToArray();
 
         }
+
     }
 }
