@@ -1,4 +1,4 @@
-﻿using Dkeshri.SystemDesign.LowLevel.Basic.Linq;
+﻿using Dkeshri.SystemDesign.LowLevel.DSA.LinkedList;
 using Dkeshri.SystemDesign.LowLevel.Interfaces;
 
 namespace ExecuterApp
@@ -8,7 +8,7 @@ namespace ExecuterApp
         IExecute execute;
         public ExecuteAlgorithm()
         {
-            execute = new LinqEx();
+            execute = new SinglyLinkListEx();
         }
         public void Run()
         {
