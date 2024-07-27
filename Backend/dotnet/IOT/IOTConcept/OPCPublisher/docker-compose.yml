@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   opc_publisher:
-    image: mcr.microsoft.com/iotedge/opc-publisher:latest
+    image: mcr.microsoft.com/iotedge/opc-publisher:2.9.6
     container_name: opc_publisher
     volumes:
       - ./pn.json:/appdata/pn.json
@@ -11,5 +11,6 @@ services:
       "--pf=/appdata/pn.json", 
       "--aa", 
       "--si=10",
-      "--ll=Trace"
+      "--ll=Trace",
+      "--di=6000"
       ]
