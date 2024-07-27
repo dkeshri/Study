@@ -1,6 +1,6 @@
 ﻿using Dkeshri.SystemDesign.LowLevel.Interfaces;
 
-namespace Dkeshri.SystemDesign.LowLevel.DSA.LinkedList
+namespace Dkeshri.SystemDesign.LowLevel.DSA.LinkedList.Singly
 {
     internal class SinglyLinkedList
     {
@@ -48,7 +48,7 @@ namespace Dkeshri.SystemDesign.LowLevel.DSA.LinkedList
 
         public void InsertAtBening(int value)
         {
-            if(head == null)
+            if (head == null)
             {
                 head = new Node(value);
             }
@@ -60,11 +60,11 @@ namespace Dkeshri.SystemDesign.LowLevel.DSA.LinkedList
             }
         }
 
-       
+
 
     }
 
-    public class SinglyLinkListEx : IExecute
+    public class SinglyLinkedListEx : IExecute
     {
         public void run()
         {

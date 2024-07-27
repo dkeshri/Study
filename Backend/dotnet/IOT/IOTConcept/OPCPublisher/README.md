@@ -1,5 +1,5 @@
 # OPC Publisher Configuration
-
+[OPC Publisher](https://azure.github.io/Industrial-IoT/opc-publisher/) [OPC Publisher Command](https://azure.github.io/Industrial-IoT/opc-publisher/commandline.html)
 ## OPC UA Server Simulation
 We are using Prosys simulation software Free version.
 
