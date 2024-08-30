@@ -16,6 +16,7 @@ namespace IOTConcept.Influxdb.Logic
         public string BucketName { get; set; } = "dkeshri-bucket";
         public string Org {  get; set; } = "DeepakKeshri_org";
         public string Token {  get; set; } = "";
+        public int RetentionPeriodDays { get; set; } = 10;
 
     }
 }
