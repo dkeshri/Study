@@ -1,0 +1,60 @@
+services:
+  kirana-store-app:
+    container_name: kirana-store-app
+    image: dkeshri/store-app:latest
+    depends_on:
+      kirana-store-api:
+        condition: service_healthy
+    networks:
+      - kirana_store
+  kirana-store-api:
+    container_name: kirana-store-api
+    image: dkeshri/store-api:latest
+    healthcheck:
+      test: curl --fail http://localhost:8080/healthz || exit 1
+      interval: 5s
+      retries: 10
+    depends_on:
+      kirana-store-mssqldb:
+        condition: service_healthy
+    networks:
+      - kirana_store
+  kirana-store-mssqldb:
+    container_name: kirana-store-mssqldb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    environment:
+      - MSSQL_SA_PASSWORD=MsSqlServer@2023
+      - ACCEPT_EULA=Y
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd","-C", "-S", "localhost", "-U", "sa", "-P", "MsSqlServer@2023", "-Q", "select 1"]
+      interval: 5s
+      retries: 10
+    volumes:
+      - store-mssql-data:/var/opt/mssql
+    networks:
+      - kirana_store
+  kirana-store-reverse-proxy:
+    container_name: kirana-store-reverse-proxy
+    image: dkeshri/nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx-data:/etc/nginx/
+    depends_on:
+      - kirana-store-app
+    networks:
+      - kirana_store
+volumes:
+  store-mssql-data:
+  nginx-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: C:/KiranaStore/nginx
+      o: bind
+networks:
+  kirana_store:
+    driver: bridge
