@@ -13,5 +13,19 @@ namespace DataSync.Common.Extensions
         {
             return configuration.GetSection("Servers:DatabaseServer:Database:Schema").Value!;
         }
+
+        public static int? GetDatabaseTransactionTimeOutInSec(this IConfiguration configuration)
+        {
+            string transactionTimeOutinSecString = configuration.GetSection("Servers:DatabaseServer:Database:TransactionTimeOutInSec").Value;
+            if (!int.TryParse(transactionTimeOutinSecString, out var transationTimeOutInSec))
+            {
+                return null;
+            }
+            return transationTimeOutInSec;
+        }
+        public static bool GetIsDatabaseLoggingEnable(this IConfiguration configuration)
+        {
+            return Convert.ToBoolean(configuration.GetSection("Servers:DatabaseServer:Database:EnableDatabaseLogging").Value);
+        }
     }
 }
