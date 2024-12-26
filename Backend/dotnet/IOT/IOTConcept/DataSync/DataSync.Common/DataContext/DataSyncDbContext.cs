@@ -1,5 +1,5 @@
-﻿using DataSync.Common.Interfaces.DataContext;
-using DataSync.DBChangeEmitter.Extensions;
+﻿using DataSync.Common.Extensions;
+using DataSync.Common.Interfaces.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
@@ -12,25 +12,21 @@ using System.Threading.Tasks;
 
 namespace DataSync.DBChangeEmitter.Data
 {
-    internal class DbChangeEmitterDbContext : DataContextBase
+    internal class DataSyncDbContext : DataContextBase
     {
-        public DbChangeEmitterDbContext(IConfiguration configuration): base(configuration)
+        public DataSyncDbContext(IConfiguration configuration): base(configuration)
         {
             
         }
 
         public override string GetConnectionString()
         {
-            string connectionFormateString = Configuration.GetConnectionStringFormate();
-            string databaseServer = Configuration.GetDatabaseServerAddress();
-            string databaseName = Configuration.GetDatabaseName();
-            string databaseUserName = Configuration.GetDatabaseUserName();
-            string databasePassword = Configuration.GetDatabasePassword();
-
-
-            string connectionStringWithCrediential = string.Format(connectionFormateString, databaseServer, databaseName, databaseUserName, databasePassword);
-
-            return connectionStringWithCrediential;
+            string? connectionString = Configuration.GetConnectionString("DefaultConnection");
+            if (connectionString == null)
+            {
+                 throw new Exception("Connection String can't be empty");
+            }
+            return connectionString;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

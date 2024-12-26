@@ -11,9 +11,6 @@ namespace DataSync.DBChangeEmitter.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
-        public static void AddDataLayer(this IServiceCollection services)
-        {
-            services.AddSingleton<IDataContext,DbChangeEmitterDbContext>();
-        }
+        
     }
 }
