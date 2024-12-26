@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace DataSync.DBChangeEmitter.Data
 {
-    public class DbChangeEmitterContext : DataContextBase
+    internal class DbChangeEmitterDbContext : DataContextBase
     {
-        public DbChangeEmitterContext(IConfiguration configuration): base(configuration)
+        public DbChangeEmitterDbContext(IConfiguration configuration): base(configuration)
         {
             
         }

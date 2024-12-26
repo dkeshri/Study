@@ -10,9 +10,6 @@ namespace DataSync.Common.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static void AddDatabaseContext(this IServiceCollection services,IConfiguration configuration)
-        {
-
-        }
+        
     }
 }
