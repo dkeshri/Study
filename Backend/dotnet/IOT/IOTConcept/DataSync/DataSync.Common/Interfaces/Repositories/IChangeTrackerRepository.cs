@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataSync.Common.Data.Entities;
+using DataSync.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +10,10 @@ namespace DataSync.Common.Interfaces.Repositories
 {
     public interface IChangeTrackerRepository
     {
+        public IReadOnlyCollection<ChangeTracker> GetTrackedTables();
         public long GetTableChangeVersion(string tableName);
         public long GetDbChangeTrackingCurrentVersion();
         public Task<long> GetDbChangeTrackingCurrentVersionAsync();
-        public List<string> GetPrimaryKeys(string tableName);
+        public Task<IReadOnlyCollection<TableRecord>> GetChangedTableRecordsAsync(ChangeTracker trackingTable);
     }
 }

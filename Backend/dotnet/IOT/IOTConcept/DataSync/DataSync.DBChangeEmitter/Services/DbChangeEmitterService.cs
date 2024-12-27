@@ -1,4 +1,5 @@
-﻿using DataSync.Common.Services;
+﻿using DataSync.Common.Models;
+using DataSync.Common.Services;
 using DataSync.DBChangeEmitter.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -21,17 +22,12 @@ namespace DataSync.DBChangeEmitter.Services
 
         protected override async Task OperationToPerforme(CancellationToken cancellationToken)
         {
-            Console.WriteLine(testCounter++);
-            string tableName = "Orders";
-            long version = DatabaseChangeTrackerService.GetTableChangeVersion(tableName);
-            Console.WriteLine($"Table {tableName} ChangeVersion is : {version}");
-            long DatabaseChangeVersion = await DatabaseChangeTrackerService.GetDbChangeTrackingCurrentVersionAsync();
-            Console.WriteLine("DbChangeVersion: "+DatabaseChangeVersion);
-            IEnumerable<string> keys = DatabaseChangeTrackerService.GetPrimaryKeys("Orders");
-            foreach (string key in keys)
+            IReadOnlyCollection<TableChanges> tablechanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
+            foreach (TableChanges tablechange in tablechanges)
             {
-                Console.WriteLine(key);
+                Console.WriteLine(tablechange.Records.ToString());
             }
+            
         }
     }
 }

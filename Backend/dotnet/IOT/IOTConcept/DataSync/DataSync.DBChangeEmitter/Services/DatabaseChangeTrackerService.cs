@@ -1,4 +1,6 @@
-﻿using DataSync.Common.Interfaces.Repositories;
+﻿using DataSync.Common.Data.Entities;
+using DataSync.Common.Interfaces.Repositories;
+using DataSync.Common.Models;
 using DataSync.DBChangeEmitter.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,24 +17,35 @@ namespace DataSync.DBChangeEmitter.Services
         {
             ChangeTrackerRepository = changeTrackerRepository;
         }
-        public long GetTableChangeVersion(string tableName)
+
+        public async Task<IReadOnlyCollection<TableChanges>> GetChangesOfTrackedTableAsync()
         {
-            return ChangeTrackerRepository.GetTableChangeVersion(tableName);
+            List<TableChanges> changes = new List<TableChanges>();
+            var trackingTables = ChangeTrackerRepository.GetTrackedTables();
+            foreach (var table in trackingTables) 
+            { 
+                var tableChanges = await GetTableChangesAsync(table);
+                if(tableChanges != null)
+                {
+                    changes.Add(tableChanges);
+                }
+            }
+            return changes;
         }
 
-        public long GetDbChangeTrackingCurrentVersion()
+        private async Task<TableChanges?> GetTableChangesAsync(ChangeTracker trackingTable) 
         {
-            return ChangeTrackerRepository.GetDbChangeTrackingCurrentVersion();
-        }
-
-        public async Task<long> GetDbChangeTrackingCurrentVersionAsync()
-        {
-            return await ChangeTrackerRepository.GetDbChangeTrackingCurrentVersionAsync();
-        }
-
-        public List<string> GetPrimaryKeys(string tableName)
-        {
-            return ChangeTrackerRepository.GetPrimaryKeys(tableName);
+            var changesForTable = await ChangeTrackerRepository.GetChangedTableRecordsAsync(trackingTable);
+            if(changesForTable.Count == 0)
+            {
+                return null;
+            }
+            return new TableChanges()
+            {
+                TableName = trackingTable.TableName,
+                CreatedOn = DateTime.UtcNow,
+                Records = changesForTable
+            };
         }
     }
 }
