@@ -19,5 +19,20 @@ namespace DataSync.DBChangeEmitter.Services
         {
             return ChangeTrackerRepository.GetTableChangeVersion(tableName);
         }
+
+        public long GetDbChangeTrackingCurrentVersion()
+        {
+            return ChangeTrackerRepository.GetDbChangeTrackingCurrentVersion();
+        }
+
+        public async Task<long> GetDbChangeTrackingCurrentVersionAsync()
+        {
+            return await ChangeTrackerRepository.GetDbChangeTrackingCurrentVersionAsync();
+        }
+
+        public List<string> GetPrimaryKeys(string tableName)
+        {
+            return ChangeTrackerRepository.GetPrimaryKeys(tableName);
+        }
     }
 }

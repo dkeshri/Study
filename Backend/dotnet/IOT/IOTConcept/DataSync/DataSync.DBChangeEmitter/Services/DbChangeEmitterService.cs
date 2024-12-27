@@ -19,13 +19,19 @@ namespace DataSync.DBChangeEmitter.Services
             DatabaseChangeTrackerService = databaseChangeTrackerService;
         }
 
-        protected override Task OperationToPerforme(CancellationToken cancellationToken)
+        protected override async Task OperationToPerforme(CancellationToken cancellationToken)
         {
             Console.WriteLine(testCounter++);
             string tableName = "Orders";
             long version = DatabaseChangeTrackerService.GetTableChangeVersion(tableName);
             Console.WriteLine($"Table {tableName} ChangeVersion is : {version}");
-            return Task.CompletedTask;
+            long DatabaseChangeVersion = await DatabaseChangeTrackerService.GetDbChangeTrackingCurrentVersionAsync();
+            Console.WriteLine("DbChangeVersion: "+DatabaseChangeVersion);
+            IEnumerable<string> keys = DatabaseChangeTrackerService.GetPrimaryKeys("Orders");
+            foreach (string key in keys)
+            {
+                Console.WriteLine(key);
+            }
         }
     }
 }
