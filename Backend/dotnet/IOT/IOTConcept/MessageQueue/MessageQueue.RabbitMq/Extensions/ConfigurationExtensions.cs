@@ -36,5 +36,9 @@ namespace MessageQueue.RabbitMq.Extensions
             int.TryParse(value, out port);
             return port;
         }
+        public static string GetRabbitMqQueueName(this IConfiguration configuration)
+        {
+            return configuration.GetSection("RabbitMq:Queue").Value;
+        }
     }
 }
