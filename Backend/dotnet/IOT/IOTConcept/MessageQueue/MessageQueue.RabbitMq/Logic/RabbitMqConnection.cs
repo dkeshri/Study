@@ -6,7 +6,7 @@ using RabbitMQ.Client;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
+    internal sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
     {
         private readonly IConnection _connection;
         private IModel _channel;

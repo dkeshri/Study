@@ -14,16 +14,20 @@ namespace DataSync.DBChangeEmitter.Services
     internal class DbChangeEmitterService : HostedTimerService
     {
         private int testCounter = 0;
-        IDatabaseChangeTrackerService DatabaseChangeTrackerService { get; }
-        public DbChangeEmitterService(IDatabaseChangeTrackerService databaseChangeTrackerService):base(TimeSpan.FromSeconds(10))
+        private IDatabaseChangeTrackerService DatabaseChangeTrackerService { get; }
+        private ISendMessageToRabbitMq SendMessageToRabbiMq { get; }
+        public DbChangeEmitterService(IDatabaseChangeTrackerService databaseChangeTrackerService,
+            ISendMessageToRabbitMq sendMessageToRabbitMq):base(TimeSpan.FromSeconds(10))
         {
             DatabaseChangeTrackerService = databaseChangeTrackerService;
+            SendMessageToRabbiMq = sendMessageToRabbitMq;
         }
 
         protected override async Task OperationToPerforme(CancellationToken cancellationToken)
         {
-            IReadOnlyCollection<TableChanges> tablechanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
-            foreach (TableChanges tablechange in tablechanges)
+            IReadOnlyCollection<TableChanges> tableChanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
+
+            foreach (TableChanges tablechange in tableChanges)
             {
                 Console.WriteLine($"************ {tablechange.TableName} ************");
                 Console.WriteLine($"Total Records: {tablechange.Records.Count}\n" );
@@ -32,7 +36,9 @@ namespace DataSync.DBChangeEmitter.Services
                 }
                 Console.WriteLine($"\n************ {tablechange.TableName} End ************\n");
             }
-            
+            Console.WriteLine("Sending.......... To RabitMq");
+            SendMessageToRabbiMq.SendMessageToRabbitMq(tableChanges);
+            Console.WriteLine("Sent.......... To RabitMq\n");
         }
     }
 }

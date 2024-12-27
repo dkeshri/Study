@@ -11,27 +11,27 @@ namespace MessageQueue.RabbitMq.Extensions
     {
         public static string GetRabbitMqHostName(this IConfiguration configuration)
         {
-            return configuration.GetSection("MessageQueues:RabbitMq:Server:HostName").Value;
+            return configuration.GetSection("RabbitMq:HostName").Value;
         }
         public static string GetRabbitMqUserName(this IConfiguration configuration)
         {
-            return configuration.GetSection("MessageQueues:RabbitMq:Server:UserName").Value;
+            return configuration.GetSection("RabbitMq:UserName").Value;
         }
         public static string GetRabbitMqPassword(this IConfiguration configuration)
         {
-            return configuration.GetSection("MessageQueues:RabbitMq:Server:Password").Value;
+            return configuration.GetSection("RabbitMq:Password").Value;
         }
         public static string GetRabbitMqExchangeName(this IConfiguration configuration)
         {
-            return configuration.GetSection("MessageQueues:RabbitMq:Server:ExchangeName").Value;
+            return configuration.GetSection("RabbitMq:ExchangeName").Value;
         }
         public static string GetRabbitMqClientProvidedName(this IConfiguration configuration)
         {
-            return configuration.GetSection("MessageQueues:RabbitMq:Server:ClientProvidedName").Value;
+            return configuration.GetSection("RabbitMq:ClientProvidedName").Value;
         }
         public static int GetRabbitMqPort(this IConfiguration configuration)
         {
-            string value = configuration.GetSection("MessageQueues:RabbitMq:Server:Port").Value;
+            string value = configuration.GetSection("RabbitMq:Port").Value;
             int port;
             int.TryParse(value, out port);
             return port;

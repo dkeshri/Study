@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class SendMessage : ISendMessage
+    internal class SendMessage : ISendMessage
     {
         private readonly IModel _channel;
         private readonly string _exchangeName; 
