@@ -117,7 +117,7 @@ namespace DataSync.Common.Repositories
                     (SELECT TOP 1 * FROM {tableName} T WHERE {condition} FOR JSON AUTO) AS Data,
                     CT.SYS_CHANGE_VERSION As ChangeVersion,
                     CT.SYS_CHANGE_OPERATION As Operation
-                FROM CHANGETABLE(CHANGES Customers, {lastChangeVersion}) AS CT
+                FROM CHANGETABLE(CHANGES {tableName}, {lastChangeVersion}) AS CT
                 LEFT OUTER JOIN
                     {tableName} T ON {condition}";
             var changes = await GetChangesFromDatabaseAsync(query);
@@ -127,37 +127,31 @@ namespace DataSync.Common.Repositories
         private async Task<List<TableRecord>> GetChangesFromDatabaseAsync(string sqlQuery)
         {
             List<TableRecord> changes = new List<TableRecord>();
-            using (var connection = DataContext.DbContext.Database.GetDbConnection())
+            using (var command = DataContext.DbContext.Database.GetDbConnection().CreateCommand())
             {
-                await connection.OpenAsync();
+                command.CommandText = sqlQuery;
+                await DataContext.DbContext.Database.OpenConnectionAsync();
                 try
                 {
-                    using (var command = connection.CreateCommand())
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        command.CommandText = sqlQuery;
-
-                        using (var reader = await command.ExecuteReaderAsync())
+                        while (await reader.ReadAsync())
                         {
-                            while (await reader.ReadAsync())
+                            var record = new TableRecord
                             {
-                                var record = new TableRecord
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Data = reader["Data"]?.ToString(),
-                                    ChangeVersion = Convert.ToInt64(reader["ChangeVersion"]),
-                                    Operation = reader["Operation"]?.ToString(),
-                                };
-                                changes.Add(record);
-                            }
+                                Id = Guid.NewGuid(),
+                                Data = reader["Data"]?.ToString(),
+                                ChangeVersion = Convert.ToInt64(reader["ChangeVersion"]),
+                                Operation = reader["Operation"]?.ToString(),
+                            };
+                            changes.Add(record);
                         }
-                        
                     }
-                    await connection.CloseAsync();
                 }
-                finally {
-                    await connection.CloseAsync();
+                finally
+                {
+                    await DataContext.DbContext.Database.CloseConnectionAsync();
                 }
-                
             }
             return changes;
         }

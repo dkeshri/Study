@@ -25,7 +25,9 @@ namespace DataSync.DBChangeEmitter.Services
             IReadOnlyCollection<TableChanges> tablechanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
             foreach (TableChanges tablechange in tablechanges)
             {
-                Console.WriteLine(tablechange.Records.ToString());
+                foreach (var record in tablechange.Records) {
+                    Console.WriteLine(record.Data.ToString());
+                }
             }
             
         }
