@@ -1,5 +1,7 @@
-﻿using DataSync.Common.Interfaces.DataContext;
-using DataSync.DBChangeEmitter.Data;
+﻿using DataSync.Common.Data.DataContext;
+using DataSync.Common.Interfaces.DataContext;
+using DataSync.Common.Interfaces.Repositories;
+using DataSync.Common.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,6 +17,12 @@ namespace DataSync.Common.Extensions
         public static void AddDataLayer(this IServiceCollection services)
         {
             services.AddSingleton<IDataContext, DataSyncDbContext>();
+            LoadRepositories(services);
+        }
+
+        private static void LoadRepositories(IServiceCollection services)
+        {
+            services.AddSingleton<IChangeTrackerRepository,ChangeTrackerRepository>();
         }
     }
 }

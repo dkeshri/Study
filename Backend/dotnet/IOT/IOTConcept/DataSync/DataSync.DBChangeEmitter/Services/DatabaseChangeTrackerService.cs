@@ -1,29 +1,51 @@
-﻿using DataSync.Common.Interfaces.DataContext;
-using DataSync.Common.Services;
-using Microsoft.Extensions.Configuration;
+﻿using DataSync.Common.Data.Entities;
+using DataSync.Common.Interfaces.Repositories;
+using DataSync.Common.Models;
+using DataSync.DBChangeEmitter.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataSync.DBChangeEmitter.Services
 {
-    internal class DatabaseChangeTrackerService : HostedTimerService
+    internal class DatabaseChangeTrackerService : IDatabaseChangeTrackerService
     {
-        private int testCounter = 0;
-        private IDataContext dataContext;
-        public DatabaseChangeTrackerService(IDataContext dataContext):base(TimeSpan.FromSeconds(4))
+        IChangeTrackerRepository ChangeTrackerRepository { get; set; }
+        public DatabaseChangeTrackerService(IChangeTrackerRepository changeTrackerRepository)
         {
-            this.dataContext = dataContext;
+            ChangeTrackerRepository = changeTrackerRepository;
         }
 
-        protected override Task OperationToPerforme(CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<TableChanges>> GetChangesOfTrackedTableAsync()
         {
-            Console.WriteLine(testCounter++);
-            Console.WriteLine(dataContext.DbContext.Database.CanConnect());
-            return Task.CompletedTask;
+            List<TableChanges> changes = new List<TableChanges>();
+            var trackingTables = ChangeTrackerRepository.GetTrackedTables();
+            foreach (var table in trackingTables) 
+            { 
+                var tableChanges = await GetTableChangesAsync(table);
+                if(tableChanges != null)
+                {
+                    changes.Add(tableChanges);
+                }
+            }
+            return changes;
+        }
+
+        private async Task<TableChanges?> GetTableChangesAsync(ChangeTracker trackingTable) 
+        {
+            var changesForTable = await ChangeTrackerRepository.GetChangedTableRecordsAsync(trackingTable);
+            if(changesForTable.Count == 0)
+            {
+                return null;
+            }
+            return new TableChanges()
+            {
+                TableName = trackingTable.TableName,
+                CreatedOn = DateTime.UtcNow,
+                Records = changesForTable
+            };
         }
     }
 }

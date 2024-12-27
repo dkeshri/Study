@@ -22,13 +22,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTConcept.MediatR", "IOTConcept.MediatR\IOTConcept.MediatR.csproj", "{7FA99E74-EAD5-4E35-A5B1-1127D70BCC4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataSync", "DataSync", "{70229946-860E-4B9B-BBBD-12C5259DCCAF}"
-	ProjectSection(SolutionItems) = preProject
-		MessageQueue\MessageQueue.RabbitMq\README.md = MessageQueue\MessageQueue.RabbitMq\README.md
-	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSync.DBChangeEmitter", "DataSync\DataSync.DBChangeEmitter\DataSync.DBChangeEmitter.csproj", "{14ED3938-4BB0-444C-AA86-AAF183B4CEFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSync.DBChangeEmitter", "DataSync\DataSync.DBChangeEmitter\DataSync.DBChangeEmitter.csproj", "{14ED3938-4BB0-444C-AA86-AAF183B4CEFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSync.Common", "DataSync\DataSync.Common\DataSync.Common.csproj", "{75BD115E-BAE3-43E3-B87B-ED50D836B936}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSync.Common", "DataSync\DataSync.Common\DataSync.Common.csproj", "{75BD115E-BAE3-43E3-B87B-ED50D836B936}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

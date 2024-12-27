@@ -1,4 +1,5 @@
 ﻿using DataSync.Common.Extensions;
+using DataSync.DBChangeEmitter.Extensions;
 using DataSync.DBChangeEmitter.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,8 @@ builder.ConfigureAppConfiguration((context, config) =>
 builder.ConfigureServices((hostContext, services) =>
 {
     services.AddDataLayer();
-    services.AddHostedService<DatabaseChangeTrackerService>();
+    services.AddServices();
+    services.AddHostedService<DbChangeEmitterService>();
 
 });
 

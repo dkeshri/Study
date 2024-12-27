@@ -1,4 +1,13 @@
-﻿# Rabbit MQ
+﻿# Database Synchronizer With Rabbit MQ
+
+## Project Summary
+
+This Project Get the changes of Tables and the push it to RabbitMQ Queue.
+Then Pick that Message and Update the database on other side.
+
+For Eg. in IOT Application We sync data from Edge to cloud.
+
+## RabbitmQ Summary
 
 Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
 best practice to implement RabbitMq Configuration is to have one __Connection__ per `Process` Or `Application` and one __Channel__ per thread.
