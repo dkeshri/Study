@@ -16,6 +16,7 @@ builder.ConfigureAppConfiguration((context, config) =>
 builder.ConfigureServices((hostContext, services) =>
 {
     services.AddDataLayer();
+    services.AddRabbitMq();
     services.AddServices();
     services.AddHostedService<DbChangeEmitterService>();
 

@@ -6,20 +6,23 @@ using RabbitMQ.Client;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
+    internal sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
     {
         private readonly IConnection _connection;
         private IModel _channel;
         private string _exchangeName;
         private bool _isDisposing = false;
+        private string _queueName;
         public IModel Channel { get => CreateChannelIfClosed(_connection); }
         public string ExchangeName { get => _exchangeName; }
+        public string QueueName { get => _queueName; }
         public RabbitMqConnection(IConfiguration configuration)
         {
             string hostName = configuration.GetRabbitMqHostName();
             string userName = configuration.GetRabbitMqUserName();
             string password = configuration.GetRabbitMqPassword();
             _exchangeName = configuration.GetRabbitMqExchangeName();
+            _queueName = configuration.GetRabbitMqQueueName() ?? "defaultQueue";
             int port = configuration.GetRabbitMqPort();
             string clientProvidedName = configuration.GetRabbitMqClientProvidedName();
 

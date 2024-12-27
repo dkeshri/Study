@@ -9,42 +9,46 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Logic
 {
-    public class SendMessage : ISendMessage
+    internal class SendMessage : ISendMessage
     {
         private readonly IModel _channel;
         private readonly string _exchangeName; 
+        private readonly string _queueName;
         public SendMessage(IRabbitMqConnection rabbitMqConnection)
         {
             _channel = rabbitMqConnection.Channel;
             _exchangeName = rabbitMqConnection.ExchangeName;
+            _queueName = rabbitMqConnection.QueueName;
         }
 
-        public void SendToQueue(string message)
+        public void SendToQueue(string message) => SendToQueue(_queueName, message);
+
+        public void SendToQueue(string queueName, string message)
         {
-            _channel.QueueDeclare(queue: "hello",
+            _channel.QueueDeclare(queue: queueName,
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-            PublishMessage(_channel, message);
+            PublishMessage(_channel, message, queueName);
         }
 
         public void SendToExchange(string message,string?routingKey)
         {
             _channel.ExchangeDeclare(_exchangeName,ExchangeType.Direct);
-            PublishMessage(_channel, message,_exchangeName,routingKey ?? string.Empty);
+            PublishMessage(_channel, message,routingKey ?? string.Empty, _exchangeName);
         }
 
-        private void PublishMessage(IModel channel, string message)
+        private void PublishMessage(IModel channel, string message, string routingKey)
         {
             var body = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(exchange: string.Empty,
-                                routingKey: "hello",
+                                routingKey: routingKey,
                                 basicProperties: null,
                                 body: body);
 
         }
-        private void PublishMessage(IModel channel, string message, string exchangeName, string routingKey)
+        private void PublishMessage(IModel channel, string message, string routingKey, string exchangeName)
         {
             var body = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(exchange: exchangeName,
@@ -53,5 +57,6 @@ namespace MessageQueue.RabbitMq.Logic
                                 body: body);
 
         }
+
     }
 }

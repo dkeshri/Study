@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj" />
     <ProjectReference Include="..\DataSync.Common\DataSync.Common.csproj" />
   </ItemGroup>
  <ItemGroup>

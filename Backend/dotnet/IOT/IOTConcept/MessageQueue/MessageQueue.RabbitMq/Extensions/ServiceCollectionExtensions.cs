@@ -15,7 +15,15 @@ namespace MessageQueue.RabbitMq.Extensions
         {
             services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
             services.AddScoped<ISendMessage, SendMessage>();
+            
+        }
+
+        public static void AddRbbitMqMessageReceiverServiceForQueue(this IServiceCollection services) 
+        {
             services.AddHostedService<ReceiveMessageFromQueueService>();
+        }
+        public static void AddRbbitMqMessageReceiverServiceForExchange(this IServiceCollection services)
+        {
             services.AddHostedService<ReceiveMessageFromExchangeService>();
         }
     }

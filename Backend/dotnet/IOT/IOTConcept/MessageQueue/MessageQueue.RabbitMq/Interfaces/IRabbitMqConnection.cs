@@ -11,5 +11,6 @@ namespace MessageQueue.RabbitMq.Interfaces
     {
         IModel Channel { get; }
         string ExchangeName { get; }
+        string QueueName {  get; }
     }
 }
