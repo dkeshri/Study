@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataSync.Common.Migrations.SQL
 {
     [DbContext(typeof(DataSyncDbContext))]
-    [Migration("20241227060914_DataSyncChangeTracking")]
-    partial class DataSyncChangeTracking
+    [Migration("20241227070113_DataSyncChangeTracker")]
+    partial class DataSyncChangeTracker
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,16 +26,15 @@ namespace DataSync.Common.Migrations.SQL
 
             modelBuilder.Entity("DataSync.Common.Data.Entities.ChangeTracker", b =>
                 {
-                    b.Property<int>("TableName")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TableName"));
-
                     b.Property<long>("ChangeVersion")
                         .HasColumnType("bigint");
 
-                    b.HasKey("TableName");
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("TableName")
+                        .IsUnique();
 
                     b.ToTable("ChangeTrackers");
                 });

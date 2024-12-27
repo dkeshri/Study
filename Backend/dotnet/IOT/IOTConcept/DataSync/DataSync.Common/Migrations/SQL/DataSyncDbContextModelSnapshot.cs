@@ -23,16 +23,15 @@ namespace DataSync.Common.Migrations.SQL
 
             modelBuilder.Entity("DataSync.Common.Data.Entities.ChangeTracker", b =>
                 {
-                    b.Property<int>("TableName")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TableName"));
-
                     b.Property<long>("ChangeVersion")
                         .HasColumnType("bigint");
 
-                    b.HasKey("TableName");
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("TableName")
+                        .IsUnique();
 
                     b.ToTable("ChangeTrackers");
                 });

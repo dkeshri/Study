@@ -10,7 +10,7 @@ namespace DataSync.Common.Data.Entities
 {
     public class ChangeTracker
     {
-        public int TableName { get; set; }
+        public string TableName { get; set; } = string.Empty;
         public long ChangeVersion { get; set; }
     }
 }
