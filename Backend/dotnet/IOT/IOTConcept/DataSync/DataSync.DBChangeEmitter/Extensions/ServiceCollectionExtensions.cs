@@ -1,5 +1,6 @@
-﻿using DataSync.Common.Interfaces.DataContext;
-using DataSync.DBChangeEmitter.Data;
+﻿
+using DataSync.DBChangeEmitter.Interfaces;
+using DataSync.DBChangeEmitter.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,9 @@ namespace DataSync.DBChangeEmitter.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
-        
+        public static void AddServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IDatabaseChangeTrackerService, DatabaseChangeTrackerService>();
+        }
     }
 }

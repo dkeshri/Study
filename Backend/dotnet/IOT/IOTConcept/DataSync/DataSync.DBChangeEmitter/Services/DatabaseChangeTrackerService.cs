@@ -1,29 +1,23 @@
-﻿using DataSync.Common.Interfaces.DataContext;
-using DataSync.Common.Services;
-using Microsoft.Extensions.Configuration;
+﻿using DataSync.Common.Interfaces.Repositories;
+using DataSync.DBChangeEmitter.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataSync.DBChangeEmitter.Services
 {
-    internal class DatabaseChangeTrackerService : HostedTimerService
+    internal class DatabaseChangeTrackerService : IDatabaseChangeTrackerService
     {
-        private int testCounter = 0;
-        private IDataContext dataContext;
-        public DatabaseChangeTrackerService(IDataContext dataContext):base(TimeSpan.FromSeconds(4))
+        IChangeTrackerRepository ChangeTrackerRepository { get; set; }
+        public DatabaseChangeTrackerService(IChangeTrackerRepository changeTrackerRepository)
         {
-            this.dataContext = dataContext;
+            ChangeTrackerRepository = changeTrackerRepository;
         }
-
-        protected override Task OperationToPerforme(CancellationToken cancellationToken)
+        public long GetTableChangeVersion(string tableName)
         {
-            Console.WriteLine(testCounter++);
-            Console.WriteLine(dataContext.DbContext.Database.CanConnect());
-            return Task.CompletedTask;
+            return ChangeTrackerRepository.GetTableChangeVersion(tableName);
         }
     }
 }

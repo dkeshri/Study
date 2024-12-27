@@ -1,4 +1,5 @@
-﻿using DataSync.Common.Extensions;
+﻿using DataSync.Common.Data.Entities;
+using DataSync.Common.Extensions;
 using DataSync.Common.Interfaces.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -10,13 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataSync.DBChangeEmitter.Data
+namespace DataSync.Common.Data.DataContext
 {
     internal class DataSyncDbContext : DataContextBase
     {
-        public DataSyncDbContext(IConfiguration configuration): base(configuration)
+        public DataSyncDbContext(IConfiguration configuration) : base(configuration)
         {
-            
+
         }
 
         public override string GetConnectionString()
@@ -24,7 +25,7 @@ namespace DataSync.DBChangeEmitter.Data
             string? connectionString = Configuration.GetConnectionString("DefaultConnection");
             if (connectionString == null)
             {
-                 throw new Exception("Connection String can't be empty");
+                throw new Exception("Connection String can't be empty");
             }
             return connectionString;
         }
@@ -49,5 +50,7 @@ namespace DataSync.DBChangeEmitter.Data
 
             }
         }
+
+        public virtual DbSet<ChangeTracker> ChangeTrackers { get; set; }
     }
 }
