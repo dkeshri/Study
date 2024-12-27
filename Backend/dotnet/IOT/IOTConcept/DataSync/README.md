@@ -1,43 +1,44 @@
-# IOT Concept
-## Table of content
+﻿# Database Synchronizer With Rabbit MQ
 
-* Background Services
-    * [HostedService](./BackgroundApplication/MyHostedService.cs)
-    * [ScheduledHostedService or HostedTimerService](./BackgroundApplication/ScheduledHostedService.cs)
-    * [RunConsoleApplication As Lifelong](./BackgroundApplication/Program.cs)
-    * [Use of Cancellation Token in Service](./BackgroundApplication/HostedTimerService.cs)
-* Message Queue
-    * [RabbitMq](./MessageQueue/MessageQueue.RabbitMq/README.md)
+## Project Summary
 
-* Metrics Collector
-    * [Prometheus](./MessageQueue/MessageQueue.WebApi/README.md)
-        * [How to use prometheus](./MessageQueue/MessageQueue.WebApi/Program.cs)
-    * [Web APP Docker Image](Frontend/web-app/README.md)
+This Project Get the changes of Tables and the push it to RabbitMQ Queue.
+Then Pick that Message and Update the database on other side.
 
-* OPC Publisher And Server
-    * [OPC Publisher](./OPCPublisher/README.md)
+For Eg. in IOT Application We sync data from Edge to cloud.
 
+## RabbitmQ Summary
 
-# Deployment of Application
+Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
+best practice to implement RabbitMq Configuration is to have one __Connection__ per `Process` Or `Application` and one __Channel__ per thread.
 
-## Step 1
-Install docker run time and run the `DockerCompose.yaml` file by below command.
+> We follow this convention to have one connection per process and one channel per thread.
 
-## Step 2
+So in our current implimentation sender and reciver are on same application so we share one connection to both sender and reciver of message queue.
+and also we have one channel through of application.
 
-### To run docker compose file follow below command.
+but we can also create two channel one for sender and one for reciver.
 
-#### Note: run the images in `DockerCompose.yaml` file
+> Note: If our sender and receiver have two application then we also create two connection. and each connection have there respective channels depending upon there need. 
+
+## Docker Container Creation
+
+> Run below command to create RabbitMq Docker container
+
 ```bash
-docker-compose -f DockerCompose.yaml up -d
+docker run -d --hostname rmq --name RabbitMqServer -p 5672:5672 -p 8080:15672 rabbitmq:3.13-management
 ```
-#### Note: stop the running container in DockerCompose.yaml file.
-```bash
-docker-compose -f DockerCompose.yaml down
-```
+### Port Detail
 
-### Command to run Keycloak
-```bash
-kc.bat start --http-enabled=true --https-certificate-file=D:\dkeshri\cert\keycloakSSL.pem --https-certificate-key-file=D:\dkeshri\cert\keycloak_private.pemp
-```
+Port `8080` is for management portal and access by below mention __Login credentials__.
 
+Click on the link for <a href='http://localhost:8080/'>Admin Portal</a>
+
+Port `5672` is use in communication during producing and consuming of message.
+
+### Login crediential
+
+> Default login crediential if we not specifiy during creation of docker container
+
+<small style='color:green'>_Username_</small> `guest` and <small style='color:green'>_Password_</small> `guest`
+ 
