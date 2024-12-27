@@ -50,7 +50,17 @@ namespace DataSync.Common.Data.DataContext
 
             }
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<ChangeTracker>(entity =>
+            {
+                entity.HasNoKey(); // Configures this entity as keyless
+                entity.HasIndex(tc => tc.TableName)
+                      .IsUnique(); // Configures TableName as a unique key
+            });
+        }
         public virtual DbSet<ChangeTracker> ChangeTrackers { get; set; }
     }
 }
