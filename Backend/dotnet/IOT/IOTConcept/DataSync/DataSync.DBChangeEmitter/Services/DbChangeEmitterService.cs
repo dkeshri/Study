@@ -22,6 +22,9 @@ namespace DataSync.DBChangeEmitter.Services
         protected override Task OperationToPerforme(CancellationToken cancellationToken)
         {
             Console.WriteLine(testCounter++);
+            string tableName = "Orders";
+            long version = DatabaseChangeTrackerService.GetTableChangeVersion(tableName);
+            Console.WriteLine($"Table {tableName} ChangeVersion is : {version}");
             return Task.CompletedTask;
         }
     }
