@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSync.DBChangeEmitter", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSync.Common", "DataSync\DataSync.Common\DataSync.Common.csproj", "{75BD115E-BAE3-43E3-B87B-ED50D836B936}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSync.DbChangeReceiver", "DataSync\DataSync.DbChangeReceiver\DataSync.DbChangeReceiver.csproj", "{259108C4-93CA-4A2D-B324-8CCD66BC4151}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{75BD115E-BAE3-43E3-B87B-ED50D836B936}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75BD115E-BAE3-43E3-B87B-ED50D836B936}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75BD115E-BAE3-43E3-B87B-ED50D836B936}.Release|Any CPU.Build.0 = Release|Any CPU
+		{259108C4-93CA-4A2D-B324-8CCD66BC4151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{259108C4-93CA-4A2D-B324-8CCD66BC4151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{259108C4-93CA-4A2D-B324-8CCD66BC4151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{259108C4-93CA-4A2D-B324-8CCD66BC4151}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +78,7 @@ Global
 		{4C1A585C-9F0D-4484-A301-8548D1838D74} = {D7EAC96D-9135-41BB-9B8A-89A8A18D64B5}
 		{14ED3938-4BB0-444C-AA86-AAF183B4CEFD} = {70229946-860E-4B9B-BBBD-12C5259DCCAF}
 		{75BD115E-BAE3-43E3-B87B-ED50D836B936} = {70229946-860E-4B9B-BBBD-12C5259DCCAF}
+		{259108C4-93CA-4A2D-B324-8CCD66BC4151} = {70229946-860E-4B9B-BBBD-12C5259DCCAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9C132D5-5122-4CF1-84B0-E87BADB9F52E}
