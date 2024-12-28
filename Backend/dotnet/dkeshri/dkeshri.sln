@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LowLevel", "LowLevel", "{F0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dkeshri.SystemDesign.LowLevel", "SystemDesign\Dkeshri.SystemDesign.LowLevel\Dkeshri.SystemDesign.LowLevel.csproj", "{26E4C105-3647-4799-BDE6-C3DFEAB990EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecuterApp", "SystemDesign\ExecuterApp\ExecuterApp.csproj", "{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExecuterApp", "SystemDesign\ExecuterApp\ExecuterApp.csproj", "{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
