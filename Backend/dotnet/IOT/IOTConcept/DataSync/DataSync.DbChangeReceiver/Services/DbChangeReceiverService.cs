@@ -1,4 +1,5 @@
-﻿using MessageQueue.RabbitMq.Interfaces;
+﻿using DataSync.DbChangeReceiver.Interfaces;
+using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -15,10 +16,12 @@ namespace DataSync.DbChangeReceiver.Services
         private IModel channel;
         private bool _isDisposing = false;
         private readonly string _queueName;
-        public DbChangeReceiverService(IRabbitMqConnection rabbitMqConnection)
+        private IRabbitMqMessageHandler _messageHandler;
+        public DbChangeReceiverService(IRabbitMqConnection rabbitMqConnection, IRabbitMqMessageHandler rabbitMqMessageHandler)
         {
             channel = rabbitMqConnection.Channel;
             _queueName = rabbitMqConnection.QueueName;
+            _messageHandler = rabbitMqMessageHandler;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -46,27 +49,13 @@ namespace DataSync.DbChangeReceiver.Services
                      arguments: null);
             channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
             var consumer = new EventingBasicConsumer(channel);
-
             consumer.Received += (model, ea) =>
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-
-                Console.WriteLine($"{nameof(DbChangeReceiverService)} [x] Received {message}");
-                if (message.Contains("error"))
-                {
-                    Console.WriteLine("Error in response so rejecting it.");
-                    channel.BasicReject(ea.DeliveryTag, false);
-                    throw new Exception("Error in code");
-                }
-                Console.WriteLine($"Processed Message: {message}");
-                channel.BasicAck(ea.DeliveryTag, false);
+                _messageHandler.HandleMessage(model, ea, channel);
             };
-
             channel.BasicConsume(queue: _queueName,
                                  autoAck: false,
                                  consumer: consumer);
-
         }
         public void Dispose()
         {

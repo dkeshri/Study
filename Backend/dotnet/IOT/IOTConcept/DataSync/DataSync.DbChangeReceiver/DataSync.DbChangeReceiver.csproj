@@ -7,18 +7,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MediatR" Version="12.4.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj" />
+	  <ProjectReference Include="..\DataSync.Common\DataSync.Common.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Interfaces\" />
 	</ItemGroup>
 </Project>
