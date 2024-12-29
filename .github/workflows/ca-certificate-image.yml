@@ -1,7 +1,7 @@
 name: Certificate Authority Docker Image CI
 # environment variable for this workflow only. available for all jobs.
 env:
-  version: ${{vars.NGINX_MAJOR}}.${{vars.NGINX_MINOR}}.${{github.run_number}}
+  version: ${{vars.CA_CERT_MAJOR}}.${{vars.CA_CERT_MINOR}}.${{github.run_number}}
 on:
   # run this workflow manually.
   workflow_dispatch:
