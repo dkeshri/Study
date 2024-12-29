@@ -2,7 +2,36 @@
 
 ## Basic command
 > Note: Before running commad Please Make Sure **Dockerfile** should be in current directory of terminal.
+
+### Create Docker image locally
+
+```bash
+docker build -t nginx:latest .
+```
+> Note: To Create Image locally no need to provide `containerRegistry/UserName`
+
+### Tag locally Image to ContainerRegistry (github,docker or azure or aws)
+
+**For DockerHub**
+```bash
+docker tag nginx:latest USERNAME/REPOSITORY_NAME:TAG
+```
+**Example**
+```bash
+docker tag nginx:latest dkeshri/nginx:latest
+```
+**For GitHub**
+```bash
+docker tag nginx:latest ghcr.io/USERNAME/REPOSITORY_NAME:TAG
+```
+**Example**
+```bash
+docker tag nginx:latest ghcr.io/dkeshri/Nginx:latest
+```
+
 ### Create Docker image for docker hub
+
+> For dockerHub containerRegistry is optional, by default docker command set for dockerHub, only you need to provide dockerHub UseName. like `userName/ImageName:Tag` 
 
 ```bash
 docker build -t dkeshri/nginx:latest .
@@ -26,10 +55,3 @@ Push Image
 docker push ghcr.io/dkeshri/nginx:1.0.0 .
 ```
 
-```bash
-sudo apt-get --purge remove <PackageName>
-```
-**Example** => Remove conky application
-```bash
-sudo apt-get --purge remove conky conky-all
-```
