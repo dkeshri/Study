@@ -31,7 +31,7 @@ docker tag nginx:latest ghcr.io/dkeshri/Nginx:latest
 
 ### Create Docker image for docker hub
 
-> For dockerHub containerRegistry is optional, by default docker command set for dockerHub, only you need to provide dockerHub UseName. like `userName/ImageName:Tag` 
+> For dockerHub containerRegistry is optional, by default docker command set for dockerHub, only you need to provide dockerHub UseName. like `userName/ImageName:Tag` **ImageName** is also called **REPOSITORY_NAME**.
 
 ```bash
 docker build -t dkeshri/nginx:latest .
