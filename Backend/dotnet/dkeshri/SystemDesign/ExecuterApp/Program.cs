@@ -1,6 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using ExecuterApp.Extensions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
-using ExecuterApp;
+var builder = Host.CreateDefaultBuilder();
 
-ExecuteAlgorithm executeAlgorithm = new ExecuteAlgorithm();
-executeAlgorithm.Run();
+builder.ConfigureAppConfiguration((context, config) =>
+{
+    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true) // Read from appsettings.json
+          .AddEnvironmentVariables();
+});
+
+builder.ConfigureServices((context, services) =>
+{
+    services.AddServices();
+});
+
+builder.RunConsoleAsync().Wait();

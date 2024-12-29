@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 var builder = Host.CreateDefaultBuilder(args);
 builder.ConfigureAppConfiguration((context, config) =>
 {
-    // Clear default sources and add custom sources
+
     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true) // Read from appsettings.json
           .AddEnvironmentVariables(); // Read from environment variables
 });
