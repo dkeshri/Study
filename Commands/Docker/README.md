@@ -1,46 +1,30 @@
-# Linux Command in Terminal
+# Docker Commands
 
 ## Basic command
-
-Check for update the system 
-```bash
-sudo apt update
-```
-Now in acutal update the system application.
-```bash
-sudo apt upgrade
-```
-we can run both command at same time
-```bash
-sudo apt update && sudo apt upgrade
-```
-
-## Install Application
-install the application 
-```bash
-sudo apt install <PackageName or PackageNames(space saperated)>
-```
-example to install VLC write the below command 
-```bash
-sudo apt install vlc
-```
-To install multiple application write the command like below example.
-
->like we are installing **Gpated,VLC and pdfsam-basic** in single command
+> Note: Before running commad Please Make Sure **Dockerfile** should be in current directory of terminal.
+### Create Docker image for docker hub
 
 ```bash
-sudo apt install gparted vlc pdfsam-basic
+docker build -t dkeshri/nginx:latest .
 ```
-
-## Uninstall Application
-
-### remove the installed Application
-
+### Push this image to docker hub.
 ```bash
-sudo apt remove <PackageName>
+docker push dkeshri/nginx:latest
 ```
+> Note Here dkeshri is repository name of docker hub. we can aslo provide version in place of `latest` Tag like `1.2.0`
 
->remove everything of that Package use **purge**
+> For Other container registry like azure, AWS and github you need to provide `containerRegistry/userName/imageName:tag`
+
+#### For Github Container registry (ghcr.io)
+
+Build Image 
+```bash
+docker build -t ghcr.io/dkeshri/nginx:1.0.0 .
+```
+Push Image
+```bash
+docker push ghcr.io/dkeshri/nginx:1.0.0 .
+```
 
 ```bash
 sudo apt-get --purge remove <PackageName>
