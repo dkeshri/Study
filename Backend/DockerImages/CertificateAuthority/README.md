@@ -4,17 +4,18 @@ This image will help user to create Certificate Authourity. They can use that ce
 
 
 ## How to generate CA certificate
-> Note: Replace **pathToHostMachine** with you actual host machine path where you want certificate to be create.
-
+**Note:** 
+* Replace **pathToHostMachine** with you actual host machine path where you want certificate to be create.
+* Make sure to create the diriectory before running below command.
 ```bash
 docker run -v pathToHostMachine:/etc/certificate --name ca-cert dkeshri/ca-cert
 ```
 
 ### Eaxmple 
-On Windows machine let's say you want at path `D:/Dev/CACert`
+On Windows machine let's say you want to generate certificate at path `D:/Dev/CACert`
 
 ```bash
-docker run -v D:/Dev/CACert:/etc/certificate --name ca-cert dkeshri/ca-cert:latest
+docker run -v D:/Dev/CACert:/etc/certificate --name ca-cert dkeshri/ca-cert
 ```
 
 ## Install CA Certificate on Client Machine
