@@ -1,51 +1,63 @@
-# Linux Command in Terminal
+# Docker Commands
 
 ## Basic command
+> Note: Before running commad Please Make Sure **Dockerfile** should be in current directory of terminal.
 
-Check for update the system 
-```bash
-sudo apt update
-```
-Now in acutal update the system application.
-```bash
-sudo apt upgrade
-```
-we can run both command at same time
-```bash
-sudo apt update && sudo apt upgrade
-```
-
-## Install Application
-install the application 
-```bash
-sudo apt install <PackageName or PackageNames(space saperated)>
-```
-example to install VLC write the below command 
-```bash
-sudo apt install vlc
-```
-To install multiple application write the command like below example.
-
->like we are installing **Gpated,VLC and pdfsam-basic** in single command
+### Create Docker image locally
 
 ```bash
-sudo apt install gparted vlc pdfsam-basic
+docker build -t nginx:latest .
+```
+> Note: To Create Image locally no need to provide `containerRegistry/UserName`
+
+### Tag locally Image to ContainerRegistry (github,docker or azure or aws)
+
+**For DockerHub**
+```bash
+docker tag nginx:latest USERNAME/REPOSITORY_NAME:TAG
+```
+**Example**
+```bash
+docker tag nginx:latest dkeshri/nginx:latest
+```
+**For GitHub**
+```bash
+docker tag nginx:latest ghcr.io/USERNAME/REPOSITORY_NAME:TAG
+```
+**Example**
+```bash
+docker tag nginx:latest ghcr.io/dkeshri/Nginx:latest
 ```
 
-## Uninstall Application
+### Create Docker image for docker hub
 
-### remove the installed Application
+> For dockerHub containerRegistry is optional, by default docker command set for dockerHub, only you need to provide dockerHub UseName. like `userName/ImageName:Tag` **ImageName** is also called **REPOSITORY_NAME**.
 
 ```bash
-sudo apt remove <PackageName>
+docker build -t dkeshri/nginx:latest .
 ```
-
->remove everything of that Package use **purge**
-
+### Push this image to docker hub.
 ```bash
-sudo apt-get --purge remove <PackageName>
+docker push dkeshri/nginx:latest
 ```
-**Example** => Remove conky application
+> Note Here dkeshri is repository name of docker hub. we can aslo provide version in place of `latest` Tag like `1.2.0`
+
+> For Other container registry like **azure, AWS and github** you need to provide `containerRegistry/userName/imageName:tag`
+
+#### For Github Container registry (ghcr.io)
+
+Build Image 
 ```bash
-sudo apt-get --purge remove conky conky-all
+docker build -t ghcr.io/dkeshri/nginx:1.0.0 .
+```
+Push Image
+```bash
+docker push ghcr.io/dkeshri/nginx:1.0.0
+```
+### Azure Container Registry
+```bash
+az login
+az acr login --name myregistry
+docker build -t myregistry.azurecr.io/nginx:1.0.0
+docker push myregistry.azurecr.io/nginx:1.0.0
 ```
