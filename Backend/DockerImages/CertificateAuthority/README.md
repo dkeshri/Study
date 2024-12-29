@@ -4,7 +4,7 @@ This image will help user to create Certificate Authourity. They can use that ce
 
 
 ## How to generate CA certificate
-> Note Replace **pathToHostMachine** with you actual host machine path where you want certificate to be create.
+> Note: Replace **pathToHostMachine** with you actual host machine path where you want certificate to be create.
 
 ```bash
 docker run -v pathToHostMachine:/etc/certificate --name ca-cert dkeshri/ca-cert
