@@ -1,8 +1,8 @@
 # Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /Source
-COPY ../DataSync.Common ./
-COPY ../DataSync.DBChangeEmitter ./
+COPY ./DataSync.Common ./DataSync.Common
+COPY ./DataSync.DBChangeEmitter ./DataSync.DBChangeEmitter
 RUN dotnet restore "./DataSync.DBChangeEmitter/DataSync.DBChangeEmitter.csproj" --disable-parallel
 RUN dotnet publish "./DataSync.DBChangeEmitter/DataSync.DBChangeEmitter.csproj" -c release -o /consoleapp --no-restore
 
