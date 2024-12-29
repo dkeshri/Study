@@ -2,16 +2,19 @@
 echo "Running certificate.sh script..."
 # Set variables
 CERT_DIR="/etc/nginx/certificate"
-CA_KEY="$CERT_DIR/storeCA.key"
-CA_CERT="$CERT_DIR/storeCA.crt"
-CERT_FILE="$CERT_DIR/store.crt"
-KEY_FILE="$CERT_DIR/store.key"
-CSR_FILE="$CERT_DIR/store.csr"
+CA_KEY="$CERT_DIR/storeCA.key"      # Cretificate Authority Ptivate Key.
+CA_CERT="$CERT_DIR/storeCA.crt"     # CA Public key 
+CERT_FILE="$CERT_DIR/store.crt"     # SSL Certificate Public Key Embbed from csr file during CA Sign
+KEY_FILE="$CERT_DIR/store.key"      # SSL Certificate Private Key.
+CSR_FILE="$CERT_DIR/store.csr"      
 DOMAIN="store.com"
 DAYS=365  # Validity of the certificate
 SUBJECT="/C=IN/ST=UP/L=NOIDA/O=dkeshri/OU=KiranaStore/CN=*.$DOMAIN"
 # Use the script's directory to find store.ext
 EXT_FILE="$(dirname "$0")/store_server.ext"
+
+# Create directory if it doesn't exist
+mkdir -p $CERT_DIR
 
 _create_ca_certificate(){
     # Generate CA key and certificate if they don't already exist
@@ -22,8 +25,8 @@ _create_ca_certificate(){
         -subj $SUBJECT
         # Display output paths
         echo "CA certificate and key generated:"
-        echo "Certificate: $CA_CERT/store.crt"
-        echo "Private Key: $CA_KEY/store.key"
+        echo "Certificate: $CA_CERT"
+        echo "Private Key: $CA_KEY"
     else
         echo "CA key and certificate already exist."
     fi
@@ -38,16 +41,13 @@ _create_server_ssl_certificate(){
         exit 0
     fi
 
-    # Check if server certificate and key already exist
+    # Check if server certificate and private key already exist
     if [[ -f "$CERT_FILE" && -f "$KEY_FILE" ]]; then
-        echo "Certificate and key already exist. Skipping creation."
+        echo "Certificate and private key already exist. Skipping creation."
         echo "Certificate: $CERT_FILE"
         echo "Private Key: $KEY_FILE"
         exit 0
     fi
-
-    # Create directory if it doesn't exist
-    mkdir -p $CERT_DIR
 
     # Generate a private key
     openssl genrsa -out $KEY_FILE 2048
@@ -60,9 +60,9 @@ _create_server_ssl_certificate(){
         -extfile $EXT_FILE
 
     # Display output paths
-    echo "Self-signed SSL certificate and key generated:"
-    echo "Certificate: $CERT_DIR/store.crt"
-    echo "Private Key: $CERT_DIR/store.key"
+    echo "SSL certificate and key generated:"
+    echo "Certificate: $CERT_FILE"
+    echo "Private Key: $KEY_FILE"
 }
 
 
