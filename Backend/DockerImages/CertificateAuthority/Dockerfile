@@ -9,4 +9,4 @@ RUN chmod +x /etc/scripts/certificate.sh
 RUN apk add --no-cache bash
 RUN apk add --no-cache openssl
 
-CMD ["/bin/bash", "-c", "/etc/scripts/certificate.sh && exec /bin/bash"]
+CMD ["/bin/bash", "-c", "/etc/scripts/certificate.sh"]

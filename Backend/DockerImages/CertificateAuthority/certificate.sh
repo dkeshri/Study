@@ -4,9 +4,7 @@ echo "Running certificate.sh script..."
 CERT_DIR="/etc/certificate"
 CA_KEY="$CERT_DIR/storeCA.key"      # Cretificate Authority Ptivate Key.
 CA_CERT="$CERT_DIR/storeCA.crt"     # CA Public key 
-CERT_FILE="$CERT_DIR/store.crt"     # SSL Certificate Public Key Embbed from csr file during CA Sign
-KEY_FILE="$CERT_DIR/store.key"      # SSL Certificate Private Key.
-CSR_FILE="$CERT_DIR/store.csr"      
+      
 DOMAIN="store.com"
 DAYS=365  # Validity of the certificate
 SUBJECT="/C=IN/ST=UP/L=NOIDA/O=dkeshri/OU=KiranaStore/CN=*.$DOMAIN"
