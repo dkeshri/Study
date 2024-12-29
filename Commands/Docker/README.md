@@ -54,4 +54,10 @@ Push Image
 ```bash
 docker push ghcr.io/dkeshri/nginx:1.0.0 .
 ```
-
+### Azure Container Registry
+```bash
+az login
+az acr login --name myregistry
+docker build -t myregistry.azurecr.io/nginx:1.0.0
+docker push myregistry.azurecr.io/nginx:1.0.0
+```
