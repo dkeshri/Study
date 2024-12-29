@@ -35,9 +35,17 @@ namespace MessageQueue.RabbitMq.Logic
             };
 
             factory.ClientProvidedName = clientProvidedName;
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
-            createDirectExchange(_channel, _exchangeName);
+            try
+            {
+                _connection = factory.CreateConnection();
+                _channel = _connection.CreateModel();
+                createDirectExchange(_channel, _exchangeName);
+            }
+            catch (Exception ex) 
+            { 
+            
+            }
+            
         }
         
         private void createDirectExchange(IModel channel,string exchangeName)
@@ -47,6 +55,12 @@ namespace MessageQueue.RabbitMq.Logic
 
         private IModel CreateChannelIfClosed(IConnection connection)
         {
+            if(connection == null)
+            {
+#pragma warning disable CS8603 // Possible null reference return.
+                return null;
+#pragma warning restore CS8603 // Possible null reference return.
+            }
             if(_channel.IsOpen)
                 return _channel;
             _channel = connection.CreateModel();

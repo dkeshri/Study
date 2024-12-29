@@ -5,11 +5,9 @@ CERT_DIR="/etc/certificate"
 CA_KEY="$CERT_DIR/storeCA.key"      # Cretificate Authority Ptivate Key.
 CA_CERT="$CERT_DIR/storeCA.crt"     # CA Public key 
       
-DOMAIN="store.com"
+DOMAIN="Dkeshri_RootCA"
 DAYS=365  # Validity of the certificate
-SUBJECT="/C=IN/ST=UP/L=NOIDA/O=dkeshri/OU=KiranaStore/CN=*.$DOMAIN"
-# Use the script's directory to find store.ext
-EXT_FILE="$(dirname "$0")/store_server.ext"
+SUBJECT="/C=IN/ST=BR/L=Patna/O=Software Development Org/OU=Technology/CN=$DOMAIN"
 
 # Create directory if it doesn't exist
 mkdir -p $CERT_DIR
@@ -20,7 +18,7 @@ _create_ca_certificate(){
         echo "Generating CA key and certificate..."
         openssl genrsa -out $CA_KEY 4096
         openssl req -x509 -new -nodes -key $CA_KEY -sha256 -days $DAYS -out $CA_CERT \
-        -subj $SUBJECT
+        -subj "$SUBJECT"
         # Display output paths
         echo "CA certificate and key generated:"
         echo "Certificate: $CA_CERT"

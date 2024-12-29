@@ -1,5 +1,12 @@
 ﻿# Database Synchronizer With Rabbit MQ
 
+### Docker Build from IOTConcept Directory 
+
+```bash
+docker build -f DataSync/DataSync.DBChangeEmitter/Dockerfile -t dkeshri/data-sync-emitter:latest .
+```
+![alt text](image.png)
+
 ## Project Summary
 
 This Project Get the changes of Tables and the push it to RabbitMQ Queue.
