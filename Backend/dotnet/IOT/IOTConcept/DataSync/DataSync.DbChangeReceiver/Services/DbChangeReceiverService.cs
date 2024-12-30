@@ -13,7 +13,7 @@ namespace DataSync.DbChangeReceiver.Services
 {
     internal class DbChangeReceiverService : IHostedService, IDisposable
     {
-        private IModel channel;
+        private IModel? channel;
         private bool _isDisposing = false;
         private readonly string _queueName;
         private IRabbitMqMessageHandler _messageHandler;
@@ -44,7 +44,7 @@ namespace DataSync.DbChangeReceiver.Services
         {
             if(channel== null)
             {
-                Console.WriteLine("Not able to connect to RabbitMQ");
+                Console.WriteLine("Receiver: Not able to connect to RabbitMQ, Channel is set to null!");
                 return;
             }
             channel.QueueDeclare(queue: _queueName,
@@ -76,7 +76,7 @@ namespace DataSync.DbChangeReceiver.Services
             }
             if (disposing)
             {
-                if (channel.IsOpen)
+                if (channel != null && channel.IsOpen)
                 {
                     channel.Close();
                     channel.Dispose();
