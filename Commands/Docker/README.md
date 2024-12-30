@@ -61,3 +61,9 @@ az acr login --name myregistry
 docker build -t myregistry.azurecr.io/nginx:1.0.0
 docker push myregistry.azurecr.io/nginx:1.0.0
 ```
+
+## See What has been copied to docker while build
+Add below command in `Dockerfile`
+```bash
+RUN ls -R /Source
+```

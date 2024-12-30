@@ -1,0 +1,11 @@
+services:
+  data-sync-emitter:
+    container_name: data-sync-emitter
+    image: dkeshri/data-sync-emitter:latest
+    #environment:
+    #- ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False
+  data-sync-receiver:
+    container_name: data-sync-receiver
+    image: dkeshri/data-sync-receiver:latest
+    #environment:
+    #- ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False
