@@ -1,4 +1,4 @@
-name: Certificate Authority Docker Image CI
+name: DataSync Emitte/Receiver Docker Image CI
 # environment variable for this workflow only. available for all jobs.
 env:
   version: ${{vars.DATA_SYNC_MAJOR}}.${{vars.DATA_SYNC_MINOR}}.${{github.run_number}}
