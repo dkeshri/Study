@@ -9,7 +9,7 @@ namespace MessageQueue.RabbitMq.Interfaces
 {
     public interface IRabbitMqConnection
     {
-        IModel Channel { get; }
+        IModel? Channel { get; }
         string ExchangeName { get; }
         string QueueName {  get; }
     }

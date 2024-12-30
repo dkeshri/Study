@@ -13,7 +13,7 @@ namespace MessageQueue.RabbitMq.Logic
 {
     public class ReceiveMessageFromExchangeService : IHostedService, IDisposable
     {
-        private IModel channel;
+        private IModel? channel;
         private bool _isDisposing = false;
         private readonly string _directExchangeName;
         private readonly string queueName = "directExchangeQueue";
@@ -42,14 +42,14 @@ namespace MessageQueue.RabbitMq.Logic
 
         private void InitMessageReciver()
         {
-            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            channel?.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
             foreach (string routingkey in routingkeys)
             {
                 channel.QueueBind(queueName, _directExchangeName, routingkey);
             }
 
-            channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+            channel?.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
             var consumer = new EventingBasicConsumer(channel);
 
             consumer.Received += (model, ea) =>
@@ -61,7 +61,7 @@ namespace MessageQueue.RabbitMq.Logic
                 if (message.Contains("error"))
                 {
                     Console.WriteLine("Error in response so rejecting it.");
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    channel?.BasicReject(ea.DeliveryTag, false);
                     throw new Exception("Error in code");
                 }
 
@@ -69,7 +69,7 @@ namespace MessageQueue.RabbitMq.Logic
                     Thread.Sleep(delayTime * 1000);
 
                 Console.WriteLine($"Processed Message: {message}");
-                channel.BasicAck(ea.DeliveryTag, false);
+                channel?.BasicAck(ea.DeliveryTag, false);
             };
 
             channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
@@ -89,7 +89,7 @@ namespace MessageQueue.RabbitMq.Logic
             }
             if (disposing)
             {
-                if (channel.IsOpen)
+                if (channel != null && channel.IsOpen)
                 {
                     channel.Close();
                     channel.Dispose();

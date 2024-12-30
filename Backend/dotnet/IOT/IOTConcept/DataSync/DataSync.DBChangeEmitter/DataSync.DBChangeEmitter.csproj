@@ -20,7 +20,7 @@
     <ProjectReference Include="..\DataSync.Common\DataSync.Common.csproj" />
   </ItemGroup>
  <ItemGroup>
-	<None Update="appsettings.json">
+	<None Update="appsettings*.json">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
  </ItemGroup>
