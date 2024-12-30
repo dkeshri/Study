@@ -46,6 +46,7 @@ namespace MessageQueue.RabbitMq.Logic
 
                 if (!IsRabbitMqReachable(hostName, port)) return;
                 _connection = _connectionFactory.CreateConnection();
+                _connection.ConnectionShutdown += OnConnectionShutdown;
                 _channel = _connection.CreateModel();
                 createDirectExchange(_channel, _exchangeName);
             }
@@ -77,7 +78,14 @@ namespace MessageQueue.RabbitMq.Logic
         private IConnection? CreateConnection(IConnectionFactory connectionFactory)
         {
             if (!IsRabbitMqReachable(hostName, port)) return null;
-            return connectionFactory.CreateConnection();
+            try
+            {
+                return connectionFactory.CreateConnection();
+            }
+            catch (Exception) { 
+                return null;
+            }
+            
         }
 
         private bool IsRabbitMqReachable(string hostName, int port)
@@ -103,6 +111,17 @@ namespace MessageQueue.RabbitMq.Logic
             {
                 Console.WriteLine(errorMessage);
                 return false;
+            }
+        }
+
+        private void OnConnectionShutdown(object? sender, ShutdownEventArgs e)
+        {
+            Console.WriteLine("Connection is shutdown! closing the open channel");
+            if (_channel != null && _channel.IsOpen)
+            {
+                _channel.Close();
+                _channel.Dispose();
+                Console.WriteLine("Channel is closed!");
             }
         }
 
