@@ -13,7 +13,7 @@ namespace MessageQueue.RabbitMq.Logic
 {
     public class ReceiveMessageFromQueueService : IHostedService, IDisposable
     {
-        private IModel channel;
+        private IModel? channel;
         private bool _isDisposing = false;
         private bool isAutoAck = false;
         public ReceiveMessageFromQueueService(IRabbitMqConnection rabbitMqConnection)
@@ -47,7 +47,7 @@ namespace MessageQueue.RabbitMq.Logic
 
         private void InitMessageReciverAutoAck()
         {
-            channel.QueueDeclare(queue: "hello",
+            channel?.QueueDeclare(queue: "hello",
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
@@ -67,12 +67,12 @@ namespace MessageQueue.RabbitMq.Logic
 
         private void InitMessageReciverWithAck()
         {
-            channel.QueueDeclare(queue: "hello",
+            channel?.QueueDeclare(queue: "hello",
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-            channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+            channel?.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
             var consumer = new EventingBasicConsumer(channel);
 
             consumer.Received += (model, ea) =>
@@ -84,11 +84,11 @@ namespace MessageQueue.RabbitMq.Logic
                 if (message.Contains("error"))
                 {
                     Console.WriteLine("Error in response so rejecting it.");
-                    channel.BasicReject(ea.DeliveryTag,false);
+                    channel?.BasicReject(ea.DeliveryTag,false);
                     throw new Exception("Error in code");
                 }
                 Console.WriteLine($"Processed Message: {message}");
-                channel.BasicAck(ea.DeliveryTag, false); 
+                channel?.BasicAck(ea.DeliveryTag, false); 
             };
 
             channel.BasicConsume(queue: "hello",
@@ -110,7 +110,7 @@ namespace MessageQueue.RabbitMq.Logic
             }
             if (disposing)
             {
-                if (channel.IsOpen)
+                if (channel != null && channel.IsOpen)
                 {
                     channel.Close();
                     channel.Dispose();

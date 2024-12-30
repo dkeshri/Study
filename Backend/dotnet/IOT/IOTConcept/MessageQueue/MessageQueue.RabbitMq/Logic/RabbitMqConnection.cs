@@ -2,22 +2,24 @@
 using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
+using System.Net.Sockets;
 
 
 namespace MessageQueue.RabbitMq.Logic
 {
     internal sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
     {
-        private readonly IConnection _connection;
-        private IModel _channel;
+        private readonly IConnection? _connection;
+        private IModel? _channel;
         private string _exchangeName;
         private bool _isDisposing = false;
         private string _queueName;
-        public IModel Channel { get => CreateChannelIfClosed(_connection); }
+        public IModel? Channel { get => CreateChannelIfClosed(_connection); }
         public string ExchangeName { get => _exchangeName; }
         public string QueueName { get => _queueName; }
         public RabbitMqConnection(IConfiguration configuration)
         {
+
             string hostName = configuration.GetRabbitMqHostName();
             string userName = configuration.GetRabbitMqUserName();
             string password = configuration.GetRabbitMqPassword();
@@ -25,25 +27,28 @@ namespace MessageQueue.RabbitMq.Logic
             _queueName = configuration.GetRabbitMqQueueName() ?? "defaultQueue";
             int port = configuration.GetRabbitMqPort();
             string clientProvidedName = configuration.GetRabbitMqClientProvidedName();
-
-            var factory = new ConnectionFactory()
-            {
-                HostName = hostName,
-                Port = port,
-                UserName = userName,
-                Password = password
-            };
-
-            factory.ClientProvidedName = clientProvidedName;
             try
             {
+                if (!IsRabbitMqReachable(hostName, port))
+                {
+                    Console.WriteLine($"RabbitMQ host: {hostName}:{port} is not reachable. Connection will not be created.");
+                    return;
+                }
+                var factory = new ConnectionFactory()
+                {
+                    HostName = hostName,
+                    Port = port,
+                    UserName = userName,
+                    Password = password
+                };
+                factory.ClientProvidedName = clientProvidedName;
                 _connection = factory.CreateConnection();
                 _channel = _connection.CreateModel();
                 createDirectExchange(_channel, _exchangeName);
             }
             catch (Exception ex) 
             { 
-            
+                throw new Exception("Error ouccr while creating connection",ex);
             }
             
         }
@@ -53,18 +58,37 @@ namespace MessageQueue.RabbitMq.Logic
             channel.ExchangeDeclare(exchangeName, ExchangeType.Direct);
         }
 
-        private IModel CreateChannelIfClosed(IConnection connection)
+        private IModel? CreateChannelIfClosed(IConnection? connection)
         {
             if(connection == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
-            if(_channel.IsOpen)
+
+            if(_channel!= null && _channel.IsOpen)
                 return _channel;
             _channel = connection.CreateModel();
             return _channel;
+        }
+
+        private bool IsRabbitMqReachable(string hostName, int port)
+        {
+            try
+            {
+                using (var tcpClient = new TcpClient())
+                {
+                    var result = tcpClient.BeginConnect(hostName, port, null, null);
+                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2));
+                    if (!success) return false;
+
+                    tcpClient.EndConnect(result);
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void Dispose()
@@ -80,12 +104,12 @@ namespace MessageQueue.RabbitMq.Logic
             }
             if (disposing)
             {
-                if(_channel.IsOpen)
+                if(_channel !=null && _channel.IsOpen)
                 {
                     _channel.Close();
                     _channel.Dispose();
                 }
-                if (_connection.IsOpen)
+                if (_connection != null && _connection.IsOpen)
                 {
                     _connection.Close();
                     _connection.Dispose();
