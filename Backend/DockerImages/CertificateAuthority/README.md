@@ -21,5 +21,5 @@ docker run -v D:/Dev/CACert:/etc/certificate --name ca-cert dkeshri/ca-cert
 ## Install CA Certificate on Client Machine
 __Windows__
 ```bash
-certutil.exe -addstore root D:\Dev\CACert\StoreCA.crt
+certutil.exe -addstore root D:\Dev\KiranStore\StoreCA.crt
 ```

@@ -36,9 +36,17 @@ namespace DataSync.DBChangeEmitter.Services
                 }
                 Console.WriteLine($"\n************ {tablechange.TableName} End ************\n");
             }
-            Console.WriteLine("Sending.......... To RabitMq");
-            SendMessageToRabbiMq.SendMessageToRabbitMq(tableChanges);
-            Console.WriteLine("Sent.......... To RabitMq\n");
+
+            if (tableChanges.Count > 0)
+            {
+                Console.WriteLine("Sending.......... To RabitMq");
+                SendMessageToRabbiMq.SendMessageToRabbitMq(tableChanges);
+                Console.WriteLine("Sent.......... To RabitMq\n");
+            }
+            else
+            {
+                Console.WriteLine("No changes detected!");
+            }
         }
     }
 }
