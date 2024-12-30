@@ -42,6 +42,11 @@ namespace DataSync.DbChangeReceiver.Services
 
         private void InitMessageReciverWithAck()
         {
+            if(channel== null)
+            {
+                Console.WriteLine("Not able to connect to RabbitMQ");
+                return;
+            }
             channel.QueueDeclare(queue: _queueName,
                      durable: false,
                      exclusive: false,

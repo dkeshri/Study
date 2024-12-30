@@ -14,4 +14,4 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app
 COPY --from=build /consoleapp .
 
-ENTRYPOINT [ "dotnet", "DataSync.DBChangeEmitter.dll" ]
+ENTRYPOINT [ "dotnet", "DataSync.DbChangeReceiver.dll" ]
