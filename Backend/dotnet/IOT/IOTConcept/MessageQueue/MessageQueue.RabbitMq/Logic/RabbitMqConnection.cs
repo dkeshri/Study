@@ -14,35 +14,38 @@ namespace MessageQueue.RabbitMq.Logic
         private string _exchangeName;
         private bool _isDisposing = false;
         private string _queueName;
-        public IModel? Channel { get => CreateChannelIfClosed(_connection); }
+        private IConnectionFactory _connectionFactory;
+        private readonly string hostName;
+        private readonly int port;
+
+        private IConnection? Connection { get => CreateConnection(_connectionFactory); }
+        public IModel? Channel { get => CreateChannelIfClosed(Connection); }
         public string ExchangeName { get => _exchangeName; }
         public string QueueName { get => _queueName; }
         public RabbitMqConnection(IConfiguration configuration)
         {
 
-            string hostName = configuration.GetRabbitMqHostName();
-            string userName = configuration.GetRabbitMqUserName();
-            string password = configuration.GetRabbitMqPassword();
+            hostName = configuration.GetRabbitMqHostName();
+            port = configuration.GetRabbitMqPort();
             _exchangeName = configuration.GetRabbitMqExchangeName();
             _queueName = configuration.GetRabbitMqQueueName() ?? "defaultQueue";
-            int port = configuration.GetRabbitMqPort();
+
+            string userName = configuration.GetRabbitMqUserName();
+            string password = configuration.GetRabbitMqPassword();
             string clientProvidedName = configuration.GetRabbitMqClientProvidedName();
             try
             {
-                if (!IsRabbitMqReachable(hostName, port))
-                {
-                    Console.WriteLine($"RabbitMQ host: {hostName}:{port} is not reachable. Connection will not be created.");
-                    return;
-                }
-                var factory = new ConnectionFactory()
+                _connectionFactory = new ConnectionFactory()
                 {
                     HostName = hostName,
                     Port = port,
                     UserName = userName,
-                    Password = password
+                    Password = password,
+                    ClientProvidedName = clientProvidedName
                 };
-                factory.ClientProvidedName = clientProvidedName;
-                _connection = factory.CreateConnection();
+
+                if (!IsRabbitMqReachable(hostName, port)) return;
+                _connection = _connectionFactory.CreateConnection();
                 _channel = _connection.CreateModel();
                 createDirectExchange(_channel, _exchangeName);
             }
@@ -71,15 +74,26 @@ namespace MessageQueue.RabbitMq.Logic
             return _channel;
         }
 
+        private IConnection? CreateConnection(IConnectionFactory connectionFactory)
+        {
+            if (!IsRabbitMqReachable(hostName, port)) return null;
+            return connectionFactory.CreateConnection();
+        }
+
         private bool IsRabbitMqReachable(string hostName, int port)
         {
+            string errorMessage = $"RabbitMQ host: {hostName}:{port} is not reachable. Connection can not be created!";
             try
             {
                 using (var tcpClient = new TcpClient())
                 {
                     var result = tcpClient.BeginConnect(hostName, port, null, null);
                     var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2));
-                    if (!success) return false;
+                    if (!success)
+                    {
+                        Console.WriteLine(errorMessage);
+                        return false;
+                    }
 
                     tcpClient.EndConnect(result);
                     return true;
@@ -87,6 +101,7 @@ namespace MessageQueue.RabbitMq.Logic
             }
             catch
             {
+                Console.WriteLine(errorMessage);
                 return false;
             }
         }

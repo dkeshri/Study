@@ -13,7 +13,6 @@ namespace DataSync.DBChangeEmitter.Services
 {
     internal class DbChangeEmitterService : HostedTimerService
     {
-        private int testCounter = 0;
         private IDatabaseChangeTrackerService DatabaseChangeTrackerService { get; }
         private ISendMessageToRabbitMq SendMessageToRabbiMq { get; }
         public DbChangeEmitterService(IDatabaseChangeTrackerService databaseChangeTrackerService,
