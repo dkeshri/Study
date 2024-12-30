@@ -1,22 +1,17 @@
 ﻿using MessageQueue.RabbitMq.Interfaces;
-using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MessageQueue.RabbitMq.Logic
 {
     internal class SendMessage : ISendMessage
     {
-        private readonly IModel? _channel;
         private readonly string _exchangeName; 
         private readonly string _queueName;
+        private readonly IRabbitMqConnection _connection;
         public SendMessage(IRabbitMqConnection rabbitMqConnection)
         {
-            _channel = rabbitMqConnection.Channel;
+            _connection = rabbitMqConnection;
             _exchangeName = rabbitMqConnection.ExchangeName;
             _queueName = rabbitMqConnection.QueueName;
         }
@@ -25,28 +20,30 @@ namespace MessageQueue.RabbitMq.Logic
 
         public void SendToQueue(string queueName, string message)
         {
-            _channel?.QueueDeclare(queue: queueName,
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
-            if(_channel == null)
+            IModel? channel = _connection.Channel;
+            if(channel == null)
             {
                 Console.WriteLine($"Error: Can not publish message to queue : {queueName}, channel is set to null!");
                 return;
             }
-            PublishMessage(_channel, message, queueName);
+            channel.QueueDeclare(queue: queueName,
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+            PublishMessage(channel, message, queueName);
         }
 
         public void SendToExchange(string message,string?routingKey)
         {
-            _channel?.ExchangeDeclare(_exchangeName,ExchangeType.Direct);
-            if (_channel == null)
+            IModel? channel = _connection.Channel;
+            if (channel == null)
             {
                 Console.WriteLine($"Error: Can not publish message to exchange : {_exchangeName}, channel is set to null!");
                 return;
             }
-            PublishMessage(_channel, message,routingKey ?? string.Empty, _exchangeName);
+            channel.ExchangeDeclare(_exchangeName, ExchangeType.Direct);
+            PublishMessage(channel, message,routingKey ?? string.Empty, _exchangeName);
         }
 
         private void PublishMessage(IModel? channel, string message, string routingKey)
