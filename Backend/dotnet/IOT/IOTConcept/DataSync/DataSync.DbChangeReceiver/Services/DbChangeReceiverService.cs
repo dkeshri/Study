@@ -27,7 +27,17 @@ namespace DataSync.DbChangeReceiver.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Rabbit MQ Message Reciver Service is starting");
-            InitMessageReciverWithAck();
+
+            IModel? channel = _connection.Channel;
+            if(channel == null || channel.IsClosed)
+            {
+                TryReconnectWithDelay();
+            }
+            else
+            {
+                InitMessageReciver(channel);
+            }
+            
             Console.WriteLine("Rabbit MQ Message Reciver Service has started");
             return Task.CompletedTask;
         }
@@ -40,28 +50,58 @@ namespace DataSync.DbChangeReceiver.Services
 
         }
 
-        private void InitMessageReciverWithAck()
+        private void InitMessageReciver(IModel channel)
         {
-            IModel? channel = _connection.Channel;
-            if(channel== null)
+            
+            try
             {
-                Console.WriteLine("Receiver: Not able to connect to RabbitMQ, Channel is set to null!");
-                return;
-            }
-            channel.QueueDeclare(queue: _queueName,
+                Console.WriteLine("Initializing Receiver with RabbitMq...");
+                channel.QueueDeclare(queue: _queueName,
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-            channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
+                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, ea) =>
+                {
+                    _messageHandler.HandleMessage(model, ea, channel);
+                };
+                channel.BasicConsume(queue: _queueName,
+                                     autoAck: false,
+                                     consumer: consumer);
+
+                channel.ModelShutdown += OnChannelShutdown;
+                Console.WriteLine("Receiver is connected to RabbitMq...");
+            }
+            catch (Exception ex) { 
+                throw new Exception("There is a problem while connecting to RabbitMq, channel is not open",ex);
+            }
+            
+        }
+
+        private void OnChannelShutdown(object? sender, ShutdownEventArgs e)
+        {
+            Console.WriteLine("Channel is Shutting down!");
+            TryReconnectWithDelay();
+        }
+
+        private void TryReconnectWithDelay()
+        {
+            IModel? channel = _connection.Channel;
+            while (channel == null || channel.IsClosed)
             {
-                _messageHandler.HandleMessage(model, ea, channel);
-            };
-            channel.BasicConsume(queue: _queueName,
-                                 autoAck: false,
-                                 consumer: consumer);
+                
+                Console.WriteLine("Attempting to reconnect...");
+                channel = _connection.Channel;
+                Thread.Sleep(TimeSpan.FromSeconds(10));
+                if(channel !=null && channel.IsOpen)
+                {
+                    InitMessageReciver(channel);
+                    break;
+                }
+            }
+            
         }
         public void Dispose()
         {
