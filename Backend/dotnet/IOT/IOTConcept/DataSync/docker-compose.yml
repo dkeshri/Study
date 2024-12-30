@@ -1,0 +1,13 @@
+services:
+  data-sync-emitter:
+    container_name: data-sync-emitter
+    image: dkeshri/data-sync-emitter:latest
+    environment:
+    - MSSQL_SA_PASSWORD=MsSqlServer@2023
+    - ACCEPT_EULA=Y
+  # data-sync-receiver:
+  #   container_name: data-sync-receiver
+  #   image: dkeshri/data-sync-receiver:latest
+  #   environment:
+  #   - MSSQL_SA_PASSWORD=MsSqlServer@2023
+  #   - ACCEPT_EULA=Y
