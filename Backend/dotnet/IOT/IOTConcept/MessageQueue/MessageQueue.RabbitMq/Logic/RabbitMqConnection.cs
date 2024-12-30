@@ -80,6 +80,8 @@ namespace MessageQueue.RabbitMq.Logic
             if (!IsRabbitMqReachable(hostName, port)) return null;
             try
             {
+                if(_connection != null && _connection.IsOpen)
+                   return _connection;
                 return connectionFactory.CreateConnection();
             }
             catch (Exception) { 
