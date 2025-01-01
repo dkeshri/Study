@@ -14,95 +14,30 @@ namespace DataSync.DbChangeReceiver.Services
     internal class DbChangeReceiverService : IHostedService, IDisposable
     {
         private bool _isDisposing = false;
-        private readonly string _queueName;
         private IRabbitMqMessageHandler _messageHandler;
-        private readonly IRabbitMqConnection _connection;
-        public DbChangeReceiverService(IRabbitMqConnection rabbitMqConnection, IRabbitMqMessageHandler rabbitMqMessageHandler)
+        private IMessageReceiver _messageReceiver;
+        public DbChangeReceiverService(IMessageReceiver messageReceiver, IRabbitMqMessageHandler rabbitMqMessageHandler)
         {
-            _connection = rabbitMqConnection;
-            _queueName = rabbitMqConnection.QueueName;
             _messageHandler = rabbitMqMessageHandler;
+            _messageReceiver = messageReceiver;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Rabbit MQ Message Reciver Service is starting");
-
-            IModel? channel = _connection.Channel;
-            if(channel == null || channel.IsClosed)
-            {
-                TryReconnectWithDelay();
-            }
-            else
-            {
-                InitMessageReciver(channel);
-            }
-            
-            Console.WriteLine("Rabbit MQ Message Reciver Service has started");
+            Console.WriteLine("DbChange Receiver Service is starting");
+            _messageReceiver.MessageHandler = _messageHandler.HandleMessage;
+            Console.WriteLine("DbChanhge Receiver Service has started!");
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Dispose(true);
-            Console.WriteLine("Shutdown RabbitMq Reciver Hosted Service");
+            Console.WriteLine("DbChange Receiver Reciver Hosted Service");
             return Task.CompletedTask;
 
         }
 
-        private void InitMessageReciver(IModel channel)
-        {
-            
-            try
-            {
-                Console.WriteLine("Initializing Receiver with RabbitMq...");
-                channel.QueueDeclare(queue: _queueName,
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
-                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
-                {
-                    _messageHandler.HandleMessage(model, ea, channel);
-                };
-                channel.BasicConsume(queue: _queueName,
-                                     autoAck: false,
-                                     consumer: consumer);
-
-                channel.ModelShutdown += OnChannelShutdown;
-                Console.WriteLine("Receiver is connected to RabbitMq...");
-            }
-            catch (Exception ex) { 
-                throw new Exception("There is a problem while connecting to RabbitMq, channel is not open",ex);
-            }
-            
-        }
-
-        private void OnChannelShutdown(object? sender, ShutdownEventArgs e)
-        {
-            Console.WriteLine("Channel is Shutting down!");
-            TryReconnectWithDelay();
-        }
-
-        private void TryReconnectWithDelay()
-        {
-            IModel? channel = _connection.Channel;
-            while (channel == null || channel.IsClosed)
-            {
-                
-                Console.WriteLine("Attempting to reconnect...");
-                channel = _connection.Channel;
-                Thread.Sleep(TimeSpan.FromSeconds(10));
-                if(channel !=null && channel.IsOpen)
-                {
-                    InitMessageReciver(channel);
-                    break;
-                }
-            }
-            
-        }
         public void Dispose()
         {
 
@@ -118,12 +53,7 @@ namespace DataSync.DbChangeReceiver.Services
             }
             if (disposing)
             {
-                IModel? channel = _connection.Channel;
-                if (channel != null && channel.IsOpen)
-                {
-                    channel.Close();
-                    channel.Dispose();
-                }
+                
             }
             _isDisposing = true;
         }
