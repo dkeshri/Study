@@ -39,6 +39,14 @@ namespace DataSync.Common.Repositories
             return record.ChangeVersion;
         }
 
+        public void UpdateTableChangeVersion(string tableName, long lastChangeVersion)
+        {
+            ChangeTrackers.Where(x => x.TableName.Equals(tableName))
+                .ExecuteUpdate(setters => setters
+                .SetProperty(x => x.ChangeVersion, lastChangeVersion));
+            Console.WriteLine($"Updated Change Tracking Version of Table: {tableName}");
+        }
+
         public long GetDbChangeTrackingCurrentVersion()
         {
             long CurrentVersion = 0;

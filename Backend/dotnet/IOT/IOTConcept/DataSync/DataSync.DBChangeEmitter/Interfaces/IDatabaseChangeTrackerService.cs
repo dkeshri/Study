@@ -10,6 +10,7 @@ namespace DataSync.DBChangeEmitter.Interfaces
     internal interface IDatabaseChangeTrackerService
     {
         public  Task<IReadOnlyCollection<TableChanges>> GetChangesOfTrackedTableAsync();
+        public  void UpdateTableChangeVersion(TableChanges tableChanges);
 
     }
 }

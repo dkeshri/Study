@@ -24,23 +24,27 @@ namespace DataSync.DBChangeEmitter.Services
 
         protected override async Task OperationToPerforme(CancellationToken cancellationToken)
         {
-            IReadOnlyCollection<TableChanges> tableChanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
+            IReadOnlyCollection<TableChanges> tablesChanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
 
-            foreach (TableChanges tablechange in tableChanges)
+            foreach (TableChanges tableChange in tablesChanges)
             {
-                Console.WriteLine($"************ {tablechange.TableName} ************");
-                Console.WriteLine($"Total Records: {tablechange.Records.Count}\n" );
-                foreach (var record in tablechange.Records) {
+                Console.WriteLine($"************ {tableChange.TableName} ************");
+                Console.WriteLine($"Total Records: {tableChange.Records.Count}\n" );
+                foreach (var record in tableChange.Records) {
                     Console.WriteLine(record.Data.ToString());
                 }
-                Console.WriteLine($"\n************ {tablechange.TableName} End ************\n");
+                Console.WriteLine($"\n************ {tableChange.TableName} End ************\n");
             }
 
-            if (tableChanges.Count > 0)
+            if (tablesChanges.Count > 0)
             {
                 Console.WriteLine("Sending.......... To RabitMq");
-                SendMessageToRabbiMq.SendMessageToRabbitMq(tableChanges);
+                SendMessageToRabbiMq.SendMessageToRabbitMq(tablesChanges);
                 Console.WriteLine("Sent.......... To RabitMq\n");
+                foreach(TableChanges tableChanges in tablesChanges)
+                {
+                    DatabaseChangeTrackerService.UpdateTableChangeVersion(tableChanges);
+                }
             }
             else
             {
