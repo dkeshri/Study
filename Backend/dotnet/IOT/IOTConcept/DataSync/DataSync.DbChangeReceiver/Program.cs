@@ -1,4 +1,5 @@
-﻿using DataSync.DbChangeReceiver.Extenstions;
+﻿using DataSync.Common.Extensions;
+using DataSync.DbChangeReceiver.Extenstions;
 using DataSync.DbChangeReceiver.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ builder.ConfigureAppConfiguration((context, config) =>
 });
 builder.ConfigureServices((hostContext, services) =>
 {
+    services.AddDataLayer();
     services.AddServices();
     services.AddHandlers();
     services.AddHostedService<DbChangeReceiverService>();

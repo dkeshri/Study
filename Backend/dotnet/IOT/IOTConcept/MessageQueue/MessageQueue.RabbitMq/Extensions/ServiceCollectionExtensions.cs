@@ -1,11 +1,9 @@
-﻿using MessageQueue.RabbitMq.Interfaces;
+﻿using MessageQueue.RabbitMq.Handlers;
+using MessageQueue.RabbitMq.Interfaces;
 using MessageQueue.RabbitMq.Logic;
+using MessageQueue.RabbitMq.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace MessageQueue.RabbitMq.Extensions
 {
@@ -20,7 +18,8 @@ namespace MessageQueue.RabbitMq.Extensions
 
         public static void AddRbbitMqMessageReceiverServiceForQueue(this IServiceCollection services) 
         {
-            services.AddHostedService<ReceiveMessageFromQueueService>();
+            services.AddSingleton<IMessageReceiver,MessageReceiverHandler>();
+            services.AddHostedService<MessageReceiverFromQueueService>();
         }
         public static void AddRbbitMqMessageReceiverServiceForExchange(this IServiceCollection services)
         {
