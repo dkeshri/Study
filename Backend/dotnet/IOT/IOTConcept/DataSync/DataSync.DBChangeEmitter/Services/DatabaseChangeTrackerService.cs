@@ -47,5 +47,18 @@ namespace DataSync.DBChangeEmitter.Services
                 Records = changesForTable
             };
         }
+
+        public void UpdateTableChangeVersion(TableChanges tableChanges)
+        {
+            try
+            {
+                string tableName = tableChanges.TableName;
+                long lastChangeVersion = tableChanges.Records.Max(x=> x.ChangeVersion);
+                ChangeTrackerRepository.UpdateTableChangeVersion(tableName, lastChangeVersion);
+            }
+            catch (Exception ex) { 
+            
+            }
+        }
     }
 }
