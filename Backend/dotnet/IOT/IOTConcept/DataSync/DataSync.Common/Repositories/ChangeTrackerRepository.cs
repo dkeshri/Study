@@ -5,6 +5,7 @@ using DataSync.Common.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,6 +48,13 @@ namespace DataSync.Common.Repositories
             Console.WriteLine($"Updated Change Tracking Version of Table: {tableName}");
         }
 
+        public void RemoveTableFromChangeTracker(string tableName) 
+        {
+            Console.WriteLine($"Removing {tableName} from ChangeTracker!");
+            ChangeTrackers.Where(x => x.TableName.Equals(tableName))
+                .ExecuteDelete();    
+        }
+
         public long GetDbChangeTrackingCurrentVersion()
         {
             long CurrentVersion = 0;
@@ -74,7 +82,18 @@ namespace DataSync.Common.Repositories
             CurrentVersion = sqlParam.Value is not null ? (long)sqlParam.Value : 0;
             return CurrentVersion;
         }
-
+        private bool IsTableExist(string tableName)
+        {
+            bool tableExists = false;
+            string query = $@"
+                            SELECT 
+                                CASE WHEN OBJECT_ID('[{tableName}]', 'U') IS NOT NULL 
+                                THEN CAST(1 AS BIT) 
+                                ELSE CAST(0 AS BIT) 
+                                END AS [Value]";
+            tableExists = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
+            return tableExists;
+        }
         private IEnumerable<string> GetPrimaryKeys(string tableName)
         {
             List<string> keys = new List<string>();
@@ -93,7 +112,7 @@ namespace DataSync.Common.Repositories
                             INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
                         WHERE 
                             i.is_primary_key = 1
-                            AND i.object_id = OBJECT_ID('{tableName}');";
+                            AND i.object_id = OBJECT_ID('[{tableName}]');";
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -113,26 +132,38 @@ namespace DataSync.Common.Repositories
             return keys;
         }
 
-        public async Task<IReadOnlyCollection<TableRecord>> GetChangedTableRecordsAsync(ChangeTracker trackingTable)
+        public async Task<IReadOnlyCollection<TableRecord>?> GetChangedTableRecordsAsync(ChangeTracker trackingTable)
         {
             string tableName = trackingTable.TableName;
             long lastChangeVersion = trackingTable.ChangeVersion;
+
+            if (!IsTableExist(tableName))
+            {
+                Console.WriteLine($"Table :{tableName} does not exist!");
+                RemoveTableFromChangeTracker(tableName);
+                return null;
+            }
+                
+
             var primaryKeys = GetPrimaryKeys(tableName);
             string condition = string.Join(" AND ", primaryKeys.Select(x => $"T.{x} = CT.{x}"));
 
+            if(string.IsNullOrEmpty(condition))
+                return null;
+
             string query = $@"
                 SELECT 
-                    (SELECT TOP 1 * FROM {tableName} T WHERE {condition} FOR JSON AUTO) AS Data,
+                    (SELECT TOP 1 * FROM [{tableName}] T WHERE {condition} FOR JSON AUTO) AS Data,
                     CT.SYS_CHANGE_VERSION As ChangeVersion,
                     CT.SYS_CHANGE_OPERATION As Operation
-                FROM CHANGETABLE(CHANGES {tableName}, {lastChangeVersion}) AS CT
+                FROM CHANGETABLE(CHANGES [{tableName}], {lastChangeVersion}) AS CT
                 LEFT OUTER JOIN
-                    {tableName} T ON {condition}";
+                    [{tableName}] T ON {condition}";
             var changes = await GetChangesFromDatabaseAsync(query);
             return changes;
         }
 
-        private async Task<List<TableRecord>> GetChangesFromDatabaseAsync(string sqlQuery)
+        private async Task<List<TableRecord>?> GetChangesFromDatabaseAsync(string sqlQuery)
         {
             List<TableRecord> changes = new List<TableRecord>();
             using (var command = DataContext.DbContext.Database.GetDbConnection().CreateCommand())

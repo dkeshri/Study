@@ -14,7 +14,9 @@ namespace DataSync.Common.Interfaces.Repositories
         public long GetTableChangeVersion(string tableName);
         public long GetDbChangeTrackingCurrentVersion();
         public Task<long> GetDbChangeTrackingCurrentVersionAsync();
-        public Task<IReadOnlyCollection<TableRecord>> GetChangedTableRecordsAsync(ChangeTracker trackingTable);
+        public Task<IReadOnlyCollection<TableRecord>?> GetChangedTableRecordsAsync(ChangeTracker trackingTable);
         public void UpdateTableChangeVersion(string tableName, long lastChangeVersion);
+        public void RemoveTableFromChangeTracker(string tableName);
+
     }
 }
