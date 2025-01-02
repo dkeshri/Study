@@ -17,11 +17,13 @@ namespace MessageQueue.RabbitMq.Logic
         private IConnectionFactory _connectionFactory;
         private readonly string hostName;
         private readonly int port;
+        private bool _isConfirmSelected = false;
 
         private IConnection? Connection { get => CreateConnection(_connectionFactory); }
         public IModel? Channel { get => CreateChannelIfClosed(Connection); }
         public string ExchangeName { get => _exchangeName; }
         public string QueueName { get => _queueName; }
+
         public RabbitMqConnection(IConfiguration configuration)
         {
 
@@ -152,6 +154,18 @@ namespace MessageQueue.RabbitMq.Logic
                 }
             }
             _isDisposing = true;
+        }
+        public void EnableConfirmIfNotSelected()
+        {
+            if(_channel == null || _channel.IsClosed) return;
+            if (_isConfirmSelected == false) { 
+                _channel.ConfirmSelect();
+            }
+            else
+            {
+                _isConfirmSelected = true;
+            }
+
         }
     }
 }

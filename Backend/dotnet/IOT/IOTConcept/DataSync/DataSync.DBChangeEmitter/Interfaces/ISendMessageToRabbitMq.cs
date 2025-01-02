@@ -9,6 +9,6 @@ namespace DataSync.DBChangeEmitter.Interfaces
 {
     internal interface ISendMessageToRabbitMq
     {
-        void SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges);
+        bool SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges);
     }
 }

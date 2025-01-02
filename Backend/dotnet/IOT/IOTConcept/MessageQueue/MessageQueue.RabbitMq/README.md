@@ -17,7 +17,8 @@ but we can also create two channel one for sender and one for reciver.
 > Run below command to create RabbitMq Docker container
 
 ```bash
-docker run -d --hostname rmq --name RabbitMqServer -p 5672:5672 -p 8080:15672 rabbitmq:3.13-management
+docker run -d -v rabbitmqv:/var/log/rabbitmq --hostname rmq --name RabbitMqServer -p 5672:5672 -p 8080:15
+672 rabbitmq:3.13-management
 ```
 ### Port Detail
 
