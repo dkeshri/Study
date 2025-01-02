@@ -36,7 +36,7 @@ namespace DataSync.DBChangeEmitter.Services
         private async Task<TableChanges?> GetTableChangesAsync(ChangeTracker trackingTable) 
         {
             var changesForTable = await ChangeTrackerRepository.GetChangedTableRecordsAsync(trackingTable);
-            if(changesForTable.Count == 0)
+            if(changesForTable == null || changesForTable.Count == 0)
             {
                 return null;
             }

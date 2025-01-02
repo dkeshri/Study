@@ -26,16 +26,6 @@ namespace DataSync.DBChangeEmitter.Services
         {
             IReadOnlyCollection<TableChanges> tablesChanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
 
-            foreach (TableChanges tableChange in tablesChanges)
-            {
-                Console.WriteLine($"************ {tableChange.TableName} ************");
-                Console.WriteLine($"Total Records: {tableChange.Records.Count}\n" );
-                foreach (var record in tableChange.Records) {
-                    Console.WriteLine(record.Data.ToString());
-                }
-                Console.WriteLine($"\n************ {tableChange.TableName} End ************\n");
-            }
-
             if (tablesChanges.Count > 0)
             {
                 Console.WriteLine("Sending.......... To RabitMq");

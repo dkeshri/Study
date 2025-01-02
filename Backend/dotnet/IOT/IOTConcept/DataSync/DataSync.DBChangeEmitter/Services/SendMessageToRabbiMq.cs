@@ -20,6 +20,7 @@ namespace DataSync.DBChangeEmitter.Services
         public void SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges)
         {
             string message = SerializeJsonObject(tableChanges);
+            Console.WriteLine(message);
             SendMessage.SendToQueue(message);
         }
 
