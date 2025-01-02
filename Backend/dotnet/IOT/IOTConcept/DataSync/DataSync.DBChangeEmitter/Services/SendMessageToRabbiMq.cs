@@ -17,11 +17,11 @@ namespace DataSync.DBChangeEmitter.Services
         {
             SendMessage = sendMessage;
         }
-        public void SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges)
+        public bool SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges)
         {
             string message = SerializeJsonObject(tableChanges);
             Console.WriteLine(message);
-            SendMessage.SendToQueue(message);
+            return SendMessage.SendToQueue(message);
         }
 
         private string SerializeJsonObject(IReadOnlyCollection<TableChanges> tableChanges)

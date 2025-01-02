@@ -29,12 +29,15 @@ namespace DataSync.DBChangeEmitter.Services
             if (tablesChanges.Count > 0)
             {
                 Console.WriteLine("Sending.......... To RabitMq");
-                SendMessageToRabbiMq.SendMessageToRabbitMq(tablesChanges);
-                Console.WriteLine("Sent.......... To RabitMq\n");
-                foreach(TableChanges tableChanges in tablesChanges)
-                {
-                    DatabaseChangeTrackerService.UpdateTableChangeVersion(tableChanges);
+                bool isMessageSent = SendMessageToRabbiMq.SendMessageToRabbitMq(tablesChanges);
+                if (isMessageSent) {
+                    Console.WriteLine("Sent.......... To RabitMq\n");
+                    foreach (TableChanges tableChanges in tablesChanges)
+                    {
+                        DatabaseChangeTrackerService.UpdateTableChangeVersion(tableChanges);
+                    }
                 }
+                
             }
             else
             {
