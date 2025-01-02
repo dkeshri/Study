@@ -21,9 +21,9 @@ namespace MessageQueue.RabbitMq.Logic
         public void SendToQueue(string queueName, string message)
         {
             IModel? channel = _connection.Channel;
-            if(channel == null)
+            if(channel == null || channel.IsClosed)
             {
-                Console.WriteLine($"Error: Can not publish message to queue : {queueName}, channel is set to null!");
+                Console.WriteLine($"Error: Can not publish message to queue : {queueName}, channel is null or closed!");
                 return;
             }
             channel.QueueDeclare(queue: queueName,
