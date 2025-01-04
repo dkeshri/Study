@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DataSync.Common.Repositories
@@ -32,7 +33,7 @@ namespace DataSync.Common.Repositories
                 if (isRecordExist) {
                     // update Operstion
                     string updateQuery = BuildUpdateQuery(record, tableName, "Id");
-                    DataContext.DbContext.Database.ExecuteSqlRaw(updateQuery, GetSqlParameters(record, primaryKeys.ToArray()));
+                    DataContext.DbContext.Database.ExecuteSqlRaw(updateQuery, GetSqlParameters(record));
                 }
                 else
                 {
@@ -64,12 +65,30 @@ namespace DataSync.Common.Repositories
             return $"UPDATE [{tableName}] SET {setClause} WHERE {primaryKey} = @{primaryKey}";
         }
 
-        private object[] GetSqlParameters(Dictionary<string, object> record, string[] includeKeys = null)
+        private object[] GetSqlParameters(Dictionary<string, object> record)
         {
-            return record
-                .Where(kvp => includeKeys == null || includeKeys.Contains(kvp.Key))
-                .Select(kvp => new Microsoft.Data.SqlClient.SqlParameter($"@{kvp.Key}", kvp.Value ?? DBNull.Value))
+             var test  = record
+                .Select(kvp => new SqlParameter($"@{kvp.Key}", ConvertJsonElement(kvp.Value) ?? DBNull.Value))
                 .ToArray();
+            return test;
+        }
+        private object ConvertJsonElement(object value)
+        {
+            if (value is JsonElement jsonElement)
+            {
+                // Handle different JSON element types
+                return jsonElement.ValueKind switch
+                {
+                    JsonValueKind.String => jsonElement.GetString(),
+                    JsonValueKind.Number => jsonElement.TryGetInt64(out long l) ? l : jsonElement.GetDouble(),
+                    JsonValueKind.True => true,
+                    JsonValueKind.False => false,
+                    JsonValueKind.Null => DBNull.Value,
+                    _ => jsonElement.GetRawText() // Fallback: return raw JSON text
+                };
+            }
+
+            return value ?? DBNull.Value; // Return the original value or DBNull for nulls
         }
         private IEnumerable<string> GetPrimaryKeys(string tableName)
         {
