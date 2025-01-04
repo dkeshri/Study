@@ -179,7 +179,7 @@ namespace DataSync.Common.Repositories
                             var record = new TableRecord
                             {
                                 Id = Guid.NewGuid(),
-                                Data = reader["Data"]?.ToString(),
+                                Data = reader["Data"]?.ToString()?.Trim('[', ']'),
                                 ChangeVersion = Convert.ToInt64(reader["ChangeVersion"]),
                                 Operation = reader["Operation"]?.ToString(),
                             };

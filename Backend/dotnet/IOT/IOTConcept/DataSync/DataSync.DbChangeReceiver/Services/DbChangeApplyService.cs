@@ -5,22 +5,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DataSync.DbChangeReceiver.Services
 {
     internal class DbChangeApplyService : IDbChangeApplyService
     {
-        private IChangeTrackerRepository ChangeTrackerRepository { get; set; }
-        public DbChangeApplyService(IChangeTrackerRepository changeTrackerRepository)
+        private IApplyDbChangeRepository ApplyDbChangeRepository { get; set; }
+        public DbChangeApplyService(IApplyDbChangeRepository applyDbChangeRepository)
         {
-            ChangeTrackerRepository = changeTrackerRepository;
+            ApplyDbChangeRepository = applyDbChangeRepository;
         }
 
         public void ApplyTableChanges(TableChanges tableChanges)
         {
             string tableName = tableChanges.TableName;
             IReadOnlyCollection<TableRecord> tableRecords = tableChanges.Records;
+            foreach (TableRecord tableRecord in tableRecords) {
+
+                switch (tableRecord.Operation)
+                {
+                    case "I":
+                    case "U":
+                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data.ToString()!);
+                        ApplyDbChangeRepository.InsertUpdate(tableName, record!);
+                        break;
+                    case "D":
+                        break;
+                }
+            
+            }
 
         }
     }
