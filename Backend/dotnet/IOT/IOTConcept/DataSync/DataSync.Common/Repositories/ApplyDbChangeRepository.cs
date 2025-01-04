@@ -42,7 +42,9 @@ namespace DataSync.Common.Repositories
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
 
         }
 
@@ -52,7 +54,10 @@ namespace DataSync.Common.Repositories
             var columns = string.Join(", ", record.Keys);
 
             var values = string.Join(", ", record.Keys.Select(key => "@" + key));
-            return $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
+            return $@"SET IDENTITY_INSERT [{tableName}] ON;
+                    INSERT INTO [{tableName}] ({columns}) VALUES ({values});
+                    SET IDENTITY_INSERT [{tableName}] OFF;"
+                ;
         }
 
         // Build Update Query
