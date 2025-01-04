@@ -42,7 +42,9 @@ namespace DataSync.Common.Repositories
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
 
         }
 
@@ -55,7 +57,6 @@ namespace DataSync.Common.Repositories
             return $@"SET IDENTITY_INSERT [{tableName}] ON;
                     INSERT INTO [{tableName}] ({columns}) VALUES ({values});
                     SET IDENTITY_INSERT [{tableName}] OFF;"
-
                 ;
         }
 
