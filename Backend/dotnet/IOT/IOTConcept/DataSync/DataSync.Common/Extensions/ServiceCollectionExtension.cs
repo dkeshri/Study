@@ -23,6 +23,7 @@ namespace DataSync.Common.Extensions
         private static void LoadRepositories(IServiceCollection services)
         {
             services.AddSingleton<IChangeTrackerRepository,ChangeTrackerRepository>();
+            services.AddSingleton<IApplyDbChangeRepository,ApplyDbChangeRepository>();
         }
     }
 }
