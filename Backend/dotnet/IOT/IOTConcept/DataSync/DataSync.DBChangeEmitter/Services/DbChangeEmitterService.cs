@@ -55,7 +55,7 @@ namespace DataSync.DBChangeEmitter.Services
             bool isDbChangeTrackingEnabled =  DatabaseChangeTrackerService.IsDatabaseChangeTrackingEnabled();
             if (!isDbChangeTrackingEnabled)
             {
-                Console.WriteLine("Database Change tracking is not enabled!,\nPlease Enable first and rerun this application!");
+                Console.WriteLine("Database Change tracking is disabled!,\nPlease Enable first and rerun this application!");
                 Console.WriteLine("Shutting down the DbChangeEmitter Application!");
                 _host.StopAsync();
                 
