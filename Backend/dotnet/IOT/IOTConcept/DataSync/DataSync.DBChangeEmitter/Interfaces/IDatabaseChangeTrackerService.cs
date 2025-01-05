@@ -11,6 +11,7 @@ namespace DataSync.DBChangeEmitter.Interfaces
     {
         public  Task<IReadOnlyCollection<TableChanges>> GetChangesOfTrackedTableAsync();
         public  void UpdateTableChangeVersion(TableChanges tableChanges);
+        public void EnableChangeTrackingOnTables();
 
     }
 }

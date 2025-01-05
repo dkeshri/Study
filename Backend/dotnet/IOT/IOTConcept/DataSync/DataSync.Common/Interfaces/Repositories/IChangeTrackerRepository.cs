@@ -18,6 +18,7 @@ namespace DataSync.Common.Interfaces.Repositories
         public void UpdateTableChangeVersion(string tableName, long lastChangeVersion);
         public void RemoveTableFromChangeTracker(string tableName);
         public ICollection<ForeignKeyRelationship>? GetForeignRelationships();
+        public void EnableChangeTrackingOnTable(string tableName);
 
     }
 }

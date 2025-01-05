@@ -25,17 +25,6 @@ namespace DataSync.DBChangeEmitter.Services
         {
             List<TableChanges> changes = new List<TableChanges>();
             var trackingTables = ChangeTrackerRepository.GetTrackedTables();
-            Console.WriteLine("Before TopologicalSort");
-            foreach (var data in trackingTables)
-            {
-                Console.WriteLine($"TableName: {data.TableName} ChangeVersion: {data.ChangeVersion}");
-            }
-            trackingTables = TopologicalSorterService.TopologicalSort(trackingTables);
-            Console.WriteLine("After TopologicalSort");
-            foreach (var data in trackingTables)
-            {
-                Console.WriteLine($"TableName: {data.TableName} ChangeVersion: {data.ChangeVersion}");
-            }
             foreach (var table in trackingTables) 
             { 
                 var tableChanges = await GetTableChangesAsync(table);
@@ -72,6 +61,15 @@ namespace DataSync.DBChangeEmitter.Services
             }
             catch (Exception ex) { 
             
+            }
+        }
+
+        public void EnableChangeTrackingOnTables()
+        {
+            var trackingTables = ChangeTrackerRepository.GetTrackedTables();
+            foreach (var trackingTable in trackingTables)
+            {
+                ChangeTrackerRepository.EnableChangeTrackingOnTable(trackingTable.TableName);
             }
         }
     }
