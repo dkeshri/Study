@@ -284,8 +284,33 @@ namespace DataSync.Common.Repositories
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error: {ex.Message}");
             }
             return isDbChangeTrackingEnabled;
+        }
+
+        public bool IsDatabaseExist()
+        {
+            bool isDatabaseExist = false;
+            string databaseName = "";
+            try
+            {
+                databaseName = DataContext.DbContext.Database.GetDbConnection().Database;
+                string query = $@"
+                            SELECT 
+                                CASE  
+                                    WHEN EXISTS (SELECT 1 FROM sys.databases WHERE name = '{databaseName}') 
+                                    THEN CAST(1 AS BIT) 
+                                    ELSE CAST(0 AS BIT) 
+                                END AS [Value]";
+                isDatabaseExist = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: Database => {databaseName} does not exist!\nPlease check connection string.");
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            return isDatabaseExist;
         }
     }
 }

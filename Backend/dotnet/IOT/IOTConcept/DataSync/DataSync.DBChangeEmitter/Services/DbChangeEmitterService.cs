@@ -52,13 +52,11 @@ namespace DataSync.DBChangeEmitter.Services
 
         protected override Task OnStartup(CancellationToken cancellationToken)
         {
-            bool isDbChangeTrackingEnabled =  DatabaseChangeTrackerService.IsDatabaseChangeTrackingEnabled();
-            if (!isDbChangeTrackingEnabled)
+            bool isDbExistAndChangeTrackingEnabled =  DatabaseChangeTrackerService.IsDatabaseExistAndChangeTrackingEnabled();
+            if (!isDbExistAndChangeTrackingEnabled)
             {
-                Console.WriteLine("Database Change tracking is disabled!,\nPlease Enable first and rerun this application!");
                 Console.WriteLine("Shutting down the DbChangeEmitter Application!");
                 _host.StopAsync();
-
             }
             else
             {
