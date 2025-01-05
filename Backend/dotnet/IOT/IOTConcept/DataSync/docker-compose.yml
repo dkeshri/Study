@@ -8,7 +8,7 @@ services:
     - RabbitMq__Port=5672
     - RabbitMq__UserName=guest
     - RabbitMq__Password=guest
-    - RabbitMq__Queue=DataSyncQueue1
+    - RabbitMq__Queue=DataSyncQueue
     - RabbitMq__ClientProvidedName=Sender
   data-sync-receiver:
     container_name: data-sync-receiver
@@ -19,5 +19,5 @@ services:
     - RabbitMq__Port=5672
     - RabbitMq__UserName=guest
     - RabbitMq__Password=guest
-    - RabbitMq__Queue=DataSyncQueue1
+    - RabbitMq__Queue=DataSyncQueue
     - RabbitMq__ClientProvidedName=Receiver
