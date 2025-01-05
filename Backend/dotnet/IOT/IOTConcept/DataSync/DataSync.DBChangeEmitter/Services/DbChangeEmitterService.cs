@@ -58,9 +58,12 @@ namespace DataSync.DBChangeEmitter.Services
                 Console.WriteLine("Database Change tracking is disabled!,\nPlease Enable first and rerun this application!");
                 Console.WriteLine("Shutting down the DbChangeEmitter Application!");
                 _host.StopAsync();
-                
+
             }
-            DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
+            else
+            {
+                DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
+            }
             return Task.CompletedTask;
         }
     }
