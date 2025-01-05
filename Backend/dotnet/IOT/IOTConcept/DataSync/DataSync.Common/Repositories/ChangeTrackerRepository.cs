@@ -266,5 +266,26 @@ namespace DataSync.Common.Repositories
             isChangeTrackingEnabled = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
             return isChangeTrackingEnabled;
         }
+
+        public bool IsDatabaseChangeTrackingEnabled()
+        {
+            bool isDbChangeTrackingEnabled = false;
+            try
+            {
+                string databaseName = DataContext.DbContext.Database.GetDbConnection().Database;
+                string query = $@"
+                            SELECT CASE WHEN COUNT(*) > 0 
+                                THEN CAST(1 AS BIT) 
+                                ELSE CAST(0 AS BIT) 
+                            END AS [Value]
+                            FROM sys.change_tracking_databases
+                            WHERE database_id = DB_ID('{databaseName}')";
+                isDbChangeTrackingEnabled = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
+            }
+            catch (Exception ex)
+            {
+            }
+            return isDbChangeTrackingEnabled;
+        }
     }
 }

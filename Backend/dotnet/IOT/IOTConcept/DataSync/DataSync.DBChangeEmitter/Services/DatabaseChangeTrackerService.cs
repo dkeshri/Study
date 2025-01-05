@@ -73,5 +73,10 @@ namespace DataSync.DBChangeEmitter.Services
                 ChangeTrackerRepository.EnableChangeTrackingOnTable(trackingTable.TableName);
             }
         }
+
+        public bool IsDatabaseChangeTrackingEnabled()
+        {
+            return ChangeTrackerRepository.IsDatabaseChangeTrackingEnabled();   
+        }
     }
 }
