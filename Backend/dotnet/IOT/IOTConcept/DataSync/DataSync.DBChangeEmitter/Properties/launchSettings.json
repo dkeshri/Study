@@ -4,7 +4,15 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "ConnectionStrings__DefaultConnection": "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False",
+        "RabbitMq__HostName": "localhost",
+        "RabbitMq__Port": "5672",
+        "RabbitMq__UserName": "guest",
+        "RabbitMq__Password": "guest",
+        "RabbitMq__ClientProvidedName": "Sender",
+        "RabbitMq__Queue": "DataSyncQueue",
+        "RabbitMq__ExchangeName": "weather_direct"
       }
     }
   }
