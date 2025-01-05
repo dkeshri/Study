@@ -2,6 +2,7 @@
 using DataSync.Common.Services;
 using DataSync.DBChangeEmitter.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
@@ -15,11 +16,15 @@ namespace DataSync.DBChangeEmitter.Services
     {
         private IDatabaseChangeTrackerService DatabaseChangeTrackerService { get; }
         private ISendMessageToRabbitMq SendMessageToRabbiMq { get; }
+
+        private IHost _host;    
         public DbChangeEmitterService(IDatabaseChangeTrackerService databaseChangeTrackerService,
-            ISendMessageToRabbitMq sendMessageToRabbitMq):base(TimeSpan.FromSeconds(10))
+            ISendMessageToRabbitMq sendMessageToRabbitMq,
+            IHost host):base(TimeSpan.FromSeconds(10))
         {
             DatabaseChangeTrackerService = databaseChangeTrackerService;
             SendMessageToRabbiMq = sendMessageToRabbitMq;
+            _host = host;
         }
 
         protected override async Task OperationToPerforme(CancellationToken cancellationToken)
@@ -47,6 +52,14 @@ namespace DataSync.DBChangeEmitter.Services
 
         protected override Task OnStartup(CancellationToken cancellationToken)
         {
+            bool isDbChangeTrackingEnabled =  DatabaseChangeTrackerService.IsDatabaseChangeTrackingEnabled();
+            if (!isDbChangeTrackingEnabled)
+            {
+                Console.WriteLine("Database Change tracking is not enabled!,\nPlease Enable first and rerun this application!");
+                Console.WriteLine("Shutting down the DbChangeEmitter Application!");
+                _host.StopAsync();
+                
+            }
             DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
             return Task.CompletedTask;
         }
