@@ -74,9 +74,17 @@ namespace DataSync.DBChangeEmitter.Services
             }
         }
 
-        public bool IsDatabaseChangeTrackingEnabled()
+        public bool IsDatabaseExistAndChangeTrackingEnabled()
         {
-            return ChangeTrackerRepository.IsDatabaseChangeTrackingEnabled();   
+            bool isDataBaseExist = ChangeTrackerRepository.IsDatabaseExist();
+            if (!isDataBaseExist) { 
+                return isDataBaseExist;
+            }
+            bool DatabaseChangeTrackingEnabled = ChangeTrackerRepository.IsDatabaseChangeTrackingEnabled();
+            if (!DatabaseChangeTrackingEnabled) {
+                Console.WriteLine("Error: Database Change tracking is disabled!,\nPlease Enable first and re-run this application!");
+            }
+            return DatabaseChangeTrackingEnabled;   
         }
     }
 }

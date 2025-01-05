@@ -20,6 +20,7 @@ namespace DataSync.Common.Interfaces.Repositories
         public ICollection<ForeignKeyRelationship>? GetForeignRelationships();
         public void EnableChangeTrackingOnTable(string tableName);
         public bool IsDatabaseChangeTrackingEnabled();
+        public bool IsDatabaseExist();
 
     }
 }
