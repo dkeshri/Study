@@ -25,6 +25,7 @@ namespace DataSync.DBChangeEmitter.Services
         {
             List<TableChanges> changes = new List<TableChanges>();
             var trackingTables = ChangeTrackerRepository.GetTrackedTables();
+            trackingTables = TopologicalSorterService.TopologicalSort(trackingTables);
             foreach (var table in trackingTables) 
             { 
                 var tableChanges = await GetTableChangesAsync(table);
