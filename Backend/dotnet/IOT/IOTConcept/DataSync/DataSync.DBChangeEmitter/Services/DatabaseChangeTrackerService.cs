@@ -12,16 +12,30 @@ namespace DataSync.DBChangeEmitter.Services
 {
     internal class DatabaseChangeTrackerService : IDatabaseChangeTrackerService
     {
-        IChangeTrackerRepository ChangeTrackerRepository { get; set; }
-        public DatabaseChangeTrackerService(IChangeTrackerRepository changeTrackerRepository)
+        IChangeTrackerRepository ChangeTrackerRepository { get; }
+        ITopologicalSorterService TopologicalSorterService { get; }
+
+        public DatabaseChangeTrackerService(IChangeTrackerRepository changeTrackerRepository,ITopologicalSorterService topologicalSorterService)
         {
             ChangeTrackerRepository = changeTrackerRepository;
+            TopologicalSorterService = topologicalSorterService;
         }
 
         public async Task<IReadOnlyCollection<TableChanges>> GetChangesOfTrackedTableAsync()
         {
             List<TableChanges> changes = new List<TableChanges>();
             var trackingTables = ChangeTrackerRepository.GetTrackedTables();
+            Console.WriteLine("Before TopologicalSort");
+            foreach (var data in trackingTables)
+            {
+                Console.WriteLine($"TableName: {data.TableName} ChangeVersion: {data.ChangeVersion}");
+            }
+            trackingTables = TopologicalSorterService.TopologicalSort(trackingTables);
+            Console.WriteLine("After TopologicalSort");
+            foreach (var data in trackingTables)
+            {
+                Console.WriteLine($"TableName: {data.TableName} ChangeVersion: {data.ChangeVersion}");
+            }
             foreach (var table in trackingTables) 
             { 
                 var tableChanges = await GetTableChangesAsync(table);

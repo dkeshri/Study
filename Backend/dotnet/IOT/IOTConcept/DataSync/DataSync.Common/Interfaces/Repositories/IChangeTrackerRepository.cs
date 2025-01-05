@@ -17,6 +17,7 @@ namespace DataSync.Common.Interfaces.Repositories
         public Task<IReadOnlyCollection<TableRecord>?> GetChangedTableRecordsAsync(ChangeTracker trackingTable);
         public void UpdateTableChangeVersion(string tableName, long lastChangeVersion);
         public void RemoveTableFromChangeTracker(string tableName);
+        public ICollection<ForeignKeyRelationship>? GetForeignRelationships();
 
     }
 }

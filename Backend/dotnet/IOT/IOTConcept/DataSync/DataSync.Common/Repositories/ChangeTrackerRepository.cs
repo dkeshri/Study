@@ -195,6 +195,29 @@ namespace DataSync.Common.Repositories
             return changes;
         }
 
-        
+        public ICollection<ForeignKeyRelationship>? GetForeignRelationships()
+        {
+            try
+            {
+                var query = @"
+                        SELECT 
+                            FK.TABLE_NAME As FkTable,
+                            PK.TABLE_NAME As PkTable
+                        FROM 
+                            INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS RC
+                            INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS FK
+                                ON RC.CONSTRAINT_NAME = FK.CONSTRAINT_NAME
+                            INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS PK
+                                ON RC.UNIQUE_CONSTRAINT_NAME = PK.CONSTRAINT_NAME
+                        WHERE FK.CONSTRAINT_TYPE = 'FOREIGN KEY';"
+                        ;
+                var data = DataContext.DbContext.Database.SqlQueryRaw<ForeignKeyRelationship>(query).ToList();
+                return data;
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"Can not retrive the ForigenKey relationship, Error: {ex.Message}");
+            }
+            return null;
+        }
     }
 }

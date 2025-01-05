@@ -11,6 +11,7 @@ namespace DataSync.DBChangeEmitter.Extensions
         {
             services.AddSingleton<IDatabaseChangeTrackerService, DatabaseChangeTrackerService>();
             services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
+            services.AddSingleton<ITopologicalSorterService, TopologicalSorterService>();
         }
         public static void AddRabbitMq(this IServiceCollection services)
         {
