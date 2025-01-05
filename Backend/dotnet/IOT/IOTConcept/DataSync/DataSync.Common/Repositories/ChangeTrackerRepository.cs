@@ -9,10 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataSync.Common.Repositories
 {
@@ -85,13 +87,21 @@ namespace DataSync.Common.Repositories
         private bool IsTableExist(string tableName)
         {
             bool tableExists = false;
-            string query = $@"
+            try
+            {
+                string query = $@"
                             SELECT 
                                 CASE WHEN OBJECT_ID('[{tableName}]', 'U') IS NOT NULL 
                                 THEN CAST(1 AS BIT) 
                                 ELSE CAST(0 AS BIT) 
                                 END AS [Value]";
-            tableExists = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
+                tableExists = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            
             return tableExists;
         }
         private IEnumerable<string> GetPrimaryKeys(string tableName)
@@ -195,6 +205,66 @@ namespace DataSync.Common.Repositories
             return changes;
         }
 
-        
+        public ICollection<ForeignKeyRelationship>? GetForeignRelationships()
+        {
+            try
+            {
+                var query = @"
+                        SELECT 
+                            FK.TABLE_NAME As FkTable,
+                            PK.TABLE_NAME As PkTable
+                        FROM 
+                            INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS RC
+                            INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS FK
+                                ON RC.CONSTRAINT_NAME = FK.CONSTRAINT_NAME
+                            INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS PK
+                                ON RC.UNIQUE_CONSTRAINT_NAME = PK.CONSTRAINT_NAME
+                        WHERE FK.CONSTRAINT_TYPE = 'FOREIGN KEY';"
+                        ;
+                var data = DataContext.DbContext.Database.SqlQueryRaw<ForeignKeyRelationship>(query).ToList();
+                return data;
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"Can not retrive the ForigenKey relationship, Error: {ex.Message}");
+            }
+            return null;
+        }
+
+        public void EnableChangeTrackingOnTable(string tableName)
+        {
+            try
+            {
+                bool isChangeTrackingEnabled = IsChangeTrackingEnabled(tableName);
+                if (!isChangeTrackingEnabled) {
+                    string query = $@"
+                        ALTER TABLE [{tableName}]
+                        ENABLE CHANGE_TRACKING;";
+                    DataContext.DbContext.Database.ExecuteSqlRaw(query);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        private bool IsChangeTrackingEnabled(string tableName)
+        {
+            bool isChangeTrackingEnabled = false;
+                string query = $@"
+                        SELECT 
+                            CASE WHEN ct.object_id IS NOT NULL 
+                                    THEN CAST(1 AS BIT) 
+                                    ELSE CAST(0 AS BIT) 
+                                    END AS [Value]
+                                FROM 
+                                    sys.tables t
+                                LEFT JOIN 
+                                    sys.change_tracking_tables ct ON t.object_id = ct.object_id
+                                WHERE 
+                                    t.name = '{tableName}' ";
+            isChangeTrackingEnabled = DataContext.DbContext.Database.SqlQueryRaw<bool>(query).Single();
+            return isChangeTrackingEnabled;
+        }
     }
 }

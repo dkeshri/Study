@@ -44,5 +44,11 @@ namespace DataSync.DBChangeEmitter.Services
                 Console.WriteLine("No changes detected!");
             }
         }
+
+        protected override Task OnStartup(CancellationToken cancellationToken)
+        {
+            DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
+            return Task.CompletedTask;
+        }
     }
 }

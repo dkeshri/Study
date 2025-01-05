@@ -15,12 +15,16 @@ namespace DataSync.Common.Services
         }
 
         protected abstract Task OperationToPerforme(CancellationToken cancellationToken);
+        protected virtual Task OnStartup(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Starting Hoster timer service");
             try
             {
-
+                await OnStartup(cancellationToken);
                 await Task.Delay(1000, cancellationToken);
                 new Thread(async () => {
                     using var periodicTimer = new PeriodicTimer(Interval);
