@@ -2,10 +2,22 @@ services:
   data-sync-emitter:
     container_name: data-sync-emitter
     image: dkeshri/data-sync-emitter:latest
-    #environment:
-    #- ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False
+    environment:
+    - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False
+    - RabbitMq__HostName=host.docker.internal
+    - RabbitMq__Port=5672
+    - RabbitMq__UserName=guest
+    - RabbitMq__Password=guest
+    - RabbitMq__Queue=DataSyncQueue1
+    - RabbitMq__ClientProvidedName=Sender
   data-sync-receiver:
     container_name: data-sync-receiver
     image: dkeshri/data-sync-receiver:latest
-    #environment:
-    #- ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False
+    environment:
+    - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=StoreCopy;User Id=sa;Password=MsSqlServer@2023;Encrypt=False
+    - RabbitMq__HostName=host.docker.internal
+    - RabbitMq__Port=5672
+    - RabbitMq__UserName=guest
+    - RabbitMq__Password=guest
+    - RabbitMq__Queue=DataSyncQueue1
+    - RabbitMq__ClientProvidedName=Receiver
