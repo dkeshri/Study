@@ -24,9 +24,9 @@ namespace DataSync.DbChangeReceiver.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("DbChange Receiver Service is starting");
+            Console.WriteLine("Data-Sync-Receiver Service is starting");
             _messageReceiver.MessageHandler = _messageHandler.HandleMessage;
-            Console.WriteLine("DbChanhge Receiver Service has started!");
+            Console.WriteLine("Data-Sync-Receiver Service has started!");
             return Task.CompletedTask;
         }
 
