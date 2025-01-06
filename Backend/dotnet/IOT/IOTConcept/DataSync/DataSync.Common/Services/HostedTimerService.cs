@@ -21,7 +21,7 @@ namespace DataSync.Common.Services
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Starting Hoster timer service");
+            Console.WriteLine("Starting Hosted timer service");
             try
             {
                 await OnStartup(cancellationToken);

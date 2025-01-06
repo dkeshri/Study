@@ -9,7 +9,7 @@ namespace MessageQueue.RabbitMq.Logic
 {
     internal sealed class RabbitMqConnection : IRabbitMqConnection, IDisposable
     {
-        private readonly IConnection? _connection;
+        private IConnection? _connection;
         private IModel? _channel;
         private string _exchangeName;
         private bool _isDisposing = false;
@@ -45,23 +45,13 @@ namespace MessageQueue.RabbitMq.Logic
                     Password = password,
                     ClientProvidedName = clientProvidedName
                 };
-
-                if (!IsRabbitMqReachable(hostName, port)) return;
-                _connection = _connectionFactory.CreateConnection();
-                _connection.ConnectionShutdown += OnConnectionShutdown;
-                _channel = _connection.CreateModel();
-                createDirectExchange(_channel, _exchangeName);
+                CreateConnection(_connectionFactory);
             }
             catch (Exception ex) 
             { 
                 throw new Exception("Error ouccr while creating connection",ex);
             }
             
-        }
-        
-        private void createDirectExchange(IModel channel,string exchangeName)
-        {
-            channel.ExchangeDeclare(exchangeName, ExchangeType.Direct);
         }
 
         private IModel? CreateChannelIfClosed(IConnection? connection)
@@ -84,7 +74,9 @@ namespace MessageQueue.RabbitMq.Logic
             {
                 if(_connection != null && _connection.IsOpen)
                    return _connection;
-                return connectionFactory.CreateConnection();
+                _connection = connectionFactory.CreateConnection();
+                _connection.ConnectionShutdown += OnConnectionShutdown;
+                return _connection;
             }
             catch (Exception) { 
                 return null;
@@ -120,6 +112,7 @@ namespace MessageQueue.RabbitMq.Logic
 
         private void OnConnectionShutdown(object? sender, ShutdownEventArgs e)
         {
+            _isConfirmSelected = false;
             Console.WriteLine("Connection is shutdown! closing the open channel");
             if (_channel != null && _channel.IsOpen)
             {
