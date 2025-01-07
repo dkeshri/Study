@@ -23,15 +23,26 @@ namespace DataSync.DbChangeReceiver.Services
             string tableName = tableChanges.TableName;
             IReadOnlyCollection<TableRecord> tableRecords = tableChanges.Records;
             foreach (TableRecord tableRecord in tableRecords) {
-
+                
                 switch (tableRecord.Operation)
                 {
+                    
                     case "I":
                     case "U":
-                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data.ToString()!);
+                        if (tableRecord.Data == null)
+                        {
+                            Console.WriteLine($"Data is Null skipping insertOrUpdate Operation {tableRecord.Operation}");
+                        }
+                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data!);
                         ApplyDbChangeRepository.InsertUpdate(tableName, record!);
                         break;
                     case "D":
+                        if (tableRecord.PkKeysWithValues == null)
+                        {
+                            Console.WriteLine($"PrimaryKeys is Null skipping Delete Operation {tableRecord.Operation}");
+                        }
+                        var peimaryKeysWithValues = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.PkKeysWithValues!);
+                        ApplyDbChangeRepository.Delete(tableName, peimaryKeysWithValues!);
                         break;
                 }
             

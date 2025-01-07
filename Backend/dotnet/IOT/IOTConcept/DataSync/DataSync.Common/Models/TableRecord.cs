@@ -9,9 +9,10 @@ namespace DataSync.Common.Models
 #nullable disable
     public class TableRecord
     {
-        public Guid Id { get; set; }
         public long ChangeVersion { get; set; }
         public string Operation { get; set; }
-        public object Data { get; set; }
+        public string Data { get; set; }
+        public string PkKeysWithValues { get; set; }
+        
     }
 }
