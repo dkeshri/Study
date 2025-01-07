@@ -66,10 +66,22 @@ namespace DataSync.Common.Repositories
             var columns = string.Join(", ", record.Keys);
 
             var values = string.Join(", ", record.Keys.Select(key => "@" + key));
-            return $@"SET IDENTITY_INSERT [{tableName}] ON;
-                    INSERT INTO [{tableName}] ({columns}) VALUES ({values});
-                    SET IDENTITY_INSERT [{tableName}] OFF;"
-                ;
+            return $@"IF EXISTS (
+                        SELECT 1
+                        FROM INFORMATION_SCHEMA.COLUMNS
+                        WHERE TABLE_NAME = '{tableName}'
+                          AND COLUMNPROPERTY(OBJECT_ID(TABLE_NAME), COLUMN_NAME, 'IsIdentity') = 1
+                    )
+                    BEGIN
+                        SET IDENTITY_INSERT [{tableName}] ON;
+                        INSERT INTO [{tableName}] ({columns}) VALUES ({values});
+                        SET IDENTITY_INSERT [{tableName}] OFF;
+                    END
+                    ELSE
+                    BEGIN
+                        INSERT INTO [{tableName}] ({columns}) VALUES ({values});
+                    END";
+
         }
         private string BuildUpdateQuery(Dictionary<string, object> record, string tableName, string primaryKey)
         {
@@ -105,39 +117,31 @@ namespace DataSync.Common.Repositories
 
             return value ?? DBNull.Value; // Return the original value or DBNull for nulls
         }
+
         private IEnumerable<string> GetPrimaryKeys(string tableName)
         {
             List<string> keys = new List<string>();
-            var dbConnections = DataContext.DbContext.Database.GetDbConnection();
             try
             {
-                dbConnections.Open();
-                using (var cmd = dbConnections.CreateCommand())
-                {
-                    cmd.CommandText = $@"
-                        SELECT 
-                            c.name AS ColumnName
-                        FROM 
-                            sys.indexes AS i
-                            INNER JOIN sys.index_columns AS ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
-                            INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
-                        WHERE 
-                            i.is_primary_key = 1
-                            AND i.object_id = OBJECT_ID('[{tableName}]');";
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            keys.Add(reader.GetString(0));
-                        }
-                    }
-                    dbConnections.Close();
-                }
-            }
-            finally
-            {
+                string query = $@"
+                    SELECT 
+                        c.COLUMN_NAME 
+                    FROM 
+                        INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+                        INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE c 
+                            ON tc.CONSTRAINT_NAME = c.CONSTRAINT_NAME
+                            AND tc.TABLE_NAME = c.TABLE_NAME
+                    WHERE 
+                        tc.TABLE_NAME = '{tableName}'
+                        AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+                    ";
+                keys = DataContext.DbContext.Database.SqlQueryRaw<string>(query).ToList();
 
-                dbConnections.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: While getting primary keys!");
+                Console.WriteLine(ex.Message);
             }
 
             return keys;
