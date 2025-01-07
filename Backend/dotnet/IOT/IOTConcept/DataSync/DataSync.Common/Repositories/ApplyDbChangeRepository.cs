@@ -14,13 +14,9 @@ using System.Threading.Tasks;
 
 namespace DataSync.Common.Repositories
 {
-    internal class ApplyDbChangeRepository : IApplyDbChangeRepository
+    internal class ApplyDbChangeRepository : Repository, IApplyDbChangeRepository
     {
-        private IDataContext DataContext { get; }
-        public ApplyDbChangeRepository(IDataContext dataContext)
-        {
-            DataContext = dataContext;
-        }
+        public ApplyDbChangeRepository(IDataContext dataContext) : base(dataContext) {}
 
         public void InsertUpdate(string tableName, Dictionary<string, object> record)
         {
@@ -116,35 +112,6 @@ namespace DataSync.Common.Repositories
             }
 
             return value ?? DBNull.Value; // Return the original value or DBNull for nulls
-        }
-
-        private IEnumerable<string> GetPrimaryKeys(string tableName)
-        {
-            List<string> keys = new List<string>();
-            try
-            {
-                string query = $@"
-                    SELECT 
-                        c.COLUMN_NAME 
-                    FROM 
-                        INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-                        INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE c 
-                            ON tc.CONSTRAINT_NAME = c.CONSTRAINT_NAME
-                            AND tc.TABLE_NAME = c.TABLE_NAME
-                    WHERE 
-                        tc.TABLE_NAME = '{tableName}'
-                        AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
-                    ";
-                keys = DataContext.DbContext.Database.SqlQueryRaw<string>(query).ToList();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: While getting primary keys!");
-                Console.WriteLine(ex.Message);
-            }
-
-            return keys;
         }
         private bool IsRecordExist(string query)
         {
