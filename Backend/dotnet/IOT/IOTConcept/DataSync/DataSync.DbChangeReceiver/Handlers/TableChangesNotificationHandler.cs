@@ -27,7 +27,7 @@ namespace DataSync.DbChangeReceiver.Handlers
                 Console.WriteLine($"Total Records: {tableChanges.Records.Count}\n");
                 foreach (var record in tableChanges.Records)
                 {
-                    Console.WriteLine(record.Data.ToString());
+                    Console.WriteLine(record.Data?.ToString());
                 }
                 Console.WriteLine($"\n************ {tableChanges.TableName} End ************\n");
             }

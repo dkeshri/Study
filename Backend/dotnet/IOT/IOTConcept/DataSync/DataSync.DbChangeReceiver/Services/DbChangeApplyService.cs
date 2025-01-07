@@ -29,11 +29,20 @@ namespace DataSync.DbChangeReceiver.Services
                     
                     case "I":
                     case "U":
-                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data?.ToString()!);
+                        if (tableRecord.Data == null)
+                        {
+                            Console.WriteLine($"Data is Null skipping insertOrUpdate Operation {tableRecord.Operation}");
+                        }
+                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data!);
                         ApplyDbChangeRepository.InsertUpdate(tableName, record!);
                         break;
                     case "D":
-                        ApplyDbChangeRepository.Delete(tableName, record!);
+                        if (tableRecord.PkKeysWithValues == null)
+                        {
+                            Console.WriteLine($"PrimaryKeys is Null skipping Delete Operation {tableRecord.Operation}");
+                        }
+                        var peimaryKeysWithValues = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.PkKeysWithValues!);
+                        ApplyDbChangeRepository.Delete(tableName, peimaryKeysWithValues!);
                         break;
                 }
             

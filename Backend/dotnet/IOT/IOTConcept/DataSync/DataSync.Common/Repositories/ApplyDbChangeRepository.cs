@@ -46,9 +46,20 @@ namespace DataSync.Common.Repositories
             }
 
         }
-        public void Delete(string tableName, Dictionary<string, object> data)
+        public void Delete(string tableName, Dictionary<string, object> pkKeysWithValues)
         {
-            throw new NotImplementedException();
+            string condition = string.Join(" AND ", pkKeysWithValues.Select(x => $"{x.Key} = {x.Value}"));
+            try
+            {
+                
+                string query = $@"
+                    DELETE from [{tableName}] where {condition}";
+                int row = DataContext.DbContext.Database.ExecuteSqlRaw(query);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error : While deleting records! in {tableName} where {condition} ");
+            }
         }
         private string BuildInsertQuery(Dictionary<string, object> record, string tableName)
         {
