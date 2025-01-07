@@ -133,7 +133,7 @@ namespace DataSync.Common.Repositories
             return keys;
         }
 
-        public async Task<IReadOnlyCollection<TableRecord>?> GetChangedTableRecordsAsync(ChangeTracker trackingTable)
+        public IReadOnlyCollection<TableRecord>? GetChangedTableRecords(ChangeTracker trackingTable)
         {
             string tableName = trackingTable.TableName;
             long lastChangeVersion = trackingTable.ChangeVersion;
@@ -144,12 +144,12 @@ namespace DataSync.Common.Repositories
                 RemoveTableFromChangeTracker(tableName);
                 return null;
             }
-                
+
 
             var primaryKeys = GetPrimaryKeys(tableName);
             string condition = string.Join(" AND ", primaryKeys.Select(x => $"T.{x} = CT.{x}"));
 
-            if(string.IsNullOrEmpty(condition))
+            if (string.IsNullOrEmpty(condition))
                 return null;
 
             string query = $@"
@@ -160,38 +160,21 @@ namespace DataSync.Common.Repositories
                 FROM CHANGETABLE(CHANGES [{tableName}], {lastChangeVersion}) AS CT
                 LEFT OUTER JOIN
                     [{tableName}] T ON {condition}";
-            var changes = await GetChangesFromDatabaseAsync(query);
+            var changes = GetChangesFromDatabase(query);
             return changes;
         }
 
-        private async Task<List<TableRecord>?> GetChangesFromDatabaseAsync(string sqlQuery)
+        private List<TableRecord>? GetChangesFromDatabase(string sqlQuery)
         {
             List<TableRecord> changes = new List<TableRecord>();
-            using (var command = DataContext.DbContext.Database.GetDbConnection().CreateCommand())
+            try
             {
-                command.CommandText = sqlQuery;
-                await DataContext.DbContext.Database.OpenConnectionAsync();
-                try
-                {
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var record = new TableRecord
-                            {
-                                Id = Guid.NewGuid(),
-                                Data = reader["Data"]?.ToString()?.Trim('[', ']'),
-                                ChangeVersion = Convert.ToInt64(reader["ChangeVersion"]),
-                                Operation = reader["Operation"]?.ToString(),
-                            };
-                            changes.Add(record);
-                        }
-                    }
-                }
-                finally
-                {
-                    await DataContext.DbContext.Database.CloseConnectionAsync();
-                }
+                changes = DataContext.DbContext.Database.SqlQueryRaw<TableRecord>(sqlQuery).ToList();
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("Error : While fetching table changes!");
+                Console.WriteLine(ex.Message);
             }
             return changes;
         }
