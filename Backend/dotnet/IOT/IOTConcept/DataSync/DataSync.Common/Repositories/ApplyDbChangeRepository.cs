@@ -31,7 +31,6 @@ namespace DataSync.Common.Repositories
                 string checkQuery = $"SELECT COUNT(1) As [Value] FROM [{tableName}] T WHERE {condition}";
                 bool isRecordExist = IsRecordExist(checkQuery);
                 if (isRecordExist) {
-                    // update Operstion
                     string updateQuery = BuildUpdateQuery(record, tableName, "Id");
                     DataContext.DbContext.Database.ExecuteSqlRaw(updateQuery, GetSqlParameters(record));
                 }
@@ -47,8 +46,10 @@ namespace DataSync.Common.Repositories
             }
 
         }
-
-        // Build Insert Query
+        public void Delete(string tableName, Dictionary<string, object> data)
+        {
+            throw new NotImplementedException();
+        }
         private string BuildInsertQuery(Dictionary<string, object> record, string tableName)
         {
             var columns = string.Join(", ", record.Keys);
@@ -59,8 +60,6 @@ namespace DataSync.Common.Repositories
                     SET IDENTITY_INSERT [{tableName}] OFF;"
                 ;
         }
-
-        // Build Update Query
         private string BuildUpdateQuery(Dictionary<string, object> record, string tableName, string primaryKey)
         {
             var setClauses = record
@@ -141,5 +140,7 @@ namespace DataSync.Common.Repositories
             }
             return false;
         }
+
+        
     }
 }

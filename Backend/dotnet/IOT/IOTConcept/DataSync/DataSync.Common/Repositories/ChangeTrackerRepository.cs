@@ -107,36 +107,27 @@ namespace DataSync.Common.Repositories
         private IEnumerable<string> GetPrimaryKeys(string tableName)
         {
             List<string> keys = new List<string>();
-            var dbConnections = DataContext.DbContext.Database.GetDbConnection();
             try
             {
-                dbConnections.Open();
-                using (var cmd = dbConnections.CreateCommand())
-                {
-                    cmd.CommandText = $@"
-                        SELECT 
-                            c.name AS ColumnName
-                        FROM 
-                            sys.indexes AS i
-                            INNER JOIN sys.index_columns AS ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
-                            INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
-                        WHERE 
-                            i.is_primary_key = 1
-                            AND i.object_id = OBJECT_ID('[{tableName}]');";
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            keys.Add(reader.GetString(0));
-                        }
-                    }
-                    dbConnections.Close();
-                }
+                string query = $@"
+                    SELECT 
+                        c.COLUMN_NAME 
+                    FROM 
+                        INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+                        INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE c 
+                            ON tc.CONSTRAINT_NAME = c.CONSTRAINT_NAME
+                            AND tc.TABLE_NAME = c.TABLE_NAME
+                    WHERE 
+                        tc.TABLE_NAME = '{tableName}'
+                        AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+                    ";
+                keys = DataContext.DbContext.Database.SqlQueryRaw<string>(query).ToList();
+
             }
-            finally 
+            catch (Exception ex)
             {
-                
-                dbConnections.Close();
+                Console.WriteLine("Error: While getting primary keys!");
+                Console.WriteLine(ex.Message);
             }
 
             return keys;

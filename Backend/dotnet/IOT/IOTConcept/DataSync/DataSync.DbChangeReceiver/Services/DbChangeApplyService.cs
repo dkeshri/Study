@@ -23,15 +23,17 @@ namespace DataSync.DbChangeReceiver.Services
             string tableName = tableChanges.TableName;
             IReadOnlyCollection<TableRecord> tableRecords = tableChanges.Records;
             foreach (TableRecord tableRecord in tableRecords) {
-
+                
                 switch (tableRecord.Operation)
                 {
+                    
                     case "I":
                     case "U":
-                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data.ToString()!);
+                        var record = JsonSerializer.Deserialize<Dictionary<string, object>>(tableRecord.Data?.ToString()!);
                         ApplyDbChangeRepository.InsertUpdate(tableName, record!);
                         break;
                     case "D":
+                        ApplyDbChangeRepository.Delete(tableName, record!);
                         break;
                 }
             
