@@ -12,6 +12,7 @@ namespace DataSync.Common.Models
         public long ChangeVersion { get; set; }
         public string Operation { get; set; }
         public string Data { get; set; }
+        public string PkKeysWithValues { get; set; }
         
     }
 }

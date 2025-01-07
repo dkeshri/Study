@@ -149,12 +149,15 @@ namespace DataSync.Common.Repositories
             var primaryKeys = GetPrimaryKeys(tableName);
             string condition = string.Join(" AND ", primaryKeys.Select(x => $"T.{x} = CT.{x}"));
 
+            var primaryKeysValueQuery = string.Join(",", primaryKeys.Select(x => $"CT.{x} As {x}"));
+
             if (string.IsNullOrEmpty(condition))
                 return null;
 
             string query = $@"
                 SELECT 
-                    (SELECT TOP 1 * FROM [{tableName}] T WHERE {condition} FOR JSON AUTO) AS Data,
+                    (SELECT TOP 1 * FROM [{tableName}] T WHERE {condition} FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) AS Data,
+                    (SELECT {primaryKeysValueQuery} FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) AS PkKeysWithValues,
                     CT.SYS_CHANGE_VERSION As ChangeVersion,
                     CT.SYS_CHANGE_OPERATION As Operation
                 FROM CHANGETABLE(CHANGES [{tableName}], {lastChangeVersion}) AS CT
