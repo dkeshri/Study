@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Dkeshri.SystemDesign.LowLevel;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace ExecuterApp.Extensions
     {
         public static void AddServices(this IServiceCollection services) 
         {
-
+            services.UseFactoryMethod();
         }
     }
 }
