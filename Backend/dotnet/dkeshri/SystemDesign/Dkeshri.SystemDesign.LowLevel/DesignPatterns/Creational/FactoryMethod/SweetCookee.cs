@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Dkeshri.SystemDesign.LowLevel.DesignPatterns.Creational.FactoryMethod
 {
-    internal class Factory
+    internal class SweetCookee : IBakedProduct
     {
+        public void UseProduct()
+        {
+            Console.WriteLine("I am Sweet Cookee!");
+        }
     }
 }
