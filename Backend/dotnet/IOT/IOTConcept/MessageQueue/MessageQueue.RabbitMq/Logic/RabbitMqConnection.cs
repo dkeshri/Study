@@ -113,7 +113,7 @@ namespace MessageQueue.RabbitMq.Logic
         private void OnConnectionShutdown(object? sender, ShutdownEventArgs e)
         {
             _isConfirmSelected = false;
-            Console.WriteLine("Connection is shutdown! closing the open channel");
+            Console.WriteLine("Connection is shutdown! closing the open channel if any!");
             if (_channel != null && _channel.IsOpen)
             {
                 _channel.Close();

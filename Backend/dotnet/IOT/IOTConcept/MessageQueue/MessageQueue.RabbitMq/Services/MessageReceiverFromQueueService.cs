@@ -13,6 +13,7 @@ namespace MessageQueue.RabbitMq.Services
     internal class MessageReceiverFromQueueService : IHostedService,IDisposable
     {
         private bool _isDisposing = false;
+        private bool _isQueueServiceStopping = false;
         private readonly string _queueName;
         private readonly IRabbitMqConnection _connection;
         private IMessageReceiver _messageReceiver;
@@ -26,7 +27,7 @@ namespace MessageQueue.RabbitMq.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Rabbit MQ Message Reciver Service is starting");
-
+            _isQueueServiceStopping = false;
             IModel? channel = _connection.Channel;
             if (channel == null || channel.IsClosed)
             {
@@ -43,6 +44,8 @@ namespace MessageQueue.RabbitMq.Services
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            Console.WriteLine(cancellationToken.IsCancellationRequested);
+            _isQueueServiceStopping = true;
             Dispose(true);
             Console.WriteLine("Shutdown RabbitMq Reciver Hosted Service");
             return Task.CompletedTask;
@@ -88,10 +91,15 @@ namespace MessageQueue.RabbitMq.Services
 
         private void TryReconnectWithDelay()
         {
+            if (_isQueueServiceStopping)
+            {
+                Console.WriteLine("MessageReceiverFromQueueService is Stopping Do not Attempt to reconnect!");
+                return;
+            }
             IModel? channel = _connection.Channel;
             while (channel == null || channel.IsClosed)
             {
-
+                
                 Console.WriteLine("Attempting to reconnect...");
                 channel = _connection.Channel;
                 Thread.Sleep(TimeSpan.FromSeconds(10));

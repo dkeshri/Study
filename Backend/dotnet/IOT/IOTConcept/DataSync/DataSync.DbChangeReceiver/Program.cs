@@ -1,6 +1,8 @@
 ﻿using DataSync.Common.Extensions;
 using DataSync.DbChangeReceiver.Extenstions;
+using DataSync.DbChangeReceiver.Interfaces;
 using DataSync.DbChangeReceiver.Services;
+using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,8 +20,16 @@ builder.ConfigureServices((hostContext, services) =>
     services.AddDataLayer();
     services.AddServices();
     services.AddHandlers();
-    services.AddHostedService<DbChangeReceiverService>();
 });
 
+var host = builder.UseConsoleLifetime().Build();
 
-builder.RunConsoleAsync().Wait();
+using (var scope = host.Services.CreateScope())
+{
+    var messageHandler = scope.ServiceProvider.GetRequiredService<IRabbitMqMessageHandler>();
+    var messageReceiver = scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
+    messageReceiver.MessageHandler = messageHandler.HandleMessage;
+    
+}
+
+host.RunAsync().Wait();
