@@ -1,11 +1,23 @@
 ﻿using DataSync.Common.Extensions;
 using DataSync.DbChangeReceiver.Extenstions;
 using DataSync.DbChangeReceiver.Interfaces;
-using DataSync.DbChangeReceiver.Services;
 using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (sender, eventArgs) =>
+{
+    // Prevent the application from exiting immediately
+    eventArgs.Cancel = true;
+    cts.Cancel();
+};
+
+AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
+{
+    cts.Cancel();
+};
 
 var builder = Host.CreateDefaultBuilder(args);
 builder.ConfigureAppConfiguration((context, config) =>
@@ -32,4 +44,4 @@ using (var scope = host.Services.CreateScope())
     
 }
 
-host.RunAsync().Wait();
+host.RunAsync(cts.Token).Wait();

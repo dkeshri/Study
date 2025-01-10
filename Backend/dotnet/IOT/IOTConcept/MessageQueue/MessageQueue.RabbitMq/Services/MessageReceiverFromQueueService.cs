@@ -31,7 +31,7 @@ namespace MessageQueue.RabbitMq.Services
             IModel? channel = _connection.Channel;
             if (channel == null || channel.IsClosed)
             {
-                TryReconnectWithDelay();
+                TryReconnectWithDelay(cancellationToken);
             }
             else
             {
@@ -44,7 +44,7 @@ namespace MessageQueue.RabbitMq.Services
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine(cancellationToken.IsCancellationRequested);
+
             _isQueueServiceStopping = true;
             Dispose(true);
             Console.WriteLine("Shutdown RabbitMq Reciver Hosted Service");
@@ -89,7 +89,7 @@ namespace MessageQueue.RabbitMq.Services
             TryReconnectWithDelay();
         }
 
-        private void TryReconnectWithDelay()
+        private void TryReconnectWithDelay(CancellationToken? cancellationToken = null)
         {
             if (_isQueueServiceStopping)
             {
@@ -101,6 +101,12 @@ namespace MessageQueue.RabbitMq.Services
             {
                 
                 Console.WriteLine("Attempting to reconnect...");
+                if(cancellationToken?.IsCancellationRequested == true)
+                {
+                    _isQueueServiceStopping = true;
+                    break;
+                }
+
                 channel = _connection.Channel;
                 Thread.Sleep(TimeSpan.FromSeconds(10));
                 if (channel != null && channel.IsOpen)
