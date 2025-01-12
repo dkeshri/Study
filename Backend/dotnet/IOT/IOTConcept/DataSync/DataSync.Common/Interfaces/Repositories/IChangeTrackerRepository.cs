@@ -25,5 +25,7 @@ namespace DataSync.Common.Interfaces.Repositories
         public bool IsDatabaseChangeTrackingEnabled();
         public bool IsDatabaseExist();
 
+        public void ApplyMigration();
+
     }
 }

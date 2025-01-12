@@ -1,14 +1,7 @@
 ﻿using DataSync.Common.Models;
 using DataSync.Common.Services;
 using DataSync.DBChangeEmitter.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataSync.DBChangeEmitter.Services
 {
@@ -17,10 +10,11 @@ namespace DataSync.DBChangeEmitter.Services
         private IDatabaseChangeTrackerService DatabaseChangeTrackerService { get; }
         private ISendMessageToRabbitMq SendMessageToRabbiMq { get; }
 
-        private IHost _host;    
+        private IHost _host;
         public DbChangeEmitterService(IDatabaseChangeTrackerService databaseChangeTrackerService,
             ISendMessageToRabbitMq sendMessageToRabbitMq,
-            IHost host):base(TimeSpan.FromSeconds(10))
+            IHost host
+            ):base(TimeSpan.FromSeconds(10))
         {
             DatabaseChangeTrackerService = databaseChangeTrackerService;
             SendMessageToRabbiMq = sendMessageToRabbitMq;
@@ -60,6 +54,7 @@ namespace DataSync.DBChangeEmitter.Services
             }
             else
             {
+                DatabaseChangeTrackerService.ApplyMigration();
                 DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
             }
             return Task.CompletedTask;

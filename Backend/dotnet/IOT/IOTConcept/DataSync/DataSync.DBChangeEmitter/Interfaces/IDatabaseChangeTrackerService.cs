@@ -14,5 +14,7 @@ namespace DataSync.DBChangeEmitter.Interfaces
         public void EnableChangeTrackingOnTables();
         public bool IsDatabaseExistAndChangeTrackingEnabled();
 
+        public void ApplyMigration();
+
     }
 }
