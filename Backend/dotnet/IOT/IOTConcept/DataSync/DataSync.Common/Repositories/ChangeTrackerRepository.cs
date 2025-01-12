@@ -261,5 +261,27 @@ namespace DataSync.Common.Repositories
             }
             return isDatabaseExist;
         }
+
+        public void ApplyMigration()
+        {
+            try
+            {
+                if (DataContext.DbContext.Database.GetPendingMigrations().Any())
+                {
+                    Console.WriteLine("DB migration started....");
+                    DataContext.DbContext.Database.Migrate();
+
+                    Console.WriteLine("DB migration successfully completed.");
+                }
+                else
+                {
+                    Console.WriteLine("DB migration: Not needed. Already up to date...");
+                }
+            }
+            catch (Exception ex) 
+            {
+            
+            }
+        }
     }
 }

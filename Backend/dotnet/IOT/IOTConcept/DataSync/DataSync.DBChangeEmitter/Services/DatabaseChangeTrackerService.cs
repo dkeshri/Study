@@ -86,5 +86,10 @@ namespace DataSync.DBChangeEmitter.Services
             }
             return DatabaseChangeTrackingEnabled;   
         }
+
+        public void ApplyMigration()
+        {
+            ChangeTrackerRepository.ApplyMigration();
+        }
     }
 }
