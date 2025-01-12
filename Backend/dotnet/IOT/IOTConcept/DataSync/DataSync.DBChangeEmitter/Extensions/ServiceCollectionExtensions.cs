@@ -2,6 +2,7 @@
 using DataSync.DBChangeEmitter.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MessageQueue.RabbitMq.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace DataSync.DBChangeEmitter.Extensions
 {
@@ -13,9 +14,9 @@ namespace DataSync.DBChangeEmitter.Extensions
             services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
             services.AddSingleton<ITopologicalSorterService, TopologicalSorterService>();
         }
-        public static void AddRabbitMq(this IServiceCollection services)
+        public static void AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddRbbitMqServices();
+            services.AddRbbitMqServices(configuration);
         }
     }
 }

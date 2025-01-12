@@ -16,6 +16,7 @@ builder.ConfigureServices((context, services) =>
 {
     services.AddServices();
     services.AddHostedService<ExecuterAppHostedService>();
+    services.AddRabbitQ();
 });
 
 builder.RunConsoleAsync().Wait();
