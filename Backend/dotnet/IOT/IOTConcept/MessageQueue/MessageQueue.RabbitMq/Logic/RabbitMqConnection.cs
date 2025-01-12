@@ -18,6 +18,9 @@ namespace MessageQueue.RabbitMq.Logic
         private readonly string hostName;
         private readonly int port;
         private bool _isConfirmSelected = false;
+        private string userName;
+        private string password;
+        private string clientProvidedName;
 
         private IConnection? Connection { get => CreateConnection(_connectionFactory); }
         public IModel? Channel { get => CreateChannelIfClosed(Connection); }
@@ -27,17 +30,34 @@ namespace MessageQueue.RabbitMq.Logic
         public RabbitMqConnection(IConfiguration configuration)
         {
 
-            hostName = configuration.GetRabbitMqHostName();
+            hostName = configuration.GetRabbitMqHostName() ?? string.Empty;
             port = configuration.GetRabbitMqPort();
-            _exchangeName = configuration.GetRabbitMqExchangeName();
+            _exchangeName = configuration.GetRabbitMqExchangeName() ?? string.Empty;
             _queueName = configuration.GetRabbitMqQueueName() ?? "defaultQueue";
+            userName = configuration.GetRabbitMqUserName() ?? string.Empty;
+            password = configuration.GetRabbitMqPassword() ?? string.Empty;
+            clientProvidedName = configuration.GetRabbitMqClientProvidedName() ?? "defaultProvider";
+            _connectionFactory = CreateConnectionFactory();
 
-            string userName = configuration.GetRabbitMqUserName();
-            string password = configuration.GetRabbitMqPassword();
-            string clientProvidedName = configuration.GetRabbitMqClientProvidedName();
+        }
+
+        public RabbitMqConnection(RabbitMqConfig rabbitMqConfig)
+        {
+            hostName = rabbitMqConfig.HostName;
+            port = rabbitMqConfig.Port;
+            _exchangeName = rabbitMqConfig.ExchangeName;
+            _queueName = rabbitMqConfig.QueueName ?? "defaultQueue";
+            userName = rabbitMqConfig.UserName;
+            password = rabbitMqConfig.Password;
+            clientProvidedName = rabbitMqConfig.ClientProvidedName ?? "defaultProvider";
+            _connectionFactory = CreateConnectionFactory();
+        }
+
+        private ConnectionFactory CreateConnectionFactory()
+        {
             try
             {
-                _connectionFactory = new ConnectionFactory()
+                return new ConnectionFactory()
                 {
                     HostName = hostName,
                     Port = port,
@@ -45,23 +65,21 @@ namespace MessageQueue.RabbitMq.Logic
                     Password = password,
                     ClientProvidedName = clientProvidedName
                 };
-                CreateConnection(_connectionFactory);
             }
-            catch (Exception ex) 
-            { 
-                throw new Exception("Error ouccr while creating connection",ex);
+            catch (Exception ex)
+            {
+                throw new Exception("Error ouccr while creating connection", ex);
             }
-            
         }
 
         private IModel? CreateChannelIfClosed(IConnection? connection)
         {
-            if(connection == null)
+            if (connection == null)
             {
                 return null;
             }
 
-            if(_channel!= null && _channel.IsOpen)
+            if (_channel != null && _channel.IsOpen)
                 return _channel;
             _channel = connection.CreateModel();
             return _channel;
@@ -72,16 +90,17 @@ namespace MessageQueue.RabbitMq.Logic
             if (!IsRabbitMqReachable(hostName, port)) return null;
             try
             {
-                if(_connection != null && _connection.IsOpen)
-                   return _connection;
+                if (_connection != null && _connection.IsOpen)
+                    return _connection;
                 _connection = connectionFactory.CreateConnection();
                 _connection.ConnectionShutdown += OnConnectionShutdown;
                 return _connection;
             }
-            catch (Exception) { 
+            catch (Exception)
+            {
                 return null;
             }
-            
+
         }
 
         private bool IsRabbitMqReachable(string hostName, int port)
@@ -135,7 +154,7 @@ namespace MessageQueue.RabbitMq.Logic
             }
             if (disposing)
             {
-                if(_channel !=null && _channel.IsOpen)
+                if (_channel != null && _channel.IsOpen)
                 {
                     _channel.Close();
                     _channel.Dispose();
@@ -150,8 +169,9 @@ namespace MessageQueue.RabbitMq.Logic
         }
         public void EnableConfirmIfNotSelected()
         {
-            if(_channel == null || _channel.IsClosed) return;
-            if (_isConfirmSelected == false) { 
+            if (_channel == null || _channel.IsClosed) return;
+            if (_isConfirmSelected == false)
+            {
                 _channel.ConfirmSelect();
             }
             else

@@ -2,6 +2,7 @@
 using DataSync.DbChangeReceiver.Interfaces;
 using DataSync.DbChangeReceiver.Services;
 using MessageQueue.RabbitMq.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace DataSync.DbChangeReceiver.Extenstions
 {
     internal static class ServiceCollectionExtensions
     {
-        public static void AddServices(this IServiceCollection services)
+        public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddRbbitMqServices();
+            services.AddRbbitMqServices(configuration);
             services.AddRbbitMqMessageReceiverServiceForQueue();
             services.AddMediatR(cfg => {
                 // Note here we can use any class to get the current assembly.

@@ -4,6 +4,13 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PackageId>RabbitMqSenderReceiver</PackageId>
+	<!-- Unique identifier for your package -->
+	<Version>1.0.1</Version>
+	<!-- Semantic versioning -->
+	<Authors>Deepak Keshri</Authors>
+	<Description>This will help the user manage the connection and allow them to send messages to the RabbitMQ queue. Additionally, there is a RabbitMQ queue receiver that retrieves the messages. </Description>
+	<PackageTags>RabbitMq Sender;RabbitMq Receiver;Message Sender;Message Receiver;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
