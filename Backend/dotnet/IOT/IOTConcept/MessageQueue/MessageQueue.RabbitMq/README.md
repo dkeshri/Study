@@ -7,7 +7,7 @@ Additionally, there is a RabbitMQ queue receiver that retrieves the messages.
 This package uses the `IServiceCollection` to setup. We have an Extension **AddRabbitMqServices** Method is use to setup RabbitMq Connections.
 
 **Register Sender**
-> Note Make sure to set `RegisterSenderServices` to `true` while configuration then only it will Provide `IMessageReceiver`
+> Note Make sure to set `RegisterSenderServices` to `true`
 ```csharp
 services.AddRabbitMqServices((config) =>
 {
@@ -17,13 +17,13 @@ services.AddRabbitMqServices((config) =>
     config.UserName = "RabblitMqUserName";
     config.Password = "password";
     config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
-    config.RegisterSenderServices = true;
+    config.RegisterSenderServices = true; // Set True to register Sender services
 });
 ```
 
 **Register Receiver**
 
-> Note Make sure to set `RegisterReceiverServices` to `true` while configuration then only it will Provide `ISendMessage`
+> Note Make sure to set `RegisterReceiverServices` to `true`
 
 ```csharp
 services.AddRabbitMqServices((config) =>
@@ -34,7 +34,7 @@ services.AddRabbitMqServices((config) =>
     config.UserName = "RabblitMqUserName";
     config.Password = "password";
     config.ClientProvidedName = "ProviderName"; // Receiver or Any name you like
-    config.RegisterReceiverServices = true;
+    config.RegisterReceiverServices = true; // Set to True to register Receiver services.
 });
 ```
 
@@ -45,16 +45,14 @@ services.AddRabbitMqServices((config) =>
 
 ### In Sender Application
 
-For the Sender it Provide `ISendMessage` interface. Having following methods.
-`SendToQueue(string message)`, `SendToQueue(string queueName, string message)` 
-You can also provide queueName while sending Messages to rabbitMQ.
+The `ISendMessage` interface is provided for the sender, offering the following methods:
 
-`ISendMessage` is provided during **confugration**  in `IServiceCollection` dependency injection Container and inject in Constructor to your class as below code.
+* SendToQueue(string message)
+* SendToQueue(string queueName, string message)
 
-> Note Make sure to also register you class in `IServiceCollection` before running application.
+You can specify the `queueName` when sending messages to RabbitMQ.
 
-
-**Example**
+The `ISendMessage` interface is registered during the configuration phase in the `IServiceCollection` dependency injection container and can be injected into your class constructor, as demonstrated in the code below:
 
 ```csharp
 class SendMessageToRabbitMq : ISendMessageToRabbitMq
@@ -103,10 +101,14 @@ builder.RunConsoleAsync().Wait();
 
 ### In Receiver Application
 
-There is an interface `IMessageReceiver` that has delegate `Action<object?, BasicDeliverEventArgs, IModel>? MessageHandler` .
-Allow you to provide your callback method so that it can be called when message received from rabbitMq Queue.
+The `IMessageReceiver` interface includes a delegate:
+`Action<object?, BasicDeliverEventArgs, IModel>? MessageHandler`.
 
-> Note Make sure to set `RegisterReceiverServices` to `true` while configuration then only it will Provide `IMessageReceiver`
+This allows you to provide a callback method that will be invoked when a message is received from the RabbitMQ queue.
+
+> Note: Ensure that `RegisterReceiverServices` is set to `true` during configuration. This is necessary for the `IMessageReceiver` interface to be provided. 
+
+As demonstrated in the code below:
 
 ```csharp
 var builder = Host.CreateDefaultBuilder(args);
