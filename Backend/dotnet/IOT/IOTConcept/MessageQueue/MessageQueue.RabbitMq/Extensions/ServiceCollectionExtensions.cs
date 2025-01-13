@@ -9,28 +9,37 @@ using Microsoft.Extensions.DependencyInjection;
 namespace MessageQueue.RabbitMq.Extensions
 {
     public static class ServiceCollectionExtensions
-    {
-        public static void AddRbbitMqServices(this IServiceCollection services, IConfiguration configuration)
+    {      
+        public static void AddRabbitMqServices(this IServiceCollection services, Action<RabbitMqConfig> configuration)
         {
-            services.AddSingleton<IRabbitMqConnection>(sp =>
-            {
-                return new RabbitMqConnection(configuration);
-            });
-
-            AddSenderService(services);
+            RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
+            configuration.Invoke(rabbitMqConfig);
+            services.AddRabbitMqServices(rabbitMqConfig);
         }
 
-        public static void AddRbbitMqServices(this IServiceCollection services, RabbitMqConfig rabbitMqConfig)
+        public static void AddRabbitMqServices(this IServiceCollection services, RabbitMqConfig rabbitMqConfig)
         {
             services.AddSingleton<IRabbitMqConnection>(sp =>
             {
                 return new RabbitMqConnection(rabbitMqConfig);
             });
 
-            AddSenderService(services);
+            rabbitMqConfig.AddRequestedServices(services);
         }
 
-        private static void AddSenderService(IServiceCollection services)
+        private static void AddRequestedServices(this RabbitMqConfig config, IServiceCollection services)
+        {
+            if (config.RegisterSenderServices)
+            {
+                services.AddSenderService();
+            }
+
+            if (config.RegisterReceiverServices) 
+            { 
+                services.AddRbbitMqMessageReceiverServiceForQueue();
+            }
+        }
+        private static void AddSenderService(this IServiceCollection services)
         {
             services.AddSingleton<ISendMessage, SendMessage>();
         }

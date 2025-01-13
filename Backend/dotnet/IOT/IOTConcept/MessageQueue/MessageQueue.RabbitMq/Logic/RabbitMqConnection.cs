@@ -27,20 +27,6 @@ namespace MessageQueue.RabbitMq.Logic
         public string ExchangeName { get => _exchangeName; }
         public string QueueName { get => _queueName; }
 
-        public RabbitMqConnection(IConfiguration configuration)
-        {
-
-            hostName = configuration.GetRabbitMqHostName() ?? string.Empty;
-            port = configuration.GetRabbitMqPort();
-            _exchangeName = configuration.GetRabbitMqExchangeName() ?? string.Empty;
-            _queueName = configuration.GetRabbitMqQueueName() ?? "defaultQueue";
-            userName = configuration.GetRabbitMqUserName() ?? string.Empty;
-            password = configuration.GetRabbitMqPassword() ?? string.Empty;
-            clientProvidedName = configuration.GetRabbitMqClientProvidedName() ?? "defaultProvider";
-            _connectionFactory = CreateConnectionFactory();
-
-        }
-
         public RabbitMqConnection(RabbitMqConfig rabbitMqConfig)
         {
             hostName = rabbitMqConfig.HostName;

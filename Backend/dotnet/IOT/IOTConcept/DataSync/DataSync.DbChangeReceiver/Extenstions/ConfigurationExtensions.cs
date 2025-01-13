@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataSync.DBChangeEmitter.Extensions
+namespace DataSync.DbChangeReceiver.Extenstions
 {
     internal static class ConfigurationExtensions
     {

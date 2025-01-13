@@ -16,8 +16,17 @@ namespace DataSync.DbChangeReceiver.Extenstions
     {
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddRbbitMqServices(configuration);
-            services.AddRbbitMqMessageReceiverServiceForQueue();
+            services.AddRabbitMqServices((config) =>
+            {
+                config.HostName = configuration.GetRabbitMqHostName()!;
+                config.Port = configuration.GetRabbitMqPort();
+                config.QueueName = configuration.GetRabbitMqQueueName()!;
+                config.UserName = configuration.GetRabbitMqUserName()!;
+                config.Password = configuration.GetRabbitMqPassword()!;
+                config.ClientProvidedName = configuration.GetRabbitMqClientProvidedName()!;
+                config.RegisterReceiverServices = true;
+
+            });
             services.AddMediatR(cfg => {
                 // Note here we can use any class to get the current assembly.
                 // here we are taking ServiceCollectionExtensions.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessageQueue.RabbitMq.Logic
+namespace MessageQueue.RabbitMq.Extensions
 {
     public class RabbitMqConfig
     {
@@ -15,7 +15,9 @@ namespace MessageQueue.RabbitMq.Logic
         public string UserName { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string ClientProvidedName { get; set; } = null!;
-        public string Topic {  get; set; } = null!;
+        public string Topic { get; set; } = null!;
+        public bool RegisterSenderServices { get; set; } = false;
+        public bool RegisterReceiverServices { get; set;} = false;
 
     }
 }
