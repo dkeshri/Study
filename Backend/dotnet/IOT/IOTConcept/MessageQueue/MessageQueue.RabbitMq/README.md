@@ -1,4 +1,160 @@
-﻿# Rabbit MQ
+﻿# Dkeshri.MessageQueue.RabbitMq
+This will help the user manage the connection and allow them to send messages to the RabbitMQ queue. 
+Additionally, there is a RabbitMQ queue receiver that retrieves the messages.
+
+## How to Configure
+
+This package uses the `IServiceCollection` to setup. We have an Extension **AddRabbitMqServices** Method is use to setup RabbitMq Connections.
+
+**Register Sender**
+> Note Make sure to set `RegisterSenderServices` to `true` while configuration then only it will Provide `IMessageReceiver`
+```csharp
+services.AddRabbitMqServices((config) =>
+{
+    config.HostName = "RabbitMqHost";
+    config.Port = 5672; // your RabbitMq Port
+    config.QueueName = "YourQueueName";
+    config.UserName = "RabblitMqUserName";
+    config.Password = "password";
+    config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
+    config.RegisterSenderServices = true;
+});
+```
+
+**Register Receiver**
+
+> Note Make sure to set `RegisterReceiverServices` to `true` while configuration then only it will Provide `ISendMessage`
+
+```csharp
+services.AddRabbitMqServices((config) =>
+{
+    config.HostName = "RabbitMqHost";
+    config.Port = 5672; // your RabbitMq Port
+    config.QueueName = "YourQueueName";
+    config.UserName = "RabblitMqUserName";
+    config.Password = "password";
+    config.ClientProvidedName = "ProviderName"; // Receiver or Any name you like
+    config.RegisterReceiverServices = true;
+});
+```
+
+> Note: Idealy One Application is Sender and other application is receiver. but you can configure both sender/receiver in one application too. 
+
+
+## How to Use
+
+### In Sender Application
+
+For the Sender it Provide `ISendMessage` interface. Having following methods.
+`SendToQueue(string message)`, `SendToQueue(string queueName, string message)` 
+You can also provide queueName while sending Messages to rabbitMQ.
+
+`ISendMessage` is provided during **confugration**  in `IServiceCollection` dependency injection Container and inject in Constructor to your class as below code.
+
+> Note Make sure to also register you class in `IServiceCollection` before running application.
+
+
+**Example**
+
+```csharp
+class SendMessageToRabbitMq : ISendMessageToRabbitMq
+{
+    private ISendMessage SendMessage { get; }
+    public SendMessageToRabbiMq(ISendMessage sendMessage)
+    {
+        SendMessage = sendMessage;
+    }
+
+    public bool SendMessageToRabbitMq(string DataToSend)
+    {
+        return SendMessage.SendToQueue(DataToSend);
+    }
+
+    public bool SendMessageToRabbitMq(string queueName, string DataToSend)
+    {
+        return SendMessage.SendToQueue(queueName,DataToSend);
+    }
+}
+```
+
+Register `SendMessageToRabbiMq` in `IServiceCollection`
+
+```csharp
+var builder = Host.CreateDefaultBuilder(args);
+builder.ConfigureServices((hostContext, services) =>
+{
+    services.AddRabbitMqServices((config) =>
+    {
+        config.HostName = "RabbitMqHost";
+        config.Port = 5672; // your RabbitMq Port
+        config.QueueName = "YourQueueName";
+        config.UserName = "RabblitMqUserName";
+        config.Password = "password";
+        config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
+        config.RegisterSenderServices = true;
+    });
+
+    services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
+
+});
+builder.RunConsoleAsync().Wait();
+```
+
+
+### In Receiver Application
+
+There is an interface `IMessageReceiver` that has delegate `Action<object?, BasicDeliverEventArgs, IModel>? MessageHandler` .
+Allow you to provide your callback method so that it can be called when message received from rabbitMq Queue.
+
+> Note Make sure to set `RegisterReceiverServices` to `true` while configuration then only it will Provide `IMessageReceiver`
+
+```csharp
+var builder = Host.CreateDefaultBuilder(args);
+builder.ConfigureServices((hostContext, services) =>
+{
+    services.AddRabbitMqServices((config) =>
+    {
+        config.HostName = "RabbitMqHost";
+        config.Port = 5672; // your RabbitMq Port
+        config.QueueName = "YourQueueName";
+        config.UserName = "RabblitMqUserName";
+        config.Password = "password";
+        config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
+        config.RegisterReceiverServices = true;
+    });
+    services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
+
+});
+
+var host = builder.UseConsoleLifetime().Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var messageReceiver = scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
+    messageReceiver.MessageHandler = (model,data,channel) =>
+    {
+        var message = data.Body.ToArray();
+        var messageString = Encoding.UTF8.GetString(message);
+        Console.WriteLine(messageString);
+    };
+}
+
+host.RunAsync().Wait();
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Rabbit MQ SetpUp
 
 Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
 best practice to implement RabbitMq Configuration is to have one __Connection__ per `Process` Or `Application` and one __Channel__ per thread.
@@ -34,55 +190,4 @@ Port `5672` is use in communication during producing and consuming of message.
 
 <small style='color:green'>_Username_</small> `guest` and <small style='color:green'>_Password_</small> `guest`
  
-
-# Publish RabbitMq App to nuget package.
-
-### Set Up the Package Information in .csproj
-
-In your project’s .csproj file, make sure you have defined the necessary NuGet metadata like PackageId, Version, and other details:
-
-```xml
-<PropertyGroup>
-  <TargetFramework>net7.0</TargetFramework>  <!-- Your target framework -->
-  <PackageId>MyLibrary</PackageId>
-  <Version>1.0.0</Version>
-  <Authors>Your Name</Authors>
-  <Company>Your Company</Company>
-  <Description>A description of your package</Description>
-  <PackageTags>rabbitmq;connection;manager</PackageTags>
-</PropertyGroup>
-
-```
-
-### Build the Project
-Before packaging, make sure your project is built so that the .dll is available.
-
-Go to Build in the top menu and select Build Solution (or press Ctrl + Shift + B).
-This will generate the .dll in the bin\Release or bin\Debug folder.
-
-
-### Pack the Project in Visual Studio
-You can use Visual Studio’s built-in tools to create a NuGet package. Here’s how:
-
-Right-click the project in Solution Explorer.
-Select Publish or Pack (depending on your version of Visual Studio).
-If you see Publish:
-Click Publish and choose NuGet Package as the destination (if it prompts you to choose a publishing target).
-This will create a .nupkg file.
-If you see **Pack** directly:
-* Select **Pack** to create the .nupkg file.
-The `.nupkg` file will be placed in the `/bin/Release` or `/bin/Debug` folder (based on your build configuration).
-
-### Publish the Package (Optional)
-Once you have the .nupkg file, you can push it to NuGet.org or any other NuGet feed.
-
-* Push to NuGet.org:
-	1. Create an API key on NuGet.org.
-	2. Use the following command to push the package:
-
-```bash
-dotnet nuget push bin/Release/RabbitMqSenderReceiver.1.0.0.nupkg --api-key Api_Key --source https://api.nuget.org/v3/index.json
-```
-
-Once published, your `.dll` will be available as a NuGet package that others can install and use.
 
