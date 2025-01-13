@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "DataSync.DBChangeEmitter": {
+    "DataSync.DBChangeEmitterApp": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
