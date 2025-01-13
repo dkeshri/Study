@@ -1,13 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PackageId>Dkeshri.DataSync.DbChangeEmitter</PackageId>
+	<Version>1.0.0</Version>
+	<Authors>Deepak Keshri</Authors>
+	<Description>
+		Tracks changes in an MSSQL database and sends updates to Message Brocker Like RabbitMq.
+	</Description>
+	<PackageTags>MSSQL;Database;Sync;Message Broker;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,12 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj" />
     <ProjectReference Include="..\DataSync.Common\DataSync.Common.csproj" />
   </ItemGroup>
- <ItemGroup>
-	<None Update="appsettings*.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
- </ItemGroup>
 </Project>

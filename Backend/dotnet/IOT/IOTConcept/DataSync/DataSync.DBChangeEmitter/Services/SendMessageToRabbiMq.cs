@@ -1,12 +1,7 @@
 ﻿using DataSync.Common.Models;
 using DataSync.DBChangeEmitter.Interfaces;
 using MessageQueue.RabbitMq.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DataSync.DBChangeEmitter.Services
 {

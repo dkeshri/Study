@@ -14,12 +14,21 @@ namespace DataSync.Common.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static void AddDataLayer(this IServiceCollection services)
+        public static void AddDataLayer(this IServiceCollection services, Action<DbConfig> action)
         {
-            services.AddSingleton<IDataContext, DataSyncDbContext>();
-            LoadRepositories(services);
+            DbConfig dbConfig = new DbConfig();
+            action.Invoke(dbConfig);
+            services.AddDataLayer(dbConfig);
         }
 
+        public static void AddDataLayer(this IServiceCollection services, DbConfig config)
+        {
+            services.AddSingleton<IDataContext>(sp =>
+            {
+                return new DataSyncDbContext(config);
+            });
+            LoadRepositories(services);
+        }
         private static void LoadRepositories(IServiceCollection services)
         {
             services.AddSingleton<IChangeTrackerRepository,ChangeTrackerRepository>();

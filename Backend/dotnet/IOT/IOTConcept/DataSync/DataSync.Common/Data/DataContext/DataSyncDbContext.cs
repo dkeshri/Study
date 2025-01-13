@@ -15,14 +15,14 @@ namespace DataSync.Common.Data.DataContext
 {
     internal class DataSyncDbContext : DataContextBase
     {
-        public DataSyncDbContext(IConfiguration configuration) : base(configuration)
+        public DataSyncDbContext(DbConfig configuration) : base(configuration)
         {
 
         }
 
         public override string GetConnectionString()
         {
-            string? connectionString = Configuration.GetConnectionString("DefaultConnection");
+            string? connectionString = Configuration.ConnectionString;
             if (connectionString == null)
             {
                 throw new Exception("Connection String can't be empty");
@@ -36,17 +36,10 @@ namespace DataSync.Common.Data.DataContext
             if (!optionsBuilder.IsConfigured)
             {
                 string connectionString = GetConnectionString();
-                int? transationTimout = Configuration.GetDatabaseTransactionTimeOutInSec();
-                bool enableDatabaseLogging = Configuration.GetIsDatabaseLoggingEnable();
+                int? transationTimout = Configuration.TransactionTimeOutInSec;
 
                 optionsBuilder.UseSqlServer(connectionString,
                     opt => opt.CommandTimeout(transationTimout));
-
-                if (enableDatabaseLogging)
-                {
-                    optionsBuilder.EnableSensitiveDataLogging()
-                        .LogTo(Console.WriteLine, LogLevel.Information);
-                }
 
             }
         }

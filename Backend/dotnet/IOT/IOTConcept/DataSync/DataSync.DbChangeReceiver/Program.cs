@@ -29,7 +29,7 @@ builder.ConfigureAppConfiguration((context, config) =>
 });
 builder.ConfigureServices((hostContext, services) =>
 {
-    services.AddDataLayer();
+    //services.AddDataLayer();
     services.AddServices(hostContext.Configuration);
     services.AddHandlers();
 });

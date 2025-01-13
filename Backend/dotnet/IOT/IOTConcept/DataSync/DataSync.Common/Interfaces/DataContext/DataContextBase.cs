@@ -12,11 +12,10 @@ namespace DataSync.Common.Interfaces.DataContext
     public abstract class DataContextBase : DbContext, IDataContext
     {
         private bool _disposed = false;
-        protected IConfiguration Configuration { get; }
-        public DataContextBase(IConfiguration configuration)
+        protected DbConfig Configuration { get; }
+        public DataContextBase(DbConfig configuration)
         {
             this.Configuration = configuration;
-            this.DefaultSchema = Configuration.GetDatabaseSchema();
         }
         public DbContext DbContext => this;
         public override void Dispose()
@@ -25,7 +24,6 @@ namespace DataSync.Common.Interfaces.DataContext
             GC.SuppressFinalize(this);
         }
         public abstract string GetConnectionString();
-        protected string DefaultSchema { get; }
         private void Dispose(bool disposing)
         {
             if (_disposed)
