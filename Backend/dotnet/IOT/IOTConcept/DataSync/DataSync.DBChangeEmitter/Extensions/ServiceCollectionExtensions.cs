@@ -16,7 +16,17 @@ namespace DataSync.DBChangeEmitter.Extensions
         }
         public static void AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddRbbitMqServices(configuration);
+            services.AddRabbitMqServices((config) =>
+            {
+                config.HostName = configuration.GetRabbitMqHostName()!;
+                config.Port = configuration.GetRabbitMqPort();
+                config.QueueName = configuration.GetRabbitMqQueueName()!;
+                config.UserName = configuration.GetRabbitMqUserName()!;
+                config.Password = configuration.GetRabbitMqPassword()!;
+                config.ClientProvidedName = configuration.GetRabbitMqClientProvidedName()!;
+                config.RegisterSenderServices = true;
+
+            });
         }
     }
 }
