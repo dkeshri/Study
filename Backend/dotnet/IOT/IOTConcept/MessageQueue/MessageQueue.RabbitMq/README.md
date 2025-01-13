@@ -144,19 +144,7 @@ using (var scope = host.Services.CreateScope())
 host.RunAsync().Wait();
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-# Rabbit MQ SetpUp
+# Rabbit MQ SetUp
 
 Generally in Message Queue system __Producer(Sender)__ and __Consumer(Reciver)__ are saperate application therefore 
 best practice to implement RabbitMq Configuration is to have one __Connection__ per `Process` Or `Application` and one __Channel__ per thread.
