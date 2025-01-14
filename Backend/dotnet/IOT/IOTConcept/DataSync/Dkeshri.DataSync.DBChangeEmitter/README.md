@@ -6,9 +6,7 @@ This application help to track the change in `MsSql` Database changes and send t
 
 ## Pre-requisite
 
-> Note: Before running image need some steps to perform
-
-### Step 1: Enable Change tracking on Database
+### Enable Change tracking on Database
 
 > If not enabled please run below command.
 
@@ -17,3 +15,80 @@ ALTER DATABASE YourDatabaseName
 SET CHANGE_TRACKING = ON 
 (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON);
 ```
+
+## How to use
+
+This package uses the `IServiceCollection` to setup. There is an Extension `AddDataSyncDbChangeEmitter` Method is use to setup. 
+
+You need to provide Message Broker Details (like `rabbitMq`) and `MsSql` Connection details to work this package.
+
+```csharp
+services.AddDataSyncDbChangeEmitter((config) =>
+{
+    config.AddRabbitMqBroker((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "localhost";
+        rabbitMqConfig.Port = 5672;
+        rabbitMqConfig.QueueName = "DataSyncQueue";
+        rabbitMqConfig.UserName = "guest";
+        rabbitMqConfig.Password = "guest";
+    });
+
+    config.AddDataLayer((dbType,config) =>
+    {
+        dbType = DatabaseType.MSSQL;
+        config.ConnectionString = "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False";
+        config.TransactionTimeOutInSec = 30;
+    });
+});
+```
+**Example:** We have a console app in Program.cs file use below code.
+
+```csharp
+using Dkeshri.DataSync.DBChangeEmitter.Extensions;
+using Microsoft.Extensions.Hosting;
+
+var builder = Host.CreateDefaultBuilder(args);
+
+builder.ConfigureServices((hostContext, services) =>
+{
+
+    services.AddDataSyncDbChangeEmitter((config) =>
+    {
+        config.AddRabbitMqBroker((rabbitMqConfig) =>
+        {
+            rabbitMqConfig.HostName = "localhost";
+            rabbitMqConfig.Port = 5672;
+            rabbitMqConfig.QueueName = "DataSyncQueue";
+            rabbitMqConfig.UserName = "guest";
+            rabbitMqConfig.Password = "guest";
+        });
+
+        config.AddDataLayer((dbType,config) =>
+        {
+            dbType = DatabaseType.MSSQL;
+            config.ConnectionString = "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False";
+            config.TransactionTimeOutInSec = 30;
+        });
+    });
+});
+builder.RunConsoleAsync().Wait();
+```
+
+## Configuration.
+
+After running this application, it will perform **database migration**, creating a table named `ChangeTrackers` in your database.
+
+You need to insert your table into the `ChangeTrackers` table. This table contains two columns: `TableName` and `ChangeVersion`. You need to set initial value as `0` to `ChangeVersion` column.
+
+use below query to insert tableName.
+
+```sql
+INSERT Into ChangeTrackers (TableName,ChangeVersion)
+VALUES('YourTableName',0);
+```
+
+> Note: Make sure dependent tableName should be there in ChangeTrackers.
+**Example :**
+
+let say you have two tables `orders` and `ordersSummary` tables, `Orders` table has foreign refrance of `ordersSummary` table then you have to insert both tableName (`orders` and `OrdersSummary`) in `ChangeTrackers` Table.
