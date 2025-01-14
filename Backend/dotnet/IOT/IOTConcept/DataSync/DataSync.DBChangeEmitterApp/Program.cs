@@ -1,4 +1,4 @@
-﻿using DataSync.DBChangeEmitter.Extensions;
+﻿using Dkeshri.DataSync.DBChangeEmitter.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -20,7 +20,7 @@ builder.ConfigureServices((hostContext, services) =>
         {
             rabbitMqConfig.HostName = "localhost";
             rabbitMqConfig.Port = 5672;
-            rabbitMqConfig.QueueName = "DataSyncQueueApp";
+            rabbitMqConfig.QueueName = "DataSyncQueue";
             rabbitMqConfig.UserName = "guest";
             rabbitMqConfig.Password = "guest";
         });

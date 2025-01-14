@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dkeshri.DataSync.DbChangeEmitter" Version="1.0.2" />
+		<PackageReference Include="Dkeshri.DataSync.DBChangeEmitter" Version="1.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
