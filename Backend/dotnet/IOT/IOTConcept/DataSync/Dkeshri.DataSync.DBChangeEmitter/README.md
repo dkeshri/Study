@@ -37,12 +37,14 @@ services.AddDataSyncDbChangeEmitter((config) =>
     config.AddDataLayer((dbType,config) =>
     {
         dbType = DatabaseType.MSSQL;
-        config.ConnectionString = "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False";
+        config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=UourDbPassword;Encrypt=False";
         config.TransactionTimeOutInSec = 30;
     });
 });
 ```
-**Example:** We have a console app in Program.cs file use below code.
+**Example:** 
+
+Lets say we have .Net Core `Console Application`, Use below code in `Program.cs` file and run the application.
 
 ```csharp
 using Dkeshri.DataSync.DBChangeEmitter.Extensions;
@@ -67,7 +69,7 @@ builder.ConfigureServices((hostContext, services) =>
         config.AddDataLayer((dbType,config) =>
         {
             dbType = DatabaseType.MSSQL;
-            config.ConnectionString = "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False";
+            config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=UourDbPassword;Encrypt=False";
             config.TransactionTimeOutInSec = 30;
         });
     });
