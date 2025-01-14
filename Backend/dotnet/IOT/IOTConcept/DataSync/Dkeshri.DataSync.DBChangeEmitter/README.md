@@ -42,7 +42,9 @@ services.AddDataSyncDbChangeEmitter((config) =>
     });
 });
 ```
-**Example:** We have a console app in Program.cs file use below code.
+**Example:** 
+
+Lets say we have .Net Core `Console Application`, Use below code in `Program.cs` file and run the application.
 
 ```csharp
 using Dkeshri.DataSync.DBChangeEmitter.Extensions;
