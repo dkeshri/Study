@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "DataSync.DbChangeReceiver": {
+    "DataSync.DbChangeReceiverApp": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
