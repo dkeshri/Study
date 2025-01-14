@@ -88,6 +88,79 @@ dotnet pack --configuration Release --property:Version=2.0.0
 Even if the `.csproj` has `<Version>1.2.3</Version>`, the package will have the version `2.0.0`.
 
 
+### Centralize Version Management
+Step 1: Use a common property for the version to ensure consistency across both projects. You can achieve this by using:
+
+**Directory.Build.props**
+
+Create a `Directory.Build.props` file in the root directory of your solution (or wherever the common parent directory of the projects is).
+
+Example `Directory.Build.props`:
+```bash
+<Project>
+  <PropertyGroup>
+    <Version>1.2.0</Version>
+  </PropertyGroup>
+</Project>
+```
+This will apply the `Version` property to all projects within the directory structure.
+
+
+**Step 2: Reference the Common Version**
+
+Each project will automatically inherit the Version property from `Directory.Build.props`. You don’t need to specify the version explicitly in individual `.csproj`files.
+
+Example `.csproj` for Project A:
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+</Project>
+```
+
+Example .csproj for Project B (which references Project A):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectA\ProjectA.csproj" />
+  </ItemGroup>
+</Project>
+
+```
+
+**Step 3: Update the Version Dynamically**
+
+When incrementing the version (e.g., for a new build), you only need to update it in the `Directory.Build.props` file.
+
+**Step 4: Pack and Push Both Projects**
+
+Use the `dotnet pack` and `dotnet nuget` push commands to pack and push both projects in the correct dependency order:
+> Note Ensure You’re in the Correct Directory
+Navigate to the directory containing your `.csproj` or `.sln` file before running the command.
+
+`For my case I need to pack all the package so My current diroctory is .sln directory where I will run below command`
+**Pack Command:**
+```bash
+dotnet pack --configuration Release
+```
+This will create .nupkg files for both projects, with consistent versions.
+
+**Push Command:**
+
+```bash
+dotnet nuget push ./ProjectA/bin/Release/ProjectA.1.2.0.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
+dotnet nuget push ./ProjectB/bin/Release/ProjectB.1.2.0.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
+```
+
+
+
+
 ## Visual Studio
 
 ### Set Up the Package Information in .csproj
