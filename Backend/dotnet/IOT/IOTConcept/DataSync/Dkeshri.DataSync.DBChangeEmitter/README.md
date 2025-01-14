@@ -37,7 +37,7 @@ services.AddDataSyncDbChangeEmitter((config) =>
     config.AddDataLayer((dbType,config) =>
     {
         dbType = DatabaseType.MSSQL;
-        config.ConnectionString = "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False";
+        config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=UourDbPassword;Encrypt=False";
         config.TransactionTimeOutInSec = 30;
     });
 });
@@ -69,7 +69,7 @@ builder.ConfigureServices((hostContext, services) =>
         config.AddDataLayer((dbType,config) =>
         {
             dbType = DatabaseType.MSSQL;
-            config.ConnectionString = "Server=localhost,1433;Database=Store;User Id=sa;Password=MsSqlServer@2023;Encrypt=False";
+            config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=UourDbPassword;Encrypt=False";
             config.TransactionTimeOutInSec = 30;
         });
     });
