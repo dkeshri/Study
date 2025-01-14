@@ -1,4 +1,5 @@
-﻿using DataSync.DbChangeReceiver.Extenstions;
+﻿
+using Dkeshri.DataSync.DbChangeReceiver.Extenstions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

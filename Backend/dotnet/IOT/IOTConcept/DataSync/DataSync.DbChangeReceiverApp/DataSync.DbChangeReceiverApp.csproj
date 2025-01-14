@@ -12,7 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DataSync.DbChangeReceiver\DataSync.DbChangeReceiver.csproj" />
+	  <ProjectReference Include="..\Dkeshri.DataSync.DbChangeReceiver\Dkeshri.DataSync.DbChangeReceiver.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings*.json">

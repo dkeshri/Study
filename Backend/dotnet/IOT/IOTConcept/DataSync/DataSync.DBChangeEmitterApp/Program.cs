@@ -1,4 +1,4 @@
-﻿using DataSync.DBChangeEmitter.Extensions;
+﻿using Dkeshri.DataSync.DBChangeEmitter.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 

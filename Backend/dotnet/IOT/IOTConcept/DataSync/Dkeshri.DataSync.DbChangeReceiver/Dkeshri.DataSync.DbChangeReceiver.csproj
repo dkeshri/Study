@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<Authors>Deepak Keshri</Authors>
+	<Description>
+		Subscribe Event of Message Broker like RabbitMq and Apply change to database.
+	</Description>
+	<PackageTags>MSSQL;Database;DataSync;MessageBroker;</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="1.0.0" />
+	<PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dkeshri.DataSync.Common\Dkeshri.DataSync.Common.csproj" />
+  </ItemGroup>
+
+</Project>
