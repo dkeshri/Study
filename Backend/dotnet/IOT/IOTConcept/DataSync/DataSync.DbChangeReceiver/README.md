@@ -1,6 +1,6 @@
-# Data-Sync-Emmiter
+# Data-Sync-Receiver
 
-This application help to track the change in `MsSql` Database changes and send that changes to `RabbitMq` Message broker. On Start of this application it create a Table called **ChangeTrackers**, Which contain list of tables that will be tracked. There is hosted service which check the Database change in every **10 secs** and Send that changes to RabbiMq queue (default_queue: DataSyncQueue).
+This will subscribe to` rabbitMq` Queue. on message received, Apply changes to `MSSQL` Database
 
 # Installation Steps
 
