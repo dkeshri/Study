@@ -1,9 +1,12 @@
-﻿using DataSync.DbChangeReceiver.Handlers;
+﻿using DataSync.Common.Extensions;
+using DataSync.DbChangeReceiver.Handlers;
 using DataSync.DbChangeReceiver.Interfaces;
 using DataSync.DbChangeReceiver.Services;
 using MessageQueue.RabbitMq.Extensions;
+using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,31 +15,86 @@ using System.Threading.Tasks;
 
 namespace DataSync.DbChangeReceiver.Extenstions
 {
-    internal static class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
-        public static void AddServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddRabbitMqServices((config) =>
-            {
-                config.HostName = configuration.GetRabbitMqHostName()!;
-                config.Port = configuration.GetRabbitMqPort();
-                config.QueueName = configuration.GetRabbitMqQueueName()!;
-                config.UserName = configuration.GetRabbitMqUserName()!;
-                config.Password = configuration.GetRabbitMqPassword()!;
-                config.ClientProvidedName = configuration.GetRabbitMqClientProvidedName()!;
-                config.RegisterReceiverServices = true;
 
-            });
+        public static void AddDbChangeReceiver(this IServiceCollection services, Action<DbChangeReceiverConfig> configuration)
+        {
+            DbChangeReceiverConfig dbChangeReceiverConfig = new DbChangeReceiverConfig();
+            configuration.Invoke(dbChangeReceiverConfig);
+            services.AddDbChangeReceiver(dbChangeReceiverConfig);
+        }
+
+        public static void AddDbChangeReceiver(this IServiceCollection services, DbChangeReceiverConfig configuration)
+        {
+            if (configuration.DatabaseType == DatabaseType.MSSQL)
+            {
+                services.AddDataLayer((dbConfig) =>
+                {
+                    dbConfig.ConnectionString = configuration.DbConfig.ConnectionString;
+                    dbConfig.TransactionTimeOutInSec = configuration.DbConfig.TransactionTimeOutInSec;
+                });
+            }
+            if (configuration.RabbitMqConfig != null)
+            {
+                services.AddRabbitMqMessageBrocker(configuration.RabbitMqConfig);
+            }
+            services.AddReveiverServices();
+        }
+
+        public static void AddRabbitMqBroker(this DbChangeReceiverConfig configuration, Action<RabbitMqConfig> config)
+        {
+            RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
+            config.Invoke(rabbitMqConfig);
+            configuration.RabbitMqConfig = rabbitMqConfig;
+        }
+        public static void AddDataLayer(this DbChangeReceiverConfig configuration, Action<DatabaseType, DbConfig> config)
+        {
+            DbConfig dbConfig = new DbConfig();
+            DatabaseType databaseType = new DatabaseType();
+            config.Invoke(databaseType, dbConfig);
+            configuration.DatabaseType = databaseType;
+            configuration.DbConfig = dbConfig;
+        }
+        public static void UseDbChangeReceiver(this IHost host)
+        {
+            if (host != null)
+            {
+                using (var scope = host.Services.CreateScope())
+                {
+                    var messageHandler = scope.ServiceProvider.GetRequiredService<IRabbitMqMessageHandler>();
+                    var messageReceiver = scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
+                    messageReceiver.MessageHandler = messageHandler.HandleMessage;
+                }
+            }
+
+        }
+        private static void AddRabbitMqMessageBrocker(this IServiceCollection services, RabbitMqConfig config)
+        {
+            MessageQueue.RabbitMq.Extensions.RabbitMqConfig rabbitMqConfig = new()
+            {
+                HostName = config.HostName,
+                Port = config.Port,
+                UserName = config.UserName,
+                Password = config.Password,
+                QueueName = config.QueueName,
+                ExchangeName = config.ExchangeName,
+                ClientProvidedName = "Receiver",
+                RegisterReceiverServices = true
+            };
+            services.AddRabbitMqServices(rabbitMqConfig);
+        }
+        private static void AddReveiverServices(this IServiceCollection services)
+        {
+
             services.AddMediatR(cfg => {
                 // Note here we can use any class to get the current assembly.
                 // here we are taking ServiceCollectionExtensions.
                 cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
             });
             services.AddSingleton<IDbChangeApplyService,DbChangeApplyService>();
+            services.AddSingleton<IRabbitMqMessageHandler, RabbitMqMessageHandler>();
         }
-        public static void AddHandlers(this IServiceCollection services)
-        { 
-            services.AddSingleton<IRabbitMqMessageHandler,RabbitMqMessageHandler>();
-        }
+
     }
 }
