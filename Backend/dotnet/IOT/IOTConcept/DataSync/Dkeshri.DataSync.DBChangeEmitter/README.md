@@ -91,6 +91,7 @@ VALUES('YourTableName',0);
 ```
 
 > Note: Make sure dependent tableName should be there in ChangeTrackers.
+
 **Example :**
 
 let say you have two tables `orders` and `ordersSummary` tables, `Orders` table has foreign refrance of `ordersSummary` table then you have to insert both tableName (`orders` and `OrdersSummary`) in `ChangeTrackers` Table.

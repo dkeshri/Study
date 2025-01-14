@@ -26,7 +26,8 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
                 });
             }
             services.AddDbChangeEmitterServices();
-            if (config.RabbitMqConfig != null)
+
+            if (config.IsRabbitMqConfigured)
             {
                 services.AddRabbitMqMessageBrocker(config.RabbitMqConfig);
             }
@@ -36,7 +37,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
             RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
             config.Invoke(rabbitMqConfig);
             configuration.RabbitMqConfig = rabbitMqConfig;
-
+            configuration.IsRabbitMqConfigured = true;
         }
 
         public static void AddDataLayer(this DbChangeEmitterConfig configuration, Action<DatabaseType, DbConfig> config)
