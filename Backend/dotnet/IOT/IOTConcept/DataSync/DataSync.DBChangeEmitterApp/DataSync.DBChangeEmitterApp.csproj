@@ -8,11 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Dkeshri.DataSync.DBChangeEmitter" Version="1.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Dkeshri.DataSync.DBChangeEmitter\Dkeshri.DataSync.DBChangeEmitter.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings*.json">

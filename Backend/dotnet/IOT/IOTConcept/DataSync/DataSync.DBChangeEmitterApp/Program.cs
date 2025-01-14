@@ -20,7 +20,7 @@ builder.ConfigureServices((hostContext, services) =>
         {
             rabbitMqConfig.HostName = "localhost";
             rabbitMqConfig.Port = 5672;
-            rabbitMqConfig.QueueName = "DataSyncQueueApp";
+            rabbitMqConfig.QueueName = "DataSyncQueue";
             rabbitMqConfig.UserName = "guest";
             rabbitMqConfig.Password = "guest";
         });
