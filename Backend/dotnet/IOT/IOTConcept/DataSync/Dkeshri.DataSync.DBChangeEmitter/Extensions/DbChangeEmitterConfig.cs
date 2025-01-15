@@ -7,5 +7,6 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
         internal RabbitMqConfig RabbitMqConfig { get; set; } = null!;
         public DatabaseType DatabaseType { get; set; }
         public DbConfig DbConfig { get; set; } = null!;
+        internal bool IsRabbitMqConfigured {  get; set; } = false;
     }
 }

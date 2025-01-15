@@ -29,7 +29,7 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
                     dbConfig.TransactionTimeOutInSec = configuration.DbConfig.TransactionTimeOutInSec;
                 });
             }
-            if (configuration.RabbitMqConfig != null)
+            if (configuration.IsRabbitMqConfigured)
             {
                 services.AddRabbitMqMessageBrocker(configuration.RabbitMqConfig);
             }
@@ -41,6 +41,7 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
             RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
             config.Invoke(rabbitMqConfig);
             configuration.RabbitMqConfig = rabbitMqConfig;
+            configuration.IsRabbitMqConfigured = true;
         }
         public static void AddDataLayer(this DbChangeReceiverConfig configuration, Action<DatabaseType, DbConfig> config)
         {

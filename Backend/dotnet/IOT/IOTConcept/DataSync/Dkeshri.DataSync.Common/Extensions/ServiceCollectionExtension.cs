@@ -17,6 +17,7 @@ namespace Dkeshri.DataSync.Common.Extensions
 
         public static void AddDataLayer(this IServiceCollection services, DbConfig config)
         {
+            services.AddSingleton<DbConfig>(config);
             services.AddSingleton<IDataContext>(sp =>
             {
                 return new DataSyncDbContext(config);
