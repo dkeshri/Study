@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\IOTConcept.Influxdb\IOTConcept.Influxdb.csproj" />
     <ProjectReference Include="..\IOTConcept.MediatR\IOTConcept.MediatR.csproj" />
-    <ProjectReference Include="..\MessageQueue\MessageQueue.RabbitMq\MessageQueue.RabbitMq.csproj" />
   </ItemGroup>
 
 </Project>

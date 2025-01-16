@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MessageQueue.RabbitMq.Extensions;
 using Dkeshri.DataSync.Common.Extensions;
 using Dkeshri.DataSync.DBChangeEmitter.Interfaces;
 using Dkeshri.DataSync.DBChangeEmitter.Services;
+using Dkeshri.MessageQueue.RabbitMq.Extensions;
 
 namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
 {

@@ -12,10 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
     <ProjectReference Include="..\Dkeshri.DataSync.Common\Dkeshri.DataSync.Common.csproj" />
   </ItemGroup>
 
