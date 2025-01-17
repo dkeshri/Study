@@ -2,9 +2,6 @@
 using Dkeshri.DataSync.DbChangeReceiver.Interfaces;
 using Dkeshri.DataSync.DbChangeReceiver.Notifications;
 using MediatR;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Text;
 using System.Text.Json;
 
 

@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
     <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue\Dkeshri.MessageQueue.csproj" />
     <ProjectReference Include="..\Dkeshri.DataSync.Common\Dkeshri.DataSync.Common.csproj" />
   </ItemGroup>

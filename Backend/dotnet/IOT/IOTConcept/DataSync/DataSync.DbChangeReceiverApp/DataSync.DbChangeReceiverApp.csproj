@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
 	  <ProjectReference Include="..\Dkeshri.DataSync.DbChangeReceiver\Dkeshri.DataSync.DbChangeReceiver.csproj" />
 	</ItemGroup>
 	<ItemGroup>
