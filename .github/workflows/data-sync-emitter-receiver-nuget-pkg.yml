@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 jobs:
 
-  build_push_Message_Queue:
+  build_push_Common_Emitter_receiver:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
