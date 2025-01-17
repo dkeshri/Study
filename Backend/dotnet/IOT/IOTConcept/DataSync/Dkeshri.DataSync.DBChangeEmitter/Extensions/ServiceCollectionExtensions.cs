@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Dkeshri.DataSync.Common.Extensions;
+using Dkeshri.MessageQueue.Extensions;
 using Dkeshri.DataSync.DBChangeEmitter.Interfaces;
 using Dkeshri.DataSync.DBChangeEmitter.Services;
-using Dkeshri.MessageQueue.Extensions;
 
 namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
 {
@@ -12,9 +12,8 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
         public static void AddDataSyncDbChangeEmitter(this IServiceCollection services, Action<DbChangeEmitterConfig> configuration) 
         {
             DbChangeEmitterConfig dbChangeEmitterConfig = new DbChangeEmitterConfig();
-            MessageBroker messageBroker = new MessageBroker();
+            MessageBroker messageBroker = new MessageBroker(services);
             messageBroker.RegisterSenderServices = true;
-            messageBroker.Services = services;
             dbChangeEmitterConfig.MessageBroker = messageBroker;
             configuration.Invoke(dbChangeEmitterConfig);
             services.AddDataSyncDbChangeEmitter(dbChangeEmitterConfig);
@@ -29,6 +28,8 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
                     dbConfig.TransactionTimeOutInSec = config.DbConfig.TransactionTimeOutInSec;
                 });
             }
+            
+            services.AddMessageBroker(config.MessageBroker);
             services.AddDbChangeEmitterServices();
         }
 

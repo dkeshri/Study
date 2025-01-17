@@ -2,6 +2,7 @@
 using Dkeshri.MessageQueue.Interfaces;
 using Dkeshri.MessageQueue.RabbitMq.Handlers;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
+using Dkeshri.MessageQueue.RabbitMq.Logic;
 using MessageQueue.RabbitMq.Logic;
 using MessageQueue.RabbitMq.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,8 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
                 return new RabbitMqConnection(rabbitMqConfig);
             });
 
-            rabbitMqConfig.AddRequestedServices(messageBroker);
+            messageBroker.Services.AddSingleton<MessageBrokerFactory, RabbitMqMessageBroker>();
+            //rabbitMqConfig.AddRequestedServices(messageBroker);
         }
 
         private static void AddRequestedServices(this RabbitMqConfig config, MessageBroker messageBroker)
