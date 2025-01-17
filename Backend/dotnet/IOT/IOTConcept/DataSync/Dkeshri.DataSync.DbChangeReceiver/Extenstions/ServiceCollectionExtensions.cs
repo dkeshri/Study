@@ -2,8 +2,8 @@
 using Dkeshri.DataSync.DbChangeReceiver.Handlers;
 using Dkeshri.DataSync.DbChangeReceiver.Interfaces;
 using Dkeshri.DataSync.DbChangeReceiver.Services;
-using MessageQueue.RabbitMq.Extensions;
-using MessageQueue.RabbitMq.Interfaces;
+using Dkeshri.MessageQueue.Extensions;
+using Dkeshri.MessageQueue.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,6 +15,10 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
         public static void AddDbChangeReceiver(this IServiceCollection services, Action<DbChangeReceiverConfig> configuration)
         {
             DbChangeReceiverConfig dbChangeReceiverConfig = new DbChangeReceiverConfig();
+            MessageBroker messageBroker = new MessageBroker(services);
+            messageBroker.RegisterReceiverServices = true;
+            messageBroker.ClientProvidedName = "Receiver";
+            dbChangeReceiverConfig.MessageBroker = messageBroker;
             configuration.Invoke(dbChangeReceiverConfig);
             services.AddDbChangeReceiver(dbChangeReceiverConfig);
         }
@@ -29,20 +33,10 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
                     dbConfig.TransactionTimeOutInSec = configuration.DbConfig.TransactionTimeOutInSec;
                 });
             }
-            if (configuration.IsRabbitMqConfigured)
-            {
-                services.AddRabbitMqMessageBrocker(configuration.RabbitMqConfig);
-            }
+            services.AddMessageBroker(configuration.MessageBroker);
             services.AddReveiverServices();
         }
 
-        public static void AddRabbitMqBroker(this DbChangeReceiverConfig configuration, Action<RabbitMqConfig> config)
-        {
-            RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
-            config.Invoke(rabbitMqConfig);
-            configuration.RabbitMqConfig = rabbitMqConfig;
-            configuration.IsRabbitMqConfigured = true;
-        }
         public static void AddDataLayer(this DbChangeReceiverConfig configuration, Action<DatabaseType, DbConfig> config)
         {
             DbConfig dbConfig = new DbConfig();
@@ -51,6 +45,7 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
             configuration.DatabaseType = databaseType;
             configuration.DbConfig = dbConfig;
         }
+
         public static void UseDbChangeReceiver(this IHost host)
         {
             if (host != null)
@@ -64,21 +59,7 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
             }
 
         }
-        private static void AddRabbitMqMessageBrocker(this IServiceCollection services, RabbitMqConfig config)
-        {
-            MessageQueue.RabbitMq.Extensions.RabbitMqConfig rabbitMqConfig = new()
-            {
-                HostName = config.HostName,
-                Port = config.Port,
-                UserName = config.UserName,
-                Password = config.Password,
-                QueueName = config.QueueName,
-                ExchangeName = config.ExchangeName,
-                ClientProvidedName = "Receiver",
-                RegisterReceiverServices = true
-            };
-            services.AddRabbitMqServices(rabbitMqConfig);
-        }
+        
         private static void AddReveiverServices(this IServiceCollection services)
         {
 

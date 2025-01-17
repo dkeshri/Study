@@ -1,5 +1,4 @@
-﻿using MessageQueue.RabbitMq.Extensions;
-using IOTConcept.Influxdb;
+﻿using IOTConcept.Influxdb;
 using IOTConcept.MediatR;
 namespace IOTConcept.WebApi.Extensions
 {

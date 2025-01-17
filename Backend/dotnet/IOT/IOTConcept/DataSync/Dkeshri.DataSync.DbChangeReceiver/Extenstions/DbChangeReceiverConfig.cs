@@ -1,4 +1,5 @@
 ﻿using Dkeshri.DataSync.Common.Extensions;
+using Dkeshri.MessageQueue.Extensions;
 
 namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
 {
@@ -8,5 +9,6 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
         public DatabaseType DatabaseType { get; set; }
         public DbConfig DbConfig { get; set; } = null!;
         internal bool IsRabbitMqConfigured { get; set; } = false;
+        public MessageBroker MessageBroker { get; set; } = null!;
     }
 }

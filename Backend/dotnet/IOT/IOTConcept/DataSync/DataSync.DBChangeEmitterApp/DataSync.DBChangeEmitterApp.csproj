@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
 	  <ProjectReference Include="..\Dkeshri.DataSync.DBChangeEmitter\Dkeshri.DataSync.DBChangeEmitter.csproj" />
 	</ItemGroup>
 	<ItemGroup>

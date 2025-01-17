@@ -1,30 +1,4 @@
-﻿# Data Sync Functionality
+﻿This Library can not be uses alone, this package is use by [Dkeshri.DataSync.DBChangeEmitter](https://www.nuget.org/packages/Dkeshri.DataSync.DBChangeEmitter) and [Dkeshri.DataSync.DbChangeReceiver](https://www.nuget.org/packages/Dkeshri.DataSync.DbChangeReceiver)
 
-## Migration For ChangeTracker
-
-> You need to install below package in `DataSync.Common` Project. After that you can run migration 
-
-```bash
-Microsoft.EntityFrameworkCore.Tools
-```
-
-> If require then Add this package too in the startup project. `DataSync.DBChangeEmitter`
-
-```bash
-dotnet add package Microsoft.EntityFrameworkCore.Design
-
-```
-# Code First Approach
-
-
-## Migration In Visual Studio.
-> Note : Please select `DataSync.Common` project in Package Manager Console then run below command.
-### Step 1
-```bash
-Add-Migration DataSyncChangeTracker -Context DataSyncDbContext -OutputDir ".\Migrations\SQL"
-```
-
-### Step 2
-```bash
-Update-Database
-```
+Both packages work in pairs to sync data changes from one database to another.
+This application is suitable for scenarios involving data synchronization from the edge to the cloud.

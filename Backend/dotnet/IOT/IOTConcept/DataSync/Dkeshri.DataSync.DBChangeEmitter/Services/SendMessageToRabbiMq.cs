@@ -1,6 +1,6 @@
 ﻿using Dkeshri.DataSync.Common.Models;
 using Dkeshri.DataSync.DBChangeEmitter.Interfaces;
-using MessageQueue.RabbitMq.Interfaces;
+using Dkeshri.MessageQueue.Interfaces;
 using System.Text.Json;
 
 namespace Dkeshri.DataSync.DBChangeEmitter.Services

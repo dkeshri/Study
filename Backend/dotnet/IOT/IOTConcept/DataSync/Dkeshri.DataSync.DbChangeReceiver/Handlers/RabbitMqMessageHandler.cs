@@ -2,9 +2,6 @@
 using Dkeshri.DataSync.DbChangeReceiver.Interfaces;
 using Dkeshri.DataSync.DbChangeReceiver.Notifications;
 using MediatR;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Text;
 using System.Text.Json;
 
 
@@ -17,28 +14,33 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Handlers
         {
             this.mediator = mediator;
         }
-        public void HandleMessage(object? model, BasicDeliverEventArgs ea, IModel channel)
+        public bool HandleMessage(string message)
         {
-            var body = ea.Body.ToArray();
-            IReadOnlyCollection<TableChanges>? tableChanges = DeserializerDbChangesMessage(body);
-            if (tableChanges != null)
+            try
             {
+                Console.WriteLine(message);
+                IReadOnlyCollection<TableChanges>? tableChanges = DeserializerDbChangesMessage(message);
+                
+                if(tableChanges== null) return true;
+
                 TableChangesNotification notificationMessage = new TableChangesNotification()
                 {
                     TableChanges = tableChanges
                 };
                 mediator.Publish(notificationMessage);
-                channel.BasicAck(ea.DeliveryTag, false);
             }
+            catch (Exception) { 
+                return false;
+            }
+            return true;
         }
 
-        private IReadOnlyCollection<TableChanges>? DeserializerDbChangesMessage(byte[] body)
+        private IReadOnlyCollection<TableChanges>? DeserializerDbChangesMessage(string message)
         {
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true // Allows matching property names in a case-insensitive way
             };
-            var message = Encoding.UTF8.GetString(body);
             List<TableChanges>? tableChanges = JsonSerializer.Deserialize<List<TableChanges>>(message, options);
             return tableChanges;
 

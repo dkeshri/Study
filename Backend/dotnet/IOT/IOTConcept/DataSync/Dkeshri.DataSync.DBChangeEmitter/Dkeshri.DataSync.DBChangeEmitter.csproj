@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<Authors>Deepak Keshri</Authors>
-	<Description>
-		Tracks changes in an MSSQL database and sends updates to Message Brocker Like RabbitMq.
-	</Description>
-	<PackageTags>MSSQL;Database;Sync;MessageBroker;</PackageTags>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Authors>Deepak Keshri</Authors>
+		<Description>
+			Tracks changes in an MSSQL database and sends updates to Message Brocker Like RabbitMq.
+		</Description>
+		<PackageTags>MSSQL;Database;Sync;MessageBroker;</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Dkeshri.DataSync.Common\Dkeshri.DataSync.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue\Dkeshri.MessageQueue.csproj" />
+		<ProjectReference Include="..\Dkeshri.DataSync.Common\Dkeshri.DataSync.Common.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>

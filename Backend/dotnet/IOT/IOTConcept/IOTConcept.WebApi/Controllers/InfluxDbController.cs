@@ -1,7 +1,6 @@
 ﻿using IOTConcept.Influxdb.Interfaces;
 using IOTConcept.Influxdb.Logic;
 using IOTConcept.WebApi.Dtos;
-using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOTConcept.WebApi.Controllers
