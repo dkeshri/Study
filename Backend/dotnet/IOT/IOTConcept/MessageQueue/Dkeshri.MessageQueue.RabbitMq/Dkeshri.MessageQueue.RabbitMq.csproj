@@ -7,7 +7,6 @@
 		<Authors>Deepak Keshri</Authors>
 		<Description>This will help the user manage the connection and allow them to send messages to the RabbitMQ queue. Additionally, there is a RabbitMQ queue receiver that retrieves the messages. </Description>
 		<PackageTags>RabbitMq Sender;RabbitMq Receiver;Message Sender;Message Receiver;</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -18,9 +17,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Dkeshri.MessageQueue\Dkeshri.MessageQueue.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 

@@ -17,19 +17,19 @@ you need to provide Message Broker Details (like rabbitMq) and MsSql Connection 
 ```csharp
 services.AddDbChangeReceiver((config) =>
 {
-    config.AddRabbitMqBroker((rabbitMqConfig) =>
+    config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
-        rabbitMqConfig.HostName = "RabbitMqhostName/IP";
+        rabbitMqConfig.HostName = "rabbitMqHostIp";
         rabbitMqConfig.Port = 5672;
-        rabbitMqConfig.QueueName = "DataSyncQueue";
-        rabbitMqConfig.UserName = "guest"; // user Name of RabbitMq
-        rabbitMqConfig.Password = "guest"; // password Name of RabbitMq
+        rabbitMqConfig.QueueName = "QueueName"; 
+        rabbitMqConfig.UserName = "userName";
+        rabbitMqConfig.Password = "password";
     });
 
     config.AddDataLayer((dbType, config) =>
     {
         dbType = DatabaseType.MSSQL;
-        config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=DbPassword;Encrypt=False";
+        config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
         config.TransactionTimeOutInSec = 30;
     });
 });
@@ -48,8 +48,9 @@ Lets say we have .Net Core `Console Application`, Use below code in `Program.cs`
 
 ```csharp
 using Dkeshri.DataSync.DbChangeReceiver.Extenstions;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Dkeshri.MessageQueue.RabbitMq.Extensions;
 
 var builder = Host.CreateDefaultBuilder(args);
 
@@ -57,19 +58,19 @@ builder.ConfigureServices((hostContext, services) =>
 {
     services.AddDbChangeReceiver((config) =>
     {
-        config.AddRabbitMqBroker((rabbitMqConfig) =>
+        config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
-            rabbitMqConfig.HostName = "RabbitMqhostName/IP";
+            rabbitMqConfig.HostName = "rabbitMqHostIp";
             rabbitMqConfig.Port = 5672;
-            rabbitMqConfig.QueueName = "DataSyncQueue";
-            rabbitMqConfig.UserName = "guest"; // user Name of RabbitMq
-            rabbitMqConfig.Password = "guest"; // password Name of RabbitMq
+            rabbitMqConfig.QueueName = "QueueName"; 
+            rabbitMqConfig.UserName = "userName";
+            rabbitMqConfig.Password = "password";
         });
 
         config.AddDataLayer((dbType, config) =>
         {
             dbType = DatabaseType.MSSQL;
-            config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=DbPassword;Encrypt=False";
+            config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
             config.TransactionTimeOutInSec = 30;
         });
     });
