@@ -1,5 +1,5 @@
+using Dkeshri.MessageQueue.Interfaces;
 using IOTConcept.WebApi.Dtos;
-using MessageQueue.RabbitMq.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOTConcept.WebApi.Controllers
