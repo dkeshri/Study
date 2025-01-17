@@ -1,0 +1,42 @@
+name: DataSync Emitte/Receiver Nuget CI
+on:
+  # run this workflow manually.
+  workflow_dispatch:
+jobs:
+
+  build_push_data_sync_emitter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      - name: Restore Dependencies
+        working-directory: /Backend/dotnet/IOT/IOTConcept
+        run: dotnet restore
+
+      - name: Build and Pack
+        working-directory: /Backend/dotnet/IOT/IOTConcept
+        run: dotnet pack --configuration Release
+
+      - name: Push NuGet Package
+        working-directory: /Backend/dotnet/IOT/IOTConcept/DataSync
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push ./Dkeshri.DataSync.Common/bin/Release/*.nupkg \
+            --api-key $NUGET_API_KEY \
+            --source https://api.nuget.org/v3/index.json; \
+          dotnet nuget push ./Dkeshri.DataSync.DBChangeEmitter/bin/Release/*.nupkg \
+            --api-key $NUGET_API_KEY \
+            --source https://api.nuget.org/v3/index.json; \
+          dotnet nuget push ./Dkeshri.DataSync.DbChangeReceiver/bin/Release/*.nupkg \
+          --api-key $NUGET_API_KEY \
+          --source https://api.nuget.org/v3/index.json
+
+
