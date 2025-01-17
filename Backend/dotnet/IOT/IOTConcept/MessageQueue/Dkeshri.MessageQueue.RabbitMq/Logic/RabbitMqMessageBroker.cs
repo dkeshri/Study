@@ -13,14 +13,17 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
     internal class RabbitMqMessageBroker : MessageBrokerFactory
     {
         private readonly IRabbitMqConnection _connection;
-        public RabbitMqMessageBroker(IRabbitMqConnection rabbitMqConnection)
+        private IMessageHandler _messageHandler;
+        public RabbitMqMessageBroker(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
         {
             _connection = rabbitMqConnection;
+            _messageHandler = messageHandler;
         }
 
         public override IMessageReceiver CreateReceiver()
         {
-            return new MessageReceiverHandler();
+            return _messageHandler as IMessageReceiver
+               ?? throw new InvalidCastException("The injected IMessageHandler does not implement IMessageReceiver.");
         }
 
         public override ISendMessage CreateSender()

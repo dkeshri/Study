@@ -21,6 +21,7 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Handlers
         {
             try
             {
+                Console.WriteLine(message);
                 IReadOnlyCollection<TableChanges>? tableChanges = DeserializerDbChangesMessage(message);
                 
                 if(tableChanges== null) return true;
