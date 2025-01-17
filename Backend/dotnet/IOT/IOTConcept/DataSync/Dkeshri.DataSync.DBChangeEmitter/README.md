@@ -25,20 +25,21 @@ You need to provide Message Broker Details (like `rabbitMq`) and `MsSql` Connect
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
 {
-    config.AddRabbitMqBroker((rabbitMqConfig) =>
-    {
-        rabbitMqConfig.HostName = "localhost";
-        rabbitMqConfig.Port = 5672;
-        rabbitMqConfig.QueueName = "DataSyncQueue";
-        rabbitMqConfig.UserName = "guest";
-        rabbitMqConfig.Password = "guest";
-    });
 
-    config.AddDataLayer((dbType,config) =>
+    config.AddDataLayer((dbType, config) =>
     {
         dbType = DatabaseType.MSSQL;
-        config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=UourDbPassword;Encrypt=False";
+        config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
         config.TransactionTimeOutInSec = 30;
+    });
+
+    config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "rabbitMqHostIp";
+        rabbitMqConfig.Port = 5672;
+        rabbitMqConfig.QueueName = "QueueName";
+        rabbitMqConfig.UserName = "username";
+        rabbitMqConfig.Password = "password";
     });
 });
 ```
@@ -57,20 +58,21 @@ builder.ConfigureServices((hostContext, services) =>
 
     services.AddDataSyncDbChangeEmitter((config) =>
     {
-        config.AddRabbitMqBroker((rabbitMqConfig) =>
-        {
-            rabbitMqConfig.HostName = "localhost";
-            rabbitMqConfig.Port = 5672;
-            rabbitMqConfig.QueueName = "DataSyncQueue";
-            rabbitMqConfig.UserName = "guest";
-            rabbitMqConfig.Password = "guest";
-        });
 
-        config.AddDataLayer((dbType,config) =>
+        config.AddDataLayer((dbType, config) =>
         {
             dbType = DatabaseType.MSSQL;
-            config.ConnectionString = "Server=hostIP;Database=DatabaseName;User Id=userId;Password=UourDbPassword;Encrypt=False";
+            config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
             config.TransactionTimeOutInSec = 30;
+        });
+
+        config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+        {
+            rabbitMqConfig.HostName = "rabbitMqHostIp";
+            rabbitMqConfig.Port = 5672;
+            rabbitMqConfig.QueueName = "QueueName";
+            rabbitMqConfig.UserName = "username";
+            rabbitMqConfig.Password = "password";
         });
     });
 });
