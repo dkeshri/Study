@@ -35,29 +35,21 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
             });
 
             messageBroker.Services.AddSingleton<MessageBrokerFactory, RabbitMqMessageBroker>();
-            //rabbitMqConfig.AddRequestedServices(messageBroker);
+            rabbitMqConfig.AddRequeriedServices(messageBroker);
         }
 
-        private static void AddRequestedServices(this RabbitMqConfig config, MessageBroker messageBroker)
+        private static void AddRequeriedServices(this RabbitMqConfig config, MessageBroker messageBroker)
         {
-            if (config.RegisterSenderServices)
-            {
-                messageBroker.Services.AddSenderService();
-            }
 
             if (config.RegisterReceiverServices) 
             {
                 messageBroker.Services.AddRbbitMqMessageReceiverServiceForQueue();
             }
         }
-        private static void AddSenderService(this IServiceCollection services)
-        {
-            services.AddSingleton<ISendMessage, SendMessage>();
-        }
 
         public static void AddRbbitMqMessageReceiverServiceForQueue(this IServiceCollection services) 
         {
-            services.AddSingleton<IMessageReceiver,MessageReceiverHandler>();
+            services.AddSingleton<IMessageHandler, MessageReceiverHandler>();
             services.AddHostedService<MessageReceiverFromQueueService>();
         }
         public static void AddRbbitMqMessageReceiverServiceForExchange(this IServiceCollection services)

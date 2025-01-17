@@ -12,11 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="1.0.0" />
 	<PackageReference Include="MediatR" Version="12.4.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
+    <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue\Dkeshri.MessageQueue.csproj" />
     <ProjectReference Include="..\Dkeshri.DataSync.Common\Dkeshri.DataSync.Common.csproj" />
   </ItemGroup>
 

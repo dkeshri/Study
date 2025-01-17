@@ -1,4 +1,5 @@
 ﻿using Dkeshri.MessageQueue.Interfaces;
+using Dkeshri.MessageQueue.RabbitMq.Handlers;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using MessageQueue.RabbitMq.Logic;
 using System;
@@ -16,6 +17,12 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
         {
             _connection = rabbitMqConnection;
         }
+
+        public override IMessageReceiver CreateReceiver()
+        {
+            return new MessageReceiverHandler();
+        }
+
         public override ISendMessage CreateSender()
         {
             return new SendMessage(_connection);

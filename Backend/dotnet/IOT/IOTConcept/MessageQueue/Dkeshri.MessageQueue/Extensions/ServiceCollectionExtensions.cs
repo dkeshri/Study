@@ -27,6 +27,16 @@ namespace Dkeshri.MessageQueue.Extensions
                     return sender;
                 });
             }
+
+            if (messageBroker.RegisterReceiverServices) {
+                messageBroker.Services.AddSingleton<IMessageReceiver>(sp =>
+                {
+                    var factory = sp.GetRequiredService<MessageBrokerFactory>();
+                    IMessageReceiver receiver = factory.CreateReceiver();
+                    return receiver;
+                });
+            
+            }
             
         }
 

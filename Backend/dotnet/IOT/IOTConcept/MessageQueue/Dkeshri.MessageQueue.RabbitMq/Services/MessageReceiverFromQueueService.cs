@@ -12,12 +12,12 @@ namespace MessageQueue.RabbitMq.Services
         private bool _isQueueServiceStopping = false;
         private readonly string _queueName;
         private readonly IRabbitMqConnection _connection;
-        private IMessageReceiver _messageReceiver;
-        public MessageReceiverFromQueueService(IRabbitMqConnection rabbitMqConnection,IMessageReceiver messageReceiver)
+        private IMessageHandler _messageHanadler;
+        public MessageReceiverFromQueueService(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
         {
             _connection = rabbitMqConnection;
             _queueName = rabbitMqConnection.QueueName;
-            _messageReceiver = messageReceiver;
+            _messageHanadler = messageHandler;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ namespace MessageQueue.RabbitMq.Services
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
-                    _messageReceiver.HandleMessage(model, ea, channel);
+                   _messageHanadler.HandleMessage(model, ea, channel);
                 };
                 channel.BasicConsume(queue: _queueName,
                                      autoAck: false,

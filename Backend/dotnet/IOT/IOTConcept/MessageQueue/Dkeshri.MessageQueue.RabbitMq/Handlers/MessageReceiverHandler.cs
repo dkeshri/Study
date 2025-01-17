@@ -1,17 +1,34 @@
-﻿using Dkeshri.MessageQueue.RabbitMq.Interfaces;
+﻿using Dkeshri.MessageQueue.Interfaces;
+using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text.Json;
+using System.Text;
 
 namespace Dkeshri.MessageQueue.RabbitMq.Handlers
 {
-    internal class MessageReceiverHandler : IMessageReceiver
+    internal class MessageReceiverHandler : IMessageHandler, IMessageReceiver
     {
-        public Action<object?, BasicDeliverEventArgs,IModel>? MessageHandler { get; set; }
+        public Predicate<string>? MessageHandler { get; set; }
 
-        void IMessageReceiver.HandleMessage(object? model, BasicDeliverEventArgs ea, IModel channel)
+        void IMessageHandler.HandleMessage(object? model, BasicDeliverEventArgs ea, IModel channel)
         {
-            MessageHandler?.Invoke(model, ea, channel);
+
+            if (MessageHandler == null)
+            {
+                Console.WriteLine("Please configure IMessageReceiver!, MessageHandler is null");
+                return;
+            }
+            bool isMessageProcessed = false;
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            isMessageProcessed = MessageHandler.Invoke(message);
+
+            if (isMessageProcessed == true)
+            {
+                channel.BasicAck(ea.DeliveryTag, false);
+            }
         }
-      
+
     }
 }

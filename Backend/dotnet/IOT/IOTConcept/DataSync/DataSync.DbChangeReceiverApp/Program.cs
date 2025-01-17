@@ -1,9 +1,7 @@
-﻿
-using Dkeshri.DataSync.DbChangeReceiver.Extenstions;
+﻿using Dkeshri.DataSync.DbChangeReceiver.Extenstions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Dkeshri.MessageQueue.RabbitMq.Extensions;
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (sender, eventArgs) =>
 {
@@ -30,7 +28,7 @@ builder.ConfigureServices((hostContext, services) =>
 {
     services.AddDbChangeReceiver((config) =>
     {
-        config.AddRabbitMqBroker((rabbitMqConfig) =>
+        config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "localhost";
             rabbitMqConfig.Port = 5672;

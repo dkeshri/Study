@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Dkeshri.MessageQueue.Interfaces
 {
-    public abstract class MessageBrokerFactory
+    public interface IMessageReceiver
     {
-        public abstract ISendMessage CreateSender();
-        public abstract IMessageReceiver CreateReceiver();
+        public Predicate<string>? MessageHandler { get; set; }
     }
 }
