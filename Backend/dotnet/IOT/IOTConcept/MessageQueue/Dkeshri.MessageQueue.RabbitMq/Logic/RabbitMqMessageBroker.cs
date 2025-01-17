@@ -13,8 +13,8 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
     internal class RabbitMqMessageBroker : MessageBrokerFactory
     {
         private readonly IRabbitMqConnection _connection;
-        private IMessageHandler _messageHandler;
-        public RabbitMqMessageBroker(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
+        private IMessageHandler? _messageHandler;
+        public RabbitMqMessageBroker(IRabbitMqConnection rabbitMqConnection,IMessageHandler? messageHandler = null)
         {
             _connection = rabbitMqConnection;
             _messageHandler = messageHandler;
