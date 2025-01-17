@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 jobs:
 
-  build_push_data_sync_emitter:
+  build_push_Message_Queue:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -17,18 +17,20 @@ jobs:
           dotnet-version: '8.0'
 
       - name: Restore Dependencies
-        working-directory: /Backend/dotnet/IOT/IOTConcept
-        run: dotnet restore
+        run: |
+          cd ./Backend/dotnet/IOT/IOTConcept
+          dotnet restore
 
       - name: Build and Pack
-        working-directory: /Backend/dotnet/IOT/IOTConcept
-        run: dotnet pack --configuration Release
+        run: |
+          cd ./Backend/dotnet/IOT/IOTConcept
+          dotnet pack --configuration Release
 
       - name: Push NuGet Package
-        working-directory: /Backend/dotnet/IOT/IOTConcept/MessageQueue
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
+          cd ./Backend/dotnet/IOT/IOTConcept/MessageQueue
           dotnet nuget push ./Dkeshri.MessageQueue/bin/Release/*.nupkg \
             --api-key $NUGET_API_KEY \
             --source https://api.nuget.org/v3/index.json; \
