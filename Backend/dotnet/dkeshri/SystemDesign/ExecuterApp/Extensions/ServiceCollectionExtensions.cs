@@ -1,5 +1,6 @@
 ﻿using Dkeshri.SystemDesign.LowLevel;
-using MessageQueue.RabbitMq.Extensions;
+using ExecuterApp.Interfaces;
+using ExecuterApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,12 @@ namespace ExecuterApp.Extensions
     {
         public static void AddServices(this IServiceCollection services) 
         {
-            services.UseFactoryMethod();
+            //services.UseFactoryMethod();
+            services.AddSingleton<IMessageSenderService,MessageSenderService>();
         }
         public static void AddRabbitQ(this IServiceCollection services)
         {
-            services.AddRbbitMqServices();
+            //services.AddRbbitMqServices();
         }
     }
 }

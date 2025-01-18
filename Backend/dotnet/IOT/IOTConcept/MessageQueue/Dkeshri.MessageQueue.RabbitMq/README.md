@@ -1,23 +1,35 @@
-﻿# Dkeshri.MessageQueue.RabbitMq
+﻿# About
+
 This will help the user manage the connection and allow them to send messages to the RabbitMQ queue. 
 Additionally, there is a RabbitMQ queue receiver that retrieves the messages.
 
+## Package Dependency
+```csharp
+Dkeshri.MessageQueue
+```
 ## How to Configure
 
-This package uses the `IServiceCollection` to setup. We have an Extension **AddRabbitMqServices** Method is use to setup RabbitMq Connections.
+This package uses the `IServiceCollection` to setup. We have an Extension Method **AddMessageBroker** in `Dkeshri.MessageQueue` provide **MessageBroker** object to setup Message Broker Propery.
+
+There is another extension method `AddRabbitMqServices` provided in `Dkeshri.MessageQueue.RabbitMq` is use to setup RabbitMq Connections. 
+
+> `AddRabbitMqServices` is extention to `MessageBroker`
 
 **Register Sender**
 > Note Make sure to set `RegisterSenderServices` to `true`
 ```csharp
-services.AddRabbitMqServices((config) =>
+services.AddMessageBroker(messageBroker =>
 {
-    config.HostName = "RabbitMqHost";
-    config.Port = 5672; // your RabbitMq Port
-    config.QueueName = "YourQueueName";
-    config.UserName = "RabblitMqUserName";
-    config.Password = "password";
-    config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
-    config.RegisterSenderServices = true; // Set True to register Sender services
+    messageBroker.RegisterSenderServices = true; // Set True to register Sender services
+    messageBroker.ClientProvidedName = "Sender"; // Sender or Any name you like
+    messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "RabbitMqHost";
+        rabbitMqConfig.Port = 5672; // your RabbitMq Port
+        rabbitMqConfig.QueueName = "YourQueueName";
+        rabbitMqConfig.UserName = "username";
+        rabbitMqConfig.Password = "password";
+    });
 });
 ```
 
@@ -26,15 +38,18 @@ services.AddRabbitMqServices((config) =>
 > Note Make sure to set `RegisterReceiverServices` to `true`
 
 ```csharp
-services.AddRabbitMqServices((config) =>
+services.AddMessageBroker(messageBroker =>
 {
-    config.HostName = "RabbitMqHost";
-    config.Port = 5672; // your RabbitMq Port
-    config.QueueName = "YourQueueName";
-    config.UserName = "RabblitMqUserName";
-    config.Password = "password";
-    config.ClientProvidedName = "ProviderName"; // Receiver or Any name you like
-    config.RegisterReceiverServices = true; // Set to True to register Receiver services.
+    messageBroker.RegisterReceiverServices = true; // Set to True to register Receiver services.
+    messageBroker.ClientProvidedName = "Receiver"; // Receiver or Any name you like
+    messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "RabbitMqHost";
+        rabbitMqConfig.Port = 5672; // your RabbitMq Port
+        rabbitMqConfig.QueueName = "YourQueueName";
+        rabbitMqConfig.UserName = "username";
+        rabbitMqConfig.Password = "password";
+    });
 });
 ```
 
@@ -74,22 +89,24 @@ class SendMessageToRabbitMq : ISendMessageToRabbitMq
     }
 }
 ```
-
 Register `SendMessageToRabbiMq` in `IServiceCollection`
 
 ```csharp
 var builder = Host.CreateDefaultBuilder(args);
 builder.ConfigureServices((hostContext, services) =>
 {
-    services.AddRabbitMqServices((config) =>
+    services.AddMessageBroker(messageBroker =>
     {
-        config.HostName = "RabbitMqHost";
-        config.Port = 5672; // your RabbitMq Port
-        config.QueueName = "YourQueueName";
-        config.UserName = "RabblitMqUserName";
-        config.Password = "password";
-        config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
-        config.RegisterSenderServices = true;
+        messageBroker.RegisterSenderServices = true; // Set True to register Sender services
+        messageBroker.ClientProvidedName = "SenderTest"; // Sender or Any name you like
+        messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+        {
+            rabbitMqConfig.HostName = "RabbitMqHost";
+            rabbitMqConfig.Port = 5672; // your RabbitMq Port
+            rabbitMqConfig.QueueName = "YourQueueName";
+            rabbitMqConfig.UserName = "username";
+            rabbitMqConfig.Password = "password";
+        });
     });
 
     services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
@@ -102,7 +119,7 @@ builder.RunConsoleAsync().Wait();
 ### In Receiver Application
 
 The `IMessageReceiver` interface includes a delegate:
-`Action<object?, BasicDeliverEventArgs, IModel>? MessageHandler`.
+`Predicate<string>? MessageHandler`.
 
 This allows you to provide a callback method that will be invoked when a message is received from the RabbitMQ queue.
 
@@ -114,18 +131,19 @@ As demonstrated in the code below:
 var builder = Host.CreateDefaultBuilder(args);
 builder.ConfigureServices((hostContext, services) =>
 {
-    services.AddRabbitMqServices((config) =>
+    services.AddMessageBroker(messageBroker =>
     {
-        config.HostName = "RabbitMqHost";
-        config.Port = 5672; // your RabbitMq Port
-        config.QueueName = "YourQueueName";
-        config.UserName = "RabblitMqUserName";
-        config.Password = "password";
-        config.ClientProvidedName = "ProviderName"; // Sender or Any name you like
-        config.RegisterReceiverServices = true;
+        messageBroker.RegisterReceiverServices = true; // Set to True to register Receiver services.
+        messageBroker.ClientProvidedName = "Receiver"; // Receiver or Any name you like
+        messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+        {
+            rabbitMqConfig.HostName = "RabbitMqHost";
+            rabbitMqConfig.Port = 5672; // your RabbitMq Port
+            rabbitMqConfig.QueueName = "YourQueueName";
+            rabbitMqConfig.UserName = "username";
+            rabbitMqConfig.Password = "password";
+        });
     });
-    services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
-
 });
 
 var host = builder.UseConsoleLifetime().Build();
@@ -133,14 +151,15 @@ var host = builder.UseConsoleLifetime().Build();
 using (var scope = host.Services.CreateScope())
 {
     var messageReceiver = scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
-    messageReceiver.MessageHandler = (model,data,channel) =>
+    messageReceiver.MessageHandler = (message) =>
     {
-        var message = data.Body.ToArray();
-        var messageString = Encoding.UTF8.GetString(message);
-        Console.WriteLine(messageString);
+        // After Process Message and return boolean value.
+        Console.WriteLine(message);
+
+        // message will only acknowledge to RabbitMq Service if return true.
+        return true; 
     };
 }
-
 host.RunAsync().Wait();
 ```
 
