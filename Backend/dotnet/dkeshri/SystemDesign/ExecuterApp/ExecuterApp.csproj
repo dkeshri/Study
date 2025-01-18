@@ -12,8 +12,8 @@
 	</None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
-    <PackageReference Include="RabbitMqSenderReceiver" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
