@@ -28,9 +28,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build And Push Emitter docker image to docker hub
+        working-directory: ./Backend/dotnet/IOT/IOTConcept/DataSync/DataSync.DBChangeEmitterApp
         run: |
-          cd ./Backend/dotnet/IOT/IOTConcept
-          docker build -f DataSync/DataSync.DBChangeEmitter/Dockerfile --rm -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:${{env.version}} -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:latest .
+          docker build --rm -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:${{env.version}} -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:latest .
           docker push ${{secrets.DOCKER_USERNAME}}/${{env.image_name}} --all-tags
 
   build_push_data_sync_receiver:
@@ -49,7 +49,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build And Push Receiver docker image to docker hub
+        working-directory: ./Backend/dotnet/IOT/IOTConcept/DataSync/DataSync.DbChangeReceiverApp
         run: |
-          cd ./Backend/dotnet/IOT/IOTConcept
-          docker build -f DataSync/DataSync.DbChangeReceiver/Dockerfile --rm -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:${{env.version}} -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:latest .
+          docker build --rm -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:${{env.version}} -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:latest .
           docker push ${{secrets.DOCKER_USERNAME}}/${{env.image_name}} --all-tags
