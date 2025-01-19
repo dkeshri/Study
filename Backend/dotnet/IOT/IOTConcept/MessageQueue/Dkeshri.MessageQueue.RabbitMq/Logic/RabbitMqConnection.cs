@@ -10,9 +10,7 @@ namespace MessageQueue.RabbitMq.Logic
     {
         private IConnection? _connection;
         private IModel? _channel;
-        private string _exchangeName;
         private bool _isDisposing = false;
-        private string _queueName;
         private IConnectionFactory _connectionFactory;
         private readonly string hostName;
         private readonly int port;
@@ -20,21 +18,21 @@ namespace MessageQueue.RabbitMq.Logic
         private string userName;
         private string password;
         private string clientProvidedName;
-
+        private QueueConfig _queueConfig;
+        private ExchangeConfig _exchangeConfig;
         private IConnection? Connection { get => CreateConnection(_connectionFactory); }
         public IModel? Channel { get => CreateChannelIfClosed(Connection); }
-        public string ExchangeName { get => _exchangeName; }
-        public string QueueName { get => _queueName; }
-
+        public QueueConfig Queue { get => _queueConfig; }
+        public ExchangeConfig Exchange { get => _exchangeConfig; }
         public RabbitMqConnection(RabbitMqConfig rabbitMqConfig)
         {
+            _queueConfig = rabbitMqConfig.Queue;
+            _exchangeConfig = rabbitMqConfig.Exchange;
             hostName = rabbitMqConfig.HostName;
             port = rabbitMqConfig.Port;
-            _exchangeName = rabbitMqConfig.ExchangeName;
-            _queueName = rabbitMqConfig.QueueName ?? "defaultQueue";
             userName = rabbitMqConfig.UserName;
             password = rabbitMqConfig.Password;
-            clientProvidedName = rabbitMqConfig.ClientProvidedName ?? "defaultProvider";
+            clientProvidedName = rabbitMqConfig.ClientProvidedName;
             _connectionFactory = CreateConnectionFactory();
         }
 
@@ -165,5 +163,6 @@ namespace MessageQueue.RabbitMq.Logic
             }
 
         }
+
     }
 }

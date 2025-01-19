@@ -17,7 +17,7 @@ namespace MessageQueue.RabbitMq.Logic
         public ReceiveMessageFromExchangeService(IRabbitMqConnection rabbitMqConnection)
         {
             channel = rabbitMqConnection.Channel;
-            _directExchangeName = rabbitMqConnection.ExchangeName;
+            _directExchangeName = rabbitMqConnection.Exchange.ExchangeName;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

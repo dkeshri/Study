@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dkeshri.MessageQueue.Rabbit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dkeshri.MessageQueue", "MessageQueue\Dkeshri.MessageQueue\Dkeshri.MessageQueue.csproj", "{BB7FF903-6D23-4738-8CB6-D02AD6F967AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageQueueApp", "MessageQueue\MessageQueueApp\MessageQueueApp.csproj", "{AE1971C7-E693-46A1-B407-EFBB095AE421}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{BB7FF903-6D23-4738-8CB6-D02AD6F967AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB7FF903-6D23-4738-8CB6-D02AD6F967AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB7FF903-6D23-4738-8CB6-D02AD6F967AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE1971C7-E693-46A1-B407-EFBB095AE421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE1971C7-E693-46A1-B407-EFBB095AE421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE1971C7-E693-46A1-B407-EFBB095AE421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE1971C7-E693-46A1-B407-EFBB095AE421}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +103,7 @@ Global
 		{D6B2DBAE-01A8-4539-910D-0234D04C96D4} = {70229946-860E-4B9B-BBBD-12C5259DCCAF}
 		{F992FAB1-79E1-40E4-B317-2DE81C25DAF2} = {C8D1D584-0931-48A7-AE24-60B27176E94A}
 		{BB7FF903-6D23-4738-8CB6-D02AD6F967AD} = {C8D1D584-0931-48A7-AE24-60B27176E94A}
+		{AE1971C7-E693-46A1-B407-EFBB095AE421} = {C8D1D584-0931-48A7-AE24-60B27176E94A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9C132D5-5122-4CF1-84B0-E87BADB9F52E}

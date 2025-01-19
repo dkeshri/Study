@@ -15,6 +15,8 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
         public static void AddRabbitMqServices(this MessageBroker messageBroker, Action<RabbitMqConfig> configuration)
         {
             RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
+            rabbitMqConfig.Queue = new QueueConfig();
+            rabbitMqConfig.Exchange = new ExchangeConfig();
             configuration.Invoke(rabbitMqConfig);
             rabbitMqConfig.RegisterSenderServices = messageBroker.RegisterSenderServices;
             rabbitMqConfig.RegisterReceiverServices = messageBroker.RegisterReceiverServices;

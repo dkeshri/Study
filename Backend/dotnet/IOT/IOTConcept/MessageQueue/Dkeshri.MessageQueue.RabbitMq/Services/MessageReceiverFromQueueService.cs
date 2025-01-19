@@ -1,4 +1,5 @@
-﻿using Dkeshri.MessageQueue.RabbitMq.Interfaces;
+﻿using Dkeshri.MessageQueue.RabbitMq.Extensions;
+using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -10,13 +11,13 @@ namespace MessageQueue.RabbitMq.Services
     {
         private bool _isDisposing = false;
         private bool _isQueueServiceStopping = false;
-        private readonly string _queueName;
         private readonly IRabbitMqConnection _connection;
         private IMessageHandler _messageHanadler;
+        private readonly QueueConfig queueConfig;
         public MessageReceiverFromQueueService(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
         {
             _connection = rabbitMqConnection;
-            _queueName = rabbitMqConnection.QueueName;
+            queueConfig = rabbitMqConnection.Queue;
             _messageHanadler = messageHandler;
         }
 
@@ -54,18 +55,18 @@ namespace MessageQueue.RabbitMq.Services
             try
             {
                 Console.WriteLine("Initializing Receiver with RabbitMq...");
-                channel.QueueDeclare(queue: _queueName,
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+                channel.QueueDeclare(queue: queueConfig.QueueName,
+                     durable: queueConfig.IsDurable,
+                     exclusive: queueConfig.IsExclusive,
+                     autoDelete: queueConfig.IsAutoDelete,
+                     arguments: queueConfig.Arguments);
                 channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
                    _messageHanadler.HandleMessage(model, ea, channel);
                 };
-                channel.BasicConsume(queue: _queueName,
+                channel.BasicConsume(queue: queueConfig.QueueName,
                                      autoAck: false,
                                      consumer: consumer);
 

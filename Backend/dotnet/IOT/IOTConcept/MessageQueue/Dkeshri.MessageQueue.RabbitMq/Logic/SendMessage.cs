@@ -1,4 +1,5 @@
 ﻿using Dkeshri.MessageQueue.Interfaces;
+using Dkeshri.MessageQueue.RabbitMq.Extensions;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using RabbitMQ.Client;
 using System.Text;
@@ -7,17 +8,17 @@ namespace MessageQueue.RabbitMq.Logic
 {
     internal class SendMessage : ISendMessage
     {
-        private readonly string _exchangeName; 
-        private readonly string _queueName;
         private readonly IRabbitMqConnection _connection;
+        private readonly QueueConfig queueConfig;
+        private readonly ExchangeConfig exchangeConfig;
         public SendMessage(IRabbitMqConnection rabbitMqConnection)
         {
             _connection = rabbitMqConnection;
-            _exchangeName = rabbitMqConnection.ExchangeName;
-            _queueName = rabbitMqConnection.QueueName;
+            queueConfig = rabbitMqConnection.Queue;
+            exchangeConfig = rabbitMqConnection.Exchange;
         }
 
-        public bool SendToQueue(string message) => SendToQueue(_queueName, message);
+        public bool SendToQueue(string message) => SendToQueue(queueConfig.QueueName, message);
 
         public bool SendToQueue(string queueName, string message)
         {
@@ -29,12 +30,11 @@ namespace MessageQueue.RabbitMq.Logic
             }
 
             _connection.EnableConfirmIfNotSelected();
-
             channel.QueueDeclare(queue: queueName,
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+                     durable: queueConfig.IsDurable,
+                     exclusive: queueConfig.IsExclusive,
+                     autoDelete: queueConfig.IsAutoDelete,
+                     arguments: queueConfig.Arguments);
             return PublishMessage(channel, message, queueName);
         }
 
@@ -43,12 +43,12 @@ namespace MessageQueue.RabbitMq.Logic
             IModel? channel = _connection.Channel;
             if (channel == null)
             {
-                Console.WriteLine($"Error: Can not publish message to exchange : {_exchangeName}, channel is set to null!");
+                Console.WriteLine($"Error: Can not publish message to exchange : {exchangeConfig.ExchangeName}, channel is set to null!");
                 return false;
             }
             _connection.EnableConfirmIfNotSelected();
-            channel.ExchangeDeclare(_exchangeName, ExchangeType.Direct);
-            return PublishMessage(channel, message,routingKey ?? string.Empty, _exchangeName);
+            channel.ExchangeDeclare(exchangeConfig.ExchangeName, ExchangeType.Direct);
+            return PublishMessage(channel, message,routingKey ?? string.Empty, exchangeConfig.ExchangeName);
         }
 
         private bool PublishMessage(IModel channel, string message, string routingKey)

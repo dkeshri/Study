@@ -1,13 +1,14 @@
-﻿using RabbitMQ.Client;
+﻿using Dkeshri.MessageQueue.RabbitMq.Extensions;
+using RabbitMQ.Client;
 
 namespace Dkeshri.MessageQueue.RabbitMq.Interfaces
 {
     public interface IRabbitMqConnection
     {
         IModel? Channel { get; }
-        string ExchangeName { get; }
-        string QueueName {  get; }
         internal void EnableConfirmIfNotSelected();
+        internal QueueConfig Queue { get; }
+        internal ExchangeConfig Exchange { get; }
 
     }
 }
