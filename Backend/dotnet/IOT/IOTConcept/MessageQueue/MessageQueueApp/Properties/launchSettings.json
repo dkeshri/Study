@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "MessageQueueApp": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "RabbitMq__HostName": "localhost",
+        "RabbitMq__Port": "5672",
+        "RabbitMq__UserName": "guest",
+        "RabbitMq__Password": "guest",
+        "RabbitMq__ClientProvidedName": "Sender",
+        "RabbitMq__Queue": "DataSyncQueue",
+        "RabbitMq__ExchangeName": "weather_direct"
+      }
+    }
+  }
+}
