@@ -17,20 +17,20 @@ jobs:
           dotnet-version: '8.0'
 
       - name: Restore Dependencies
+        working-directory: ./Backend/dotnet/IOT/IOTConcept
         run: |
-          cd ./Backend/dotnet/IOT/IOTConcept
           dotnet restore
 
       - name: Build and Pack
+        working-directory: ./Backend/dotnet/IOT/IOTConcept
         run: |
-          cd ./Backend/dotnet/IOT/IOTConcept
           dotnet pack --configuration Release
 
       - name: Push NuGet Package
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        working-directory: ./Backend/dotnet/IOT/IOTConcept/MessageQueue
         run: |
-          cd ./Backend/dotnet/IOT/IOTConcept/MessageQueue
           dotnet nuget push ./Dkeshri.MessageQueue/bin/Release/*.nupkg \
             --api-key $NUGET_API_KEY \
             --source https://api.nuget.org/v3/index.json; \
