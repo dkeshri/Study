@@ -26,7 +26,7 @@ services.AddMessageBroker(messageBroker =>
     {
         rabbitMqConfig.HostName = "RabbitMqHost";
         rabbitMqConfig.Port = 5672; // your RabbitMq Port
-        rabbitMqConfig.QueueName = "YourQueueName";
+        rabbitMqConfig.Exchange.ExchangeName = "Your_ExchangeName";
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
     });
@@ -46,9 +46,11 @@ services.AddMessageBroker(messageBroker =>
     {
         rabbitMqConfig.HostName = "RabbitMqHost";
         rabbitMqConfig.Port = 5672; // your RabbitMq Port
-        rabbitMqConfig.QueueName = "YourQueueName";
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
+        rabbitMqConfig.Queue.QueueName = "YourQueueName";
+        rabbitMqConfig.Queue.ExchangeName = "YourSenderExchangeName";
+        rabbitMqConfig.Queue.RoutingKeys = [ "routingKey1" ];
     });
 });
 ```
@@ -64,6 +66,7 @@ The `ISendMessage` interface is provided for the sender, offering the following 
 
 * SendToQueue(string message)
 * SendToQueue(string queueName, string message)
+* SendToExchange(string message, string? routingKey);
 
 You can specify the `queueName` when sending messages to RabbitMQ.
 
@@ -87,6 +90,11 @@ class SendMessageToRabbitMq : ISendMessageToRabbitMq
     {
         return SendMessage.SendToQueue(queueName,DataToSend);
     }
+    public bool SendMessageToRabbitMqExchange(string queueName, string DataToSend)
+    {
+        return SendMessage.SendToExchange(message,"routingKey1");
+    }
+
 }
 ```
 Register `SendMessageToRabbiMq` in `IServiceCollection`
@@ -103,7 +111,7 @@ builder.ConfigureServices((hostContext, services) =>
         {
             rabbitMqConfig.HostName = "RabbitMqHost";
             rabbitMqConfig.Port = 5672; // your RabbitMq Port
-            rabbitMqConfig.QueueName = "YourQueueName";
+            rabbitMqConfig.Exchange.ExchangeName = "Your_ExchangeName";
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
         });
@@ -139,9 +147,11 @@ builder.ConfigureServices((hostContext, services) =>
         {
             rabbitMqConfig.HostName = "RabbitMqHost";
             rabbitMqConfig.Port = 5672; // your RabbitMq Port
-            rabbitMqConfig.QueueName = "YourQueueName";
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
+            rabbitMqConfig.Queue.QueueName = "YourQueueName";
+            rabbitMqConfig.Queue.ExchangeName = "YourSenderExchangeName";
+            rabbitMqConfig.Queue.RoutingKeys = [ "routingKey1" ];
         });
     });
 });
