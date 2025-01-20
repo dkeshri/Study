@@ -61,6 +61,20 @@ namespace MessageQueue.RabbitMq.Services
                      autoDelete: queueConfig.IsAutoDelete,
                      arguments: queueConfig.Arguments);
                 channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+                
+                if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
+                {
+                    string[] routingKey = queueConfig.RoutingKeys;
+                    foreach (var key in routingKey)
+                    {
+                        channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, key);
+                    }
+                    if (routingKey.Length == 0)
+                    {
+                        channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, string.Empty);
+                    }
+                }
+                
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {

@@ -1,7 +1,6 @@
 ﻿using Dkeshri.MessageQueue.Extensions;
 using Dkeshri.MessageQueue.Interfaces;
 using Dkeshri.MessageQueue.RabbitMq.Extensions;
-using MessageQueueApp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,8 +19,8 @@ builder.ConfigureServices((hostContext, services) =>
 {
     services.AddMessageBroker(messageBroker =>
     {
-        messageBroker.ClientProvidedName = "SenderApp";
-        messageBroker.RegisterSenderServices = true;
+        messageBroker.ClientProvidedName = "ReceiverApp";
+        messageBroker.RegisterReceiverServices = true;
         messageBroker.AddRabbitMqServices(config =>
         {
             config.HostName = "localhost";
@@ -33,7 +32,18 @@ builder.ConfigureServices((hostContext, services) =>
         });
 
     });
-    services.AddHostedService<SendMessageService>();
 });
 
-builder.RunConsoleAsync().Wait();
+
+var host = builder.UseConsoleLifetime().Build();
+
+using (IServiceScope serviceScope = host.Services.CreateScope())
+{
+    serviceScope.ServiceProvider.GetRequiredService<IMessageReceiver>().MessageHandler = (message) =>
+    {
+        Console.WriteLine(message);
+        return true;
+    };
+}
+
+host.RunAsync().Wait();
