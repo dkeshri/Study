@@ -42,13 +42,13 @@ var host = builder.UseConsoleLifetime().Build();
 using (IServiceScope serviceScope = host.Services.CreateScope())
 {
     ISendMessage messageSender= serviceScope.ServiceProvider.GetRequiredService<ISendMessage>();
-    string? message = "Test";
+    string? message = "Hello Deepak";
     do
     {
-       
+        messageSender.SendToQueue(message);
         Console.WriteLine("Enter Message to send: ");
         message = Console.ReadLine();
-        messageSender.SendToQueue(message);
+        
     }
     while (!string.IsNullOrEmpty(message));
 }
