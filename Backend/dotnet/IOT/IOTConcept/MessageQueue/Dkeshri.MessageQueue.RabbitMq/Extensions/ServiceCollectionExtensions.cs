@@ -52,11 +52,8 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
         public static void AddRbbitMqMessageReceiverServiceForQueue(this IServiceCollection services) 
         {
             services.AddSingleton<IMessageHandler, MessageReceiverHandler>();
-            services.AddHostedService<MessageReceiverFromQueueService>();
+            services.AddHostedService<MessageReceiverQueueService>();
         }
-        public static void AddRbbitMqMessageReceiverServiceForExchange(this IServiceCollection services)
-        {
-            services.AddHostedService<ReceiveMessageFromExchangeService>();
-        }
+
     }
 }

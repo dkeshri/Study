@@ -7,14 +7,14 @@ using RabbitMQ.Client.Events;
 
 namespace MessageQueue.RabbitMq.Services
 {
-    internal class MessageReceiverFromQueueService : IHostedService,IDisposable
+    internal class MessageReceiverQueueService : IHostedService,IDisposable
     {
         private bool _isDisposing = false;
         private bool _isQueueServiceStopping = false;
         private readonly IRabbitMqConnection _connection;
         private IMessageHandler _messageHanadler;
         private readonly QueueConfig queueConfig;
-        public MessageReceiverFromQueueService(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
+        public MessageReceiverQueueService(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
         {
             _connection = rabbitMqConnection;
             queueConfig = rabbitMqConnection.Queue;
