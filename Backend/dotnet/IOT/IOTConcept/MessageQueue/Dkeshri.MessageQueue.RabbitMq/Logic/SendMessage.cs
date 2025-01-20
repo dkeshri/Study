@@ -38,7 +38,7 @@ namespace MessageQueue.RabbitMq.Logic
             return PublishMessage(channel, message, queueName);
         }
 
-        public bool SendToExchange(string message,string?routingKey)
+        public bool SendToExchange(string message,string? routingKey)
         {
             IModel? channel = _connection.Channel;
             if (channel == null)
@@ -47,24 +47,23 @@ namespace MessageQueue.RabbitMq.Logic
                 return false;
             }
             _connection.EnableConfirmIfNotSelected();
-            channel.ExchangeDeclare(exchangeConfig.ExchangeName, ExchangeType.Direct);
-            return PublishMessage(channel, message,routingKey ?? string.Empty, exchangeConfig.ExchangeName);
+            channel.ExchangeDeclare(
+                exchange: exchangeConfig.ExchangeName, 
+                type: exchangeConfig.ExchangeType,
+                durable: exchangeConfig.IsDurable,
+                autoDelete: exchangeConfig.AutoDelete,
+                arguments: exchangeConfig.Arguments
+                );
+            return PublishMessage(channel, message, routingKey ?? string.Empty, exchangeConfig.ExchangeName);
         }
 
-        private bool PublishMessage(IModel channel, string message, string routingKey)
+        private bool PublishMessage(IModel channel, string message, string routingKey) 
+            => PublishMessage(channel,message,routingKey, null);
+        
+        private bool PublishMessage(IModel channel, string message, string routingKey, string? exchangeName)
         {
             var body = Encoding.UTF8.GetBytes(message);
-            channel.BasicPublish(exchange: string.Empty,
-                                routingKey: routingKey,
-                                basicProperties: null,
-                                body: body);
-            return channel.WaitForConfirms(TimeSpan.FromSeconds(3));
-
-        }
-        private bool PublishMessage(IModel channel, string message, string routingKey, string exchangeName)
-        {
-            var body = Encoding.UTF8.GetBytes(message);
-            channel.BasicPublish(exchange: exchangeName,
+            channel.BasicPublish(exchange: exchangeName ?? string.Empty,
                                 routingKey: routingKey,
                                 basicProperties: null,
                                 body: body);

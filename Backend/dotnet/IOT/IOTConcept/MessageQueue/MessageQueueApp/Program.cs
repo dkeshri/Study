@@ -28,8 +28,7 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-            config.Queue.QueueName = "DataSyncQueue";
-            config.Queue.IsDurable = true;
+            config.Exchange.ExchangeName = "Sender_Exchange";
         });
 
     });
@@ -45,7 +44,7 @@ using (IServiceScope serviceScope = host.Services.CreateScope())
     string? message = "Hello Deepak";
     do
     {
-        messageSender.SendToQueue(message);
+        messageSender.SendToExchange(message,"test");
         Console.WriteLine("Enter Message to send: ");
         message = Console.ReadLine();
         

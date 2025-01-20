@@ -27,8 +27,9 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-            config.Queue.QueueName = "DataSyncQueue";
-            config.Queue.IsDurable = true;
+            config.Queue.QueueName = "DeepakTest";
+            config.Queue.ExchangeName = "Sender_Exchange";
+            config.Queue.RoutingKeys = [ "test" ];
         });
 
     });
