@@ -8,6 +8,5 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
         public DatabaseType DatabaseType { get; set; }
         public DbConfig DbConfig { get; set; } = null!;
         public MessageBroker MessageBroker { get; set; } = null!;
-        public string? ExchangeRoutingKey { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
         public SendMessageToRabbiMq(ISendMessage sendMessage, DbChangeEmitterConfig config)
         {
             SendMessage = sendMessage;
-            _routingKey = config.ExchangeRoutingKey;
+            _routingKey = config.MessageBroker.ExchangeRoutingKey;
             UseExchangeToSendMessage = config.MessageBroker.UseExchangeToSendMessage;
         }
         public bool SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges)
