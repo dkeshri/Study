@@ -26,7 +26,7 @@ You need to provide Message Broker Details (like `rabbitMq`) and `MsSql` Connect
 
 **Publish Message To Queue**
 
-If you want to publish message directly to RabbitMq. Then no need to provide Exchange Name, Provide only Queue name.
+If you want to publish message directly to `Queue`. Then no need to provide Exchange Name, Provide only Queue name.
 
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
@@ -73,7 +73,7 @@ services.AddDataSyncDbChangeEmitter((config) =>
     });
 
     // To Publish message on Exchange need below Properties.
-    config.ExchangeRoutingKey = "RouitngKey";
+    config.MessageBroker.ExchangeRoutingKey = "RouitngKey";
     config.MessageBroker.UseExchangeToSendMessage = true;
 
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>

@@ -29,21 +29,18 @@ builder.ConfigureServices((hostContext, services) =>
             config.ConnectionString = dbConnectionString;
             config.TransactionTimeOutInSec = dbTransationTimeOut;
         });
-
-        config.MessageBroker.UseExchangeToSendMessage = true;
         
         if(rabbitMqConfiguration != null)
         {
             config.MessageBroker.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
+            config.MessageBroker.UseExchangeToSendMessage = true;
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {
                 rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;
                 rabbitMqConfig.Port = rabbitMqConfiguration.Port;
                 rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
-                rabbitMqConfig.Queue.QueueName = "DataSyncQueue";
-                rabbitMqConfig.Exchange.ExchangeName = "";
-
+                rabbitMqConfig.Exchange.ExchangeName = rabbitMqConfiguration.Exchange.Name;
             });
         }
         
