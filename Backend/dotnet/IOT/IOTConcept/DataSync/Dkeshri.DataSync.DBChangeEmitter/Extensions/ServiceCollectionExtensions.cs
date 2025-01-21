@@ -14,6 +14,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
             DbChangeEmitterConfig dbChangeEmitterConfig = new DbChangeEmitterConfig();
             MessageBroker messageBroker = new MessageBroker(services);
             messageBroker.RegisterSenderServices = true;
+            messageBroker.ClientProvidedName = "Sender";
             dbChangeEmitterConfig.MessageBroker = messageBroker;
             configuration.Invoke(dbChangeEmitterConfig);
             services.AddDataSyncDbChangeEmitter(dbChangeEmitterConfig);

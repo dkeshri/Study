@@ -16,7 +16,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
         {
             string message = SerializeJsonObject(tableChanges);
             Console.WriteLine(message);
-            return SendMessage.SendToQueue(message);
+            return SendMessage.SendToExchange(message,"EmitterToReceiver");
         }
 
         private string SerializeJsonObject(IReadOnlyCollection<TableChanges> tableChanges)

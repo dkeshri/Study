@@ -10,9 +10,7 @@
         "RabbitMq__Port": "5672",
         "RabbitMq__UserName": "guest",
         "RabbitMq__Password": "guest",
-        "RabbitMq__ClientProvidedName": "Sender",
-        "RabbitMq__Queue": "DataSyncQueue",
-        "RabbitMq__ExchangeName": "weather_direct"
+        "RabbitMq__ClientProvidedName": "Sender"
       }
     }
   }

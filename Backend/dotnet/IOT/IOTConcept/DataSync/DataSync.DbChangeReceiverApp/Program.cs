@@ -28,24 +28,23 @@ builder.ConfigureAppConfiguration((context, config) =>
 builder.ConfigureServices((hostContext, services) =>
 {
     string dbConnectionString = hostContext.Configuration.GetDbConnectionString();
-    string rabbitMqHost = hostContext.Configuration.GetRabbitMqHostName();
-    int rabbitMqPort = hostContext.Configuration.GetRabbitMqHostPort();
-    string rabbitMqUsername = hostContext.Configuration.GetRabbitMqUserName();
-    string rabbitMqPassword = hostContext.Configuration.GetRabbitMqPassword();
-    string rabbitMqQueueName = hostContext.Configuration.GetRabbitMqQueueName();
-    string rabbitMqExchangeName = hostContext.Configuration.GetRabbitMqExchangeName();
-    string rabbitMqClientproviderName = hostContext.Configuration.GetRabbitMqClientProvidedName();
     int dbTransationTimeOut = hostContext.Configuration.GetDbTransactionTimeOutInSec();
+    var rabbitMqConfiguration = hostContext.Configuration.GetRabbitMqConfiguration();
     services.AddDbChangeReceiver((config) =>
     {
-        config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+        if(rabbitMqConfiguration != null)
         {
-            rabbitMqConfig.HostName = rabbitMqHost;
-            rabbitMqConfig.Port = rabbitMqPort;
-            rabbitMqConfig.QueueName = rabbitMqQueueName;
-            rabbitMqConfig.UserName = rabbitMqUsername;
-            rabbitMqConfig.Password = rabbitMqPassword;
-        });
+            config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+            {
+                rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;
+                rabbitMqConfig.Port = rabbitMqConfiguration.Port;
+                rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
+                rabbitMqConfig.Password = rabbitMqConfiguration.Password;
+                rabbitMqConfig.Queue.QueueName = rabbitMqConfiguration.Queue.Name;
+                rabbitMqConfig.Queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
+                rabbitMqConfig.Queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
+            });
+        }
 
         config.AddDataLayer((dbType, config) =>
         {

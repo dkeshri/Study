@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DataSync.DBChangeEmitterApp.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace DataSync.DbChangeReceiverApp.Extensions
 {
@@ -18,35 +19,9 @@ namespace DataSync.DbChangeReceiverApp.Extensions
             }
             return timeout;
         }
-        public static string GetRabbitMqHostName(this IConfiguration configuration)
+        public static RabbitMqConfiguration? GetRabbitMqConfiguration(this IConfiguration configuration)
         {
-            return configuration.GetSection("RabbitMq:HostName").Value!;
-        }
-        public static int GetRabbitMqHostPort(this IConfiguration configuration)
-        {
-            int.TryParse(configuration.GetSection("RabbitMq:Port").Value!,out int port);
-            return port;
-        }
-
-        public static string GetRabbitMqUserName(this IConfiguration configuration)
-        {
-            return configuration.GetSection("RabbitMq:UserName").Value!;
-        }
-        public static string GetRabbitMqPassword(this IConfiguration configuration)
-        {
-            return configuration.GetSection("RabbitMq:Password").Value!;
-        }
-        public static string GetRabbitMqQueueName(this IConfiguration configuration)
-        {
-            return configuration.GetSection("RabbitMq:Queue").Value!;
-        }
-        public static string GetRabbitMqExchangeName(this IConfiguration configuration)
-        {
-            return configuration.GetSection("RabbitMq:ExchangeName").Value!;
-        }
-        public static string GetRabbitMqClientProvidedName(this IConfiguration configuration)
-        {
-            return configuration.GetSection("RabbitMq:ClientProvidedName").Value!;
+            return configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>();
         }
     }
 }
