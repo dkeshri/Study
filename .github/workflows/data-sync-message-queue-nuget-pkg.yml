@@ -26,15 +26,29 @@ jobs:
         run: |
           dotnet pack --configuration Release
 
-      - name: Push NuGet Package
+      - name: Push NuGet MessageQueue
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        working-directory: ./Backend/dotnet/IOT/IOTConcept/MessageQueue
+        working-directory: ./Backend/dotnet/IOT/IOTConcept/MessageQueue/Dkeshri.MessageQueue
         run: |
-          dotnet nuget push ./Dkeshri.MessageQueue/bin/Release/*.nupkg \
-            --api-key $NUGET_API_KEY \
-            --source https://api.nuget.org/v3/index.json; \
-          dotnet nuget push ./Dkeshri.MessageQueue.RabbitMq/bin/Release/*.nupkg \
+          PACKAGE_ID="Dkeshri.MessageQueue"
+          PACKAGE_VERSION=$(grep -oP '(?<=<Version>).*?(?=</Version>)' Directory.Build.props)
+
+          response=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json")
+          if echo "$response" | grep -q "\"$PACKAGE_VERSION\""; then
+              echo "Version $PACKAGE_VERSION of package $PACKAGE_ID already exists on NuGet. Skipping push."
+          else
+              echo "Version $PACKAGE_VERSION of package $PACKAGE_ID does not exist. Pushing package..."
+              dotnet nuget push ./bin/Release/*.nupkg \
+                --api-key $NUGET_API_KEY \
+                --source https://api.nuget.org/v3/index.json; \
+          fi
+      - name: Push NuGet MessageQueue.RabbitMq
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        working-directory: ./Backend/dotnet/IOT/IOTConcept/MessageQueue/Dkeshri.MessageQueue.RabbitMq
+        run: |
+          dotnet nuget push ./bin/Release/*.nupkg \
             --api-key $NUGET_API_KEY \
             --source https://api.nuget.org/v3/index.json
 
