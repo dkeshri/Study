@@ -70,6 +70,7 @@ namespace MessageQueue.RabbitMq.Services
                 else
                 {
                     Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
+                    Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
                 }
 
                 if (channel != null && channel.IsOpen) 

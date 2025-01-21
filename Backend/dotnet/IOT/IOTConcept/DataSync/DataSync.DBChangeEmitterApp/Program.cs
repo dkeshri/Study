@@ -40,6 +40,7 @@ builder.ConfigureServices((hostContext, services) =>
                 rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
                 rabbitMqConfig.Exchange.ExchangeName = rabbitMqConfiguration.Exchange.Name;
+                rabbitMqConfig.Queue.QueueName = "DataSyncQueue";
             });
         }
         
