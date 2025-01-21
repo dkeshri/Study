@@ -32,15 +32,14 @@ builder.ConfigureServices((hostContext, services) =>
         
         if(rabbitMqConfiguration != null)
         {
-            config.MessageBroker.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
-            config.MessageBroker.UseExchangeToSendMessage = true;
+
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {
                 rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;
                 rabbitMqConfig.Port = rabbitMqConfiguration.Port;
                 rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
-                rabbitMqConfig.Exchange.ExchangeName = rabbitMqConfiguration.Exchange.Name;
+                rabbitMqConfig.Queue.QueueName = rabbitMqConfiguration.Queue.Name;
             });
         }
         
