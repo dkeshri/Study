@@ -12,6 +12,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
         public static void AddDataSyncDbChangeEmitter(this IServiceCollection services, Action<DbChangeEmitterConfig> configuration) 
         {
             DbChangeEmitterConfig dbChangeEmitterConfig = new DbChangeEmitterConfig();
+            dbChangeEmitterConfig.ExchangeRoutingKey = "EmitterToReceiver";
             MessageBroker messageBroker = new MessageBroker(services);
             messageBroker.RegisterSenderServices = true;
             messageBroker.ClientProvidedName = "Sender";
@@ -21,6 +22,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
         }
         public static void AddDataSyncDbChangeEmitter(this IServiceCollection services, DbChangeEmitterConfig config)
         {
+            services.AddSingleton(config);
             if (config.DatabaseType == DatabaseType.MSSQL)
             {
                 services.AddDataLayer((dbConfig) =>

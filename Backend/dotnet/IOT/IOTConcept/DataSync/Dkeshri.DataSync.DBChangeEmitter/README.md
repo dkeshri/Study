@@ -16,6 +16,8 @@ SET CHANGE_TRACKING = ON
 (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON);
 ```
 
+> Message Broker need to be running. (RabbitMq)
+
 ## How to use
 
 This package uses the `IServiceCollection` to setup. There is an Extension `AddDataSyncDbChangeEmitter` Method is use to setup. 
@@ -32,14 +34,14 @@ services.AddDataSyncDbChangeEmitter((config) =>
         config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
         config.TransactionTimeOutInSec = 30;
     });
-
+    config.ExchangeRoutingKey = "RouitngKey";
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "rabbitMqHostIp";
         rabbitMqConfig.Port = 5672;
-        rabbitMqConfig.QueueName = "QueueName";
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
+        rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
     });
 });
 ```
@@ -66,13 +68,14 @@ builder.ConfigureServices((hostContext, services) =>
             config.TransactionTimeOutInSec = 30;
         });
 
+        config.ExchangeRoutingKey = "RouitngKey";
         config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "rabbitMqHostIp";
             rabbitMqConfig.Port = 5672;
-            rabbitMqConfig.QueueName = "QueueName";
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
+            rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
         });
     });
 });
@@ -94,6 +97,17 @@ VALUES('YourTableName',0);
 
 > Note: Make sure dependent tableName should be there in ChangeTrackers.
 
-**Example :**
+**Example**
 
 let say you have two tables `orders` and `ordersSummary` tables, `Orders` table has foreign refrance of `ordersSummary` table then you have to insert both tableName (`orders` and `OrdersSummary`) in `ChangeTrackers` Table.
+
+> After inserting tables in `ChangeTrackers` you need to restart Emitter Application, to Enable Change tracker on newly added Tables.
+
+** If don't want to restert Emitter Application**
+
+Run below query to manually enable
+
+```sql
+ALTER TABLE TableName
+ENABLE CHANGE_TRACKING;
+```
