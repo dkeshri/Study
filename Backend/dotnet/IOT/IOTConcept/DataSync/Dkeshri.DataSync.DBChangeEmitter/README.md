@@ -24,6 +24,10 @@ This package uses the `IServiceCollection` to setup. There is an Extension `AddD
 
 You need to provide Message Broker Details (like `rabbitMq`) and `MsSql` Connection details to work this package.
 
+**Publish Message To Queue**
+
+If you want to publish message directly to RabbitMq. Then no need to provide Exchange Name, Provide only Queue name.
+
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
 {
@@ -34,7 +38,44 @@ services.AddDataSyncDbChangeEmitter((config) =>
         config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
         config.TransactionTimeOutInSec = 30;
     });
+
+    config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "rabbitMqHostIp";
+        rabbitMqConfig.Port = 5672;
+        rabbitMqConfig.UserName = "username";
+        rabbitMqConfig.Password = "password";
+        rabbitMqConfig.Queue.QueueName = "DataSyncQueue";
+    });
+});
+```
+
+**Publish Message to Exchange**
+
+To Publish message to Exchange you need to set `UseExchangeToSendMessage` Property to `true`, and `ExchangeRoutingKey` as below code.
+
+
+
+```csharp
+config.MessageBroker.ExchangeRoutingKey = "YourRoutingKey";
+config.MessageBroker.UseExchangeToSendMessage = true;
+```
+
+```csharp
+services.AddDataSyncDbChangeEmitter((config) =>
+{
+
+    config.AddDataLayer((dbType, config) =>
+    {
+        dbType = DatabaseType.MSSQL;
+        config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
+        config.TransactionTimeOutInSec = 30;
+    });
+
+    // To Publish message on Exchange need below Properties.
     config.ExchangeRoutingKey = "RouitngKey";
+    config.MessageBroker.UseExchangeToSendMessage = true;
+
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "rabbitMqHostIp";
@@ -45,13 +86,17 @@ services.AddDataSyncDbChangeEmitter((config) =>
     });
 });
 ```
-**Example:** 
+
+**Full Example For Queue** 
 
 Lets say we have .Net Core `Console Application`, Use below code in `Program.cs` file and run the application.
 
 ```csharp
 using Dkeshri.DataSync.DBChangeEmitter.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Dkeshri.MessageQueue.RabbitMq.Extensions;
+using DataSync.DBChangeEmitterApp.Extensions;
 
 var builder = Host.CreateDefaultBuilder(args);
 
@@ -60,15 +105,53 @@ builder.ConfigureServices((hostContext, services) =>
 
     services.AddDataSyncDbChangeEmitter((config) =>
     {
-
+        
         config.AddDataLayer((dbType, config) =>
         {
             dbType = DatabaseType.MSSQL;
-            config.ConnectionString = "Server=hostIp;Database=DatabaseName;User Id=userid;Password=YourDbPassword;Encrypt=False";
-            config.TransactionTimeOutInSec = 30;
+            config.ConnectionString = dbConnectionString;
+            config.TransactionTimeOutInSec = dbTransationTimeOut;
         });
 
-        config.ExchangeRoutingKey = "RouitngKey";
+        config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+        {
+            rabbitMqConfig.HostName = "rabbitMqHostIp";
+            rabbitMqConfig.Port = 5672;
+            rabbitMqConfig.UserName = "username";
+            rabbitMqConfig.Password = "password";
+            rabbitMqConfig.Queue.QueueName = "YourQueueName";
+        }); 
+    });
+});
+builder.RunConsoleAsync().Wait();
+```
+
+**Full Example For Exchange**
+
+```csharp
+using Dkeshri.DataSync.DBChangeEmitter.Extensions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Dkeshri.MessageQueue.RabbitMq.Extensions;
+using DataSync.DBChangeEmitterApp.Extensions;
+
+var builder = Host.CreateDefaultBuilder(args);
+
+builder.ConfigureServices((hostContext, services) =>
+{
+
+    services.AddDataSyncDbChangeEmitter((config) =>
+    {
+        
+        config.AddDataLayer((dbType, config) =>
+        {
+            dbType = DatabaseType.MSSQL;
+            config.ConnectionString = dbConnectionString;
+            config.TransactionTimeOutInSec = dbTransationTimeOut;
+        });
+
+        config.MessageBroker.ExchangeRoutingKey = "YourRoutingKey";
+        config.MessageBroker.UseExchangeToSendMessage = true;
         config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "rabbitMqHostIp";
@@ -76,11 +159,15 @@ builder.ConfigureServices((hostContext, services) =>
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
             rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
-        });
+        }); 
     });
 });
 builder.RunConsoleAsync().Wait();
 ```
+
+
+
+
 
 ## Configuration.
 

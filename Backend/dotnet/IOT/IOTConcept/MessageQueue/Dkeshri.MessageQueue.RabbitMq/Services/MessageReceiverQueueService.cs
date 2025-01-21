@@ -3,6 +3,7 @@ using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 
 
 namespace MessageQueue.RabbitMq.Services
@@ -32,10 +33,10 @@ namespace MessageQueue.RabbitMq.Services
             }
             else
             {
-                InitMessageReciver(channel);
+                InitMessageReciver(channel, cancellationToken);
             }
 
-            Console.WriteLine("Rabbit MQ Message Reciver Service has started");
+            Console.WriteLine("Rabbit MQ Message Receiver Service has started");
             return Task.CompletedTask;
         }
 
@@ -49,43 +50,44 @@ namespace MessageQueue.RabbitMq.Services
 
         }
 
-        private void InitMessageReciver(IModel channel)
+        private void InitMessageReciver(IModel? channel, CancellationToken? cancellationToken = null)
         {
 
             try
             {
                 Console.WriteLine("Initializing Receiver with RabbitMq...");
-                channel.QueueDeclare(queue: queueConfig.QueueName,
+                channel?.QueueDeclare(queue: queueConfig.QueueName,
                      durable: queueConfig.IsDurable,
                      exclusive: queueConfig.IsExclusive,
                      autoDelete: queueConfig.IsAutoDelete,
                      arguments: queueConfig.Arguments);
-                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+                channel?.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
                 
                 if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
                 {
-                    string[] routingKey = queueConfig.RoutingKeys;
-                    foreach (var key in routingKey)
+                    channel = BindQueueWithExchange(cancellationToken);
+                }
+                else
+                {
+                    Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
+                    Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
+                }
+
+                if (channel != null && channel.IsOpen) 
+                {
+                    var consumer = new EventingBasicConsumer(channel);
+                    consumer.Received += (model, ea) =>
                     {
-                        channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, key);
-                    }
-                    if (routingKey.Length == 0)
-                    {
-                        channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, string.Empty);
-                    }
+                        _messageHanadler.HandleMessage(model, ea, channel);
+                    };
+                    channel.BasicConsume(queue: queueConfig.QueueName,
+                                         autoAck: false,
+                                         consumer: consumer);
+
+                    channel.ModelShutdown += OnChannelShutdown;
+                    Console.WriteLine("Receiver is connected to RabbitMq...");
                 }
                 
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
-                {
-                   _messageHanadler.HandleMessage(model, ea, channel);
-                };
-                channel.BasicConsume(queue: queueConfig.QueueName,
-                                     autoAck: false,
-                                     consumer: consumer);
-
-                channel.ModelShutdown += OnChannelShutdown;
-                Console.WriteLine("Receiver is connected to RabbitMq...");
             }
             catch (Exception ex)
             {
@@ -122,11 +124,61 @@ namespace MessageQueue.RabbitMq.Services
                 Thread.Sleep(TimeSpan.FromSeconds(10));
                 if (channel != null && channel.IsOpen)
                 {
-                    InitMessageReciver(channel);
+                    InitMessageReciver(channel,cancellationToken);
                     break;
                 }
             }
 
+        }
+        private IModel? BindQueueWithExchange(CancellationToken? cancellationToken = null)
+        {
+            Console.WriteLine("Binding Queue with Exchange");
+            bool isBindToExchange = false;
+            IModel? channel = _connection.Channel;
+            while (!isBindToExchange && !_isQueueServiceStopping) 
+            {
+
+                try
+                {
+                    if (cancellationToken?.IsCancellationRequested == true)
+                    {
+                        _isQueueServiceStopping = true;
+                        break;
+                    }
+                    string[] routingKey = queueConfig.RoutingKeys;
+                    if(channel == null || channel.IsClosed)
+                    {
+                        channel = _connection.Channel;
+                    }
+                    foreach (var key in routingKey)
+                    {
+                        if (channel!=null && channel.IsOpen)
+                        {
+                            channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, key);
+                            isBindToExchange = true;
+                            Console.WriteLine($"{queueConfig.QueueName} binds to Exchange {queueConfig.ExchangeName} routing key: {key}");
+                        }
+                    }
+                    if (routingKey.Length == 0)
+                    {
+                        if (channel != null && channel.IsOpen)
+                        {
+                            channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, string.Empty);
+                            isBindToExchange = true;
+                            Console.WriteLine($"{queueConfig.QueueName} binds to Exchange {queueConfig.ExchangeName}");
+                        }
+                           
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exchange : {queueConfig.ExchangeName} does not exist");
+                    Console.WriteLine("Wating for Exchange to be created! re-try to bind");
+                    Thread.Sleep(TimeSpan.FromSeconds(10));
+                }
+            }
+            return channel;
+            
         }
         public void Dispose()
         {

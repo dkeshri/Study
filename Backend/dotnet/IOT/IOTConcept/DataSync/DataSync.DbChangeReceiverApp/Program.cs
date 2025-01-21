@@ -41,8 +41,8 @@ builder.ConfigureServices((hostContext, services) =>
                 rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
                 rabbitMqConfig.Queue.QueueName = rabbitMqConfiguration.Queue.Name;
-                rabbitMqConfig.Queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
-                rabbitMqConfig.Queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
+                //rabbitMqConfig.Queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
+                //rabbitMqConfig.Queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
             });
         }
 
