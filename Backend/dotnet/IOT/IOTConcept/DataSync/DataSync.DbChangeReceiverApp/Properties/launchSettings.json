@@ -7,7 +7,7 @@
         "DOTNET_ENVIRONMENT": "Development",
         "RabbitMq__ClientProvidedName": "ReceiverTEst",
         "RabbitMq__Queue__Name": "DataSyncQueue",
-        "RabbitMq__Queue__ExchangeName": "SenderDataSyncExchange"
+        "RabbitMq__Queue__ExchangeName": "DataSyncExchange"
       }
     }
   }

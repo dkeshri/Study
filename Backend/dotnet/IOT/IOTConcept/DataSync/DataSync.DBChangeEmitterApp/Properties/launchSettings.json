@@ -11,7 +11,7 @@
         "RabbitMq__UserName": "guest",
         "RabbitMq__Password": "guest",
         "RabbitMq__ClientProvidedName": "Sender",
-        "RabbitMq__Exchange__Name": "SenderDataSyncExchange",
+        "RabbitMq__Exchange__Name": "DataSyncExchange",
         "RabbitMq__Exchange__RoutingKey": "DeepakTestKey"
       }
     }
