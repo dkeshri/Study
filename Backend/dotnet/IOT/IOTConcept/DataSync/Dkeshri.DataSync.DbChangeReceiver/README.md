@@ -20,10 +20,12 @@ services.AddDbChangeReceiver((config) =>
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "rabbitMqHostIp";
-        rabbitMqConfig.Port = 5672;
-        rabbitMqConfig.QueueName = "QueueName"; 
+        rabbitMqConfig.Port = 5672; 
         rabbitMqConfig.UserName = "userName";
         rabbitMqConfig.Password = "password";
+        rabbitMqConfig.Queue.QueueName = "QueueName";
+        rabbitMqConfig.Queue.ExchangeName = "ExchangeName";
+        rabbitMqConfig.Queue.RoutingKeys = ["RoutingKey1"];
     });
 
     config.AddDataLayer((dbType, config) =>
@@ -61,10 +63,12 @@ builder.ConfigureServices((hostContext, services) =>
         config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "rabbitMqHostIp";
-            rabbitMqConfig.Port = 5672;
-            rabbitMqConfig.QueueName = "QueueName"; 
+            rabbitMqConfig.Port = 5672; 
             rabbitMqConfig.UserName = "userName";
             rabbitMqConfig.Password = "password";
+            rabbitMqConfig.Queue.QueueName = "QueueName";
+            rabbitMqConfig.Queue.ExchangeName = "ExchangeName";
+            rabbitMqConfig.Queue.RoutingKeys = ["RoutingKey1"];
         });
 
         config.AddDataLayer((dbType, config) =>

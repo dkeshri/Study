@@ -17,14 +17,8 @@ builder.ConfigureServices((hostContext, services) =>
 {
 
     string dbConnectionString = hostContext.Configuration.GetDbConnectionString();
-    string rabbitMqHost = hostContext.Configuration.GetRabbitMqHostName();
-    int rabbitMqPort = hostContext.Configuration.GetRabbitMqHostPort();
-    string rabbitMqUsername = hostContext.Configuration.GetRabbitMqUserName();
-    string rabbitMqPassword = hostContext.Configuration.GetRabbitMqPassword();
-    string rabbitMqQueueName = hostContext.Configuration.GetRabbitMqQueueName();
-    string rabbitMqExchangeName = hostContext.Configuration.GetRabbitMqExchangeName();
-    string rabbitMqClientproviderName = hostContext.Configuration.GetRabbitMqClientProvidedName();
     int dbTransationTimeOut = hostContext.Configuration.GetDbTransactionTimeOutInSec();
+    var rabbitMqConfiguration = hostContext.Configuration.GetRabbitMqConfiguration();
 
     services.AddDataSyncDbChangeEmitter((config) =>
     {
@@ -35,16 +29,20 @@ builder.ConfigureServices((hostContext, services) =>
             config.ConnectionString = dbConnectionString;
             config.TransactionTimeOutInSec = dbTransationTimeOut;
         });
-
-        config.MessageBroker.ClientProvidedName = rabbitMqClientproviderName;
-        config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+        
+        if(rabbitMqConfiguration != null)
         {
-            rabbitMqConfig.HostName = rabbitMqHost;
-            rabbitMqConfig.Port = rabbitMqPort;
-            rabbitMqConfig.QueueName = rabbitMqQueueName;
-            rabbitMqConfig.UserName = rabbitMqUsername;
-            rabbitMqConfig.Password = rabbitMqPassword;
-        });
+            config.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
+            config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+            {
+                rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;
+                rabbitMqConfig.Port = rabbitMqConfiguration.Port;
+                rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
+                rabbitMqConfig.Password = rabbitMqConfiguration.Password;
+                rabbitMqConfig.Exchange.ExchangeName = rabbitMqConfiguration.Exchange.Name;
+            });
+        }
+        
     });
 
 });

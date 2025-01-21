@@ -1,4 +1,5 @@
 ﻿using Dkeshri.DataSync.Common.Models;
+using Dkeshri.DataSync.DBChangeEmitter.Extensions;
 using Dkeshri.DataSync.DBChangeEmitter.Interfaces;
 using Dkeshri.MessageQueue.Interfaces;
 using System.Text.Json;
@@ -8,15 +9,18 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
     internal class SendMessageToRabbiMq : ISendMessageToRabbitMq
     {
         private ISendMessage SendMessage { get; }
-        public SendMessageToRabbiMq(ISendMessage sendMessage)
+
+        private readonly string? _routingKey;
+        public SendMessageToRabbiMq(ISendMessage sendMessage, DbChangeEmitterConfig config)
         {
             SendMessage = sendMessage;
+            _routingKey = config.ExchangeRoutingKey;
         }
         public bool SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges)
         {
             string message = SerializeJsonObject(tableChanges);
             Console.WriteLine(message);
-            return SendMessage.SendToQueue(message);
+            return SendMessage.SendToExchange(message, _routingKey);
         }
 
         private string SerializeJsonObject(IReadOnlyCollection<TableChanges> tableChanges)
