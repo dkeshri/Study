@@ -24,11 +24,12 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
             Console.WriteLine(message);
             if (UseExchangeToSendMessage) 
             {
-                return SendMessage.SendToQueue(message);
+                
+                return SendMessage.SendToExchange(message, _routingKey);
             }
             else
             {
-                return SendMessage.SendToExchange(message, _routingKey);
+                return SendMessage.SendToQueue(message);
             }
             
         }
