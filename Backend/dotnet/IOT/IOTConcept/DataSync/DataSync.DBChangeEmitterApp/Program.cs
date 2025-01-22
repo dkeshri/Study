@@ -32,8 +32,8 @@ builder.ConfigureServices((hostContext, services) =>
         
         if(rabbitMqConfiguration != null)
         {
-            config.MessageBroker.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
             config.MessageBroker.UseExchangeToSendMessage = true;
+            config.MessageBroker.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {
                 rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;

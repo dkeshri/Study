@@ -9,16 +9,18 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
     {
         private IDatabaseChangeTrackerService DatabaseChangeTrackerService { get; }
         private ISendMessageToRabbitMq SendMessageToRabbiMq { get; }
-
+        private IMessageBrokerInitService MessageBrokerInitService { get; }
         private IHost _host;
         public DbChangeEmitterService(IDatabaseChangeTrackerService databaseChangeTrackerService,
             ISendMessageToRabbitMq sendMessageToRabbitMq,
-            IHost host
+            IHost host,
+            IMessageBrokerInitService messageBrokerInitService
             ):base(TimeSpan.FromSeconds(10))
         {
             DatabaseChangeTrackerService = databaseChangeTrackerService;
             SendMessageToRabbiMq = sendMessageToRabbitMq;
             _host = host;
+            MessageBrokerInitService = messageBrokerInitService;
         }
 
         protected override async Task OperationToPerforme(CancellationToken cancellationToken)
@@ -56,6 +58,9 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
             {
                 DatabaseChangeTrackerService.ApplyMigration();
                 DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
+
+                Console.WriteLine("Init Message Broker");
+                MessageBrokerInitService.InitMessageBroker();
             }
             return Task.CompletedTask;
         }

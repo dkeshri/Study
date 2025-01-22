@@ -42,9 +42,7 @@ builder.ConfigureServices((hostContext, services) =>
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
                 rabbitMqConfig.Queue.QueueName = rabbitMqConfiguration.Queue.Name;
                 rabbitMqConfig.Queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
-                rabbitMqConfig.Queue.RoutingKeys = [ "DeepakTestKey"];
-
-                
+                rabbitMqConfig.Queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
             });
         }
 

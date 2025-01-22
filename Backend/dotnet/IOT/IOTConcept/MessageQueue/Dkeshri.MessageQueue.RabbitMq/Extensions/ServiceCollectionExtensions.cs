@@ -16,8 +16,13 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
         {
             RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
             rabbitMqConfig.Queue = new QueueConfig();
+            rabbitMqConfig.Queue.Arguments = new Dictionary<string, object>();
+            
             rabbitMqConfig.Exchange = new ExchangeConfig();
+            rabbitMqConfig.Exchange.Arguments = new Dictionary<string, object>();
+            
             configuration.Invoke(rabbitMqConfig);
+            
             rabbitMqConfig.RegisterSenderServices = messageBroker.RegisterSenderServices;
             rabbitMqConfig.RegisterReceiverServices = messageBroker.RegisterReceiverServices;
             rabbitMqConfig.ClientProvidedName = messageBroker.ClientProvidedName;
@@ -45,11 +50,11 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
 
             if (config.RegisterReceiverServices) 
             {
-                messageBroker.Services.AddRbbitMqMessageReceiverServiceForQueue();
+                messageBroker.Services.AddMessageReceiverQueueService();
             }
         }
 
-        public static void AddRbbitMqMessageReceiverServiceForQueue(this IServiceCollection services) 
+        public static void AddMessageReceiverQueueService(this IServiceCollection services) 
         {
             services.AddSingleton<IMessageHandler, MessageReceiverHandler>();
             services.AddHostedService<MessageReceiverQueueService>();
