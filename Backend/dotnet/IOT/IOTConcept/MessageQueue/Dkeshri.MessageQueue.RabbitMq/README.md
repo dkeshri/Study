@@ -17,25 +17,68 @@ There is another extension method `AddRabbitMqServices` provided in `Dkeshri.Mes
 
 **Register Sender**
 > Note Make sure to set `RegisterSenderServices` to `true`
+
+**Sender For Exchange** When you want to send message to `Exchange` this is the prefered way.
+
+Step 1
+
 ```csharp
 services.AddMessageBroker(messageBroker =>
 {
     messageBroker.RegisterSenderServices = true; // Set True to register Sender services
     messageBroker.ClientProvidedName = "Sender"; // Sender or Any name you like
+    messageBroker.MessageBroker.ExchangeRoutingKey = "RoutingKey";
     messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "RabbitMqHost";
         rabbitMqConfig.Port = 5672; // your RabbitMq Port
-        rabbitMqConfig.Exchange.ExchangeName = "Your_ExchangeName";
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
+        rabbitMqConfig.Exchange.ExchangeName = "Your_ExchangeName";
+    });
+});
+```
+Step 2
+
+There is an `IStartup` Interface provided by Message Broker, that will use Init `Exchange`, Please call it in main method, this interface is Registed in `IServiceCollection` DI container.
+```csharp
+internal class MessageBrokerInitService : IMessageBrokerInitService
+{
+    IStartup _startup;
+    public MessageBrokerInitService(IStartup startup)
+    {
+        _startup = startup;
+    }
+
+    public void InitMessageBroker()
+    {
+        _startup.OnStart();
+    }
+}
+```
+
+**Sender For Queue** When you want to send message to `queue` not to `Exchange`
+
+```csharp
+services.AddMessageBroker(messageBroker =>
+{
+    messageBroker.RegisterSenderServices = true; // Set True to register Sender services
+    messageBroker.ClientProvidedName = "Sender"; // Sender or Any name you like
+    messageBroker.MessageBroker.ExchangeRoutingKey = "RoutingKey";
+    messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "RabbitMqHost";
+        rabbitMqConfig.Port = 5672; // your RabbitMq Port
+        rabbitMqConfig.UserName = "username";
+        rabbitMqConfig.Password = "password";
+        rabbitMqConfig.Queue.QueueName = "YourQueueName";
     });
 });
 ```
 
 **Register Receiver**
 
-> Note Make sure to set `RegisterReceiverServices` to `true`
+> Note Make sure to set `RegisterReceiverServices` to `true`. If you only want to reveive message from Queue then Please do not provide `ExchangeName` and `RoutingKeys`.
 
 ```csharp
 services.AddMessageBroker(messageBroker =>
@@ -62,7 +105,7 @@ services.AddMessageBroker(messageBroker =>
 
 ### In Sender Application
 
-The `ISendMessage` interface is provided for the sender, offering the following methods:
+The `IMessageSender` interface is provided for the sender, offering the following methods:
 
 * SendToQueue(string message)
 * SendToQueue(string queueName, string message)
@@ -70,13 +113,13 @@ The `ISendMessage` interface is provided for the sender, offering the following 
 
 You can specify the `queueName` when sending messages to RabbitMQ.
 
-The `ISendMessage` interface is registered during the configuration phase in the `IServiceCollection` dependency injection container and can be injected into your class constructor, as demonstrated in the code below:
+The `IMessageSender` interface is registered during the configuration phase in the `IServiceCollection` dependency injection container and can be injected into your class constructor, as demonstrated in the code below:
 
 ```csharp
 class SendMessageToRabbitMq : ISendMessageToRabbitMq
 {
-    private ISendMessage SendMessage { get; }
-    public SendMessageToRabbiMq(ISendMessage sendMessage)
+    private IMessageSender SendMessage { get; }
+    public SendMessageToRabbiMq(IMessageSender sendMessage)
     {
         SendMessage = sendMessage;
     }
@@ -92,7 +135,7 @@ class SendMessageToRabbitMq : ISendMessageToRabbitMq
     }
     public bool SendMessageToRabbitMqExchange(string queueName, string DataToSend)
     {
-        return SendMessage.SendToExchange(message,"routingKey1");
+        return SendMessage.SendToExchange(DataToSend,"routingKey1");
     }
 
 }
@@ -118,10 +161,21 @@ builder.ConfigureServices((hostContext, services) =>
         });
     });
 
+    // register Sender Service in Services
     services.AddSingleton<ISendMessageToRabbitMq, SendMessageToRabbiMq>();
 
 });
-builder.RunConsoleAsync().Wait();
+
+
+var host = builder.UseConsoleLifetime().Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var startUp = scope.ServiceProvider.GetRequiredService<IStartup>();
+    startUp.OnStart();
+}
+
+host.RunAsync().Wait();
 ```
 
 
@@ -151,7 +205,7 @@ builder.ConfigureServices((hostContext, services) =>
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
             rabbitMqConfig.Queue.QueueName = "YourQueueName";
-            rabbitMqConfig.Queue.ExchangeName = "YourSenderExchangeName";
+            rabbitMqConfig.Queue.ExchangeName = "Your_ExchangeName";
             rabbitMqConfig.Queue.RoutingKeys = [ "routingKey1" ];
         });
     });
@@ -193,8 +247,8 @@ but we can also create two channel one for sender and one for reciver.
 > Run below command to create RabbitMq Docker container
 
 ```bash
-docker run -d -v rabbitmqv:/var/log/rabbitmq --hostname rmq --name RabbitMqServer -p 5672:5672 -p 8080:15
-672 rabbitmq:3.13-management
+docker run -d -v rabbitmqv:/var/log/rabbitmq --hostname rmq --name RabbitMqServer \
+-p 5672:5672 -p 8080:15672 rabbitmq:3.13-management
 ```
 ### Port Detail
 
