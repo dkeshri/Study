@@ -8,11 +8,11 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
 {
     internal class SendMessageToRabbiMq : ISendMessageToRabbitMq
     {
-        private ISendMessage SendMessage { get; }
+        private IMessageSender SendMessage { get; }
 
         private readonly string? _routingKey;
         private readonly bool UseExchangeToSendMessage;
-        public SendMessageToRabbiMq(ISendMessage sendMessage, DbChangeEmitterConfig config)
+        public SendMessageToRabbiMq(IMessageSender sendMessage, DbChangeEmitterConfig config)
         {
             SendMessage = sendMessage;
             _routingKey = config.MessageBroker.ExchangeRoutingKey;

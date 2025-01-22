@@ -1,10 +1,5 @@
 ﻿using Dkeshri.MessageQueue.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dkeshri.MessageQueue.Extensions
 {
@@ -18,12 +13,19 @@ namespace Dkeshri.MessageQueue.Extensions
         }
         public static void AddMessageBroker(this IServiceCollection services, MessageBroker messageBroker)
         {
+            messageBroker.Services.AddSingleton<IStartup>(sp =>
+            {
+                var factory = sp.GetRequiredService<MessageBrokerFactory>();
+                IStartup startup = factory.CreateInitializer();
+                return startup;
+            });
+
             if (messageBroker.RegisterSenderServices)
             {
-                messageBroker.Services.AddSingleton<ISendMessage>(sp =>
+                messageBroker.Services.AddSingleton<IMessageSender>(sp =>
                 {
                     var factory = sp.GetRequiredService<MessageBrokerFactory>();
-                    ISendMessage sender = factory.CreateSender();
+                    IMessageSender sender = factory.CreateSender();
                     return sender;
                 });
             }

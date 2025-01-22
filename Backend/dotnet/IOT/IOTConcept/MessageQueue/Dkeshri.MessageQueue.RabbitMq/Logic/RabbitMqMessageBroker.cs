@@ -1,12 +1,7 @@
 ﻿using Dkeshri.MessageQueue.Interfaces;
-using Dkeshri.MessageQueue.RabbitMq.Handlers;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using MessageQueue.RabbitMq.Logic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Dkeshri.MessageQueue.RabbitMq.Logic
 {
@@ -20,15 +15,20 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
             _messageHandler = messageHandler;
         }
 
+        public override IStartup CreateInitializer()
+        {
+            return new MessageBrokerInitializer(_connection);
+        }
+
         public override IMessageReceiver CreateReceiver()
         {
             return _messageHandler as IMessageReceiver
                ?? throw new InvalidCastException("The injected IMessageHandler does not implement IMessageReceiver.");
         }
 
-        public override ISendMessage CreateSender()
+        public override IMessageSender CreateSender()
         {
-            return new SendMessage(_connection);
+            return new MessageSender(_connection);
         }
     }
 }
