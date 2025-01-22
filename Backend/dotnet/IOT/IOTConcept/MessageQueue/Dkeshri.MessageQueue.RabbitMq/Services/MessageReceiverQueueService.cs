@@ -62,18 +62,19 @@ namespace MessageQueue.RabbitMq.Services
                      autoDelete: queueConfig.IsAutoDelete,
                      arguments: queueConfig.Arguments);
                 channel?.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-                
+                bool isProcessingAlternateQueue = true;
                 if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
                 {
                     channel = BindQueueWithExchange(cancellationToken);
+                    
+                    (channel, isProcessingAlternateQueue) = ProcessMessageFromAlternateQueue();
                 }
                 else
                 {
                     Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
                     Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
                 }
-                bool isProcessingAlternateQueue = true;
-                (channel,isProcessingAlternateQueue) = ProcessMessageFromAlternateQueue();
+                
                 if (!isProcessingAlternateQueue && channel != null && channel.IsOpen) 
                 {
                     var consumer = new EventingBasicConsumer(channel);

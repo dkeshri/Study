@@ -107,6 +107,7 @@ builder.ConfigureServices((hostContext, services) =>
     {
         messageBroker.RegisterSenderServices = true; // Set True to register Sender services
         messageBroker.ClientProvidedName = "SenderTest"; // Sender or Any name you like
+        messageBroker.MessageBroker.ExchangeRoutingKey = "RoutingKey";
         messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "RabbitMqHost";
