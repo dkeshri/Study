@@ -2,7 +2,6 @@
 using Dkeshri.MessageQueue.RabbitMq.Extensions;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using RabbitMQ.Client;
-using System.Threading.Channels;
 
 namespace Dkeshri.MessageQueue.RabbitMq.Logic
 {
@@ -79,26 +78,26 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
                 Console.WriteLine($"Error: Can't Create Exchange: {exchangeConfig.ExchangeName}, channel is not open!");
                 return;
             }
-            Console.WriteLine("Declaring Alternate Exchange");
+            
             createAlternateExchange(channel);
             channel.ExchangeDeclare(
                 exchange: exchangeConfig.ExchangeName,
                 type: exchangeConfig.ExchangeType,
                 durable: exchangeConfig.IsDurable,
                 autoDelete: exchangeConfig.AutoDelete,
-                arguments: new Dictionary<string, object>
-                {
-                    { "alternate-exchange", "alternate.exchange" }
-                }
+                arguments: exchangeConfig.Arguments
             );
             Console.WriteLine($"Exchange: {exchangeConfig.ExchangeName} created!");
         }
 
         private void createAlternateExchange(IModel channel)
         {
+            exchangeConfig.Arguments?.Add("alternate-exchange", "alternate.exchange");
+            Console.WriteLine("Declaring Alternate Exchange");
             channel.ExchangeDeclare("alternate.exchange", ExchangeType.Fanout, durable: true);
             channel.QueueDeclare("unroutable.queue", durable: true, exclusive: false, autoDelete: false);
             channel.QueueBind("unroutable.queue", "alternate.exchange", "");
+            Console.WriteLine("Alternate Exchange Declared! and Bind to");
         }
 
     }
