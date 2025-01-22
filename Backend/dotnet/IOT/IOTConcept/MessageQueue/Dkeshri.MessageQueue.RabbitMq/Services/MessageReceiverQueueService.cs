@@ -72,8 +72,9 @@ namespace MessageQueue.RabbitMq.Services
                     Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
                     Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
                 }
-
-                if (channel != null && channel.IsOpen) 
+                bool isProcessingAlternateQueue = true;
+                (channel,isProcessingAlternateQueue) = ProcessMessageFromAlternateQueue();
+                if (!isProcessingAlternateQueue && channel != null && channel.IsOpen) 
                 {
                     var consumer = new EventingBasicConsumer(channel);
                     consumer.Received += (model, ea) =>
@@ -179,6 +180,47 @@ namespace MessageQueue.RabbitMq.Services
             }
             return channel;
             
+        }
+        private (IModel?,bool) ProcessMessageFromAlternateQueue()
+        {
+            bool isProcessingAlternateQueue = true;
+            IModel? channel = _connection?.Channel;
+            try
+            {
+                if (channel != null && channel.IsOpen)
+                {
+                    channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+                    var consumer = new EventingBasicConsumer(channel);
+                    Console.WriteLine("Processing Messages from unroutable.queue");
+                    consumer.Received += (model, ea) =>
+                    {
+                        _messageHanadler.HandleMessage(model, ea, channel);
+                    };
+                    channel.BasicConsume(queue: "unroutable.queue",
+                                         autoAck: false,
+                                         consumer: consumer);
+                    while (true)
+                    {
+                        var messageCount = channel.MessageCount("unroutable.queue");
+                        if (messageCount == 0)
+                        {
+                            Console.WriteLine("Alternate queue is empty. Resuming main queue...");
+                            isProcessingAlternateQueue = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("Error: occur while processing messages from unroutable.queue");
+            }
+
+            if(channel == null || channel.IsClosed)
+            {
+                channel = _connection?.Channel;
+            }
+            return (channel,isProcessingAlternateQueue);
         }
         public void Dispose()
         {
