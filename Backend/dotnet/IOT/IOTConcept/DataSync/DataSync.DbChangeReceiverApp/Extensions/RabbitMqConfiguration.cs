@@ -9,7 +9,6 @@
         public string Password { get; set; }
         public string ClientProvidedName { get; set; }
         public QueueConfig Queue { get; set; }
-        public ExchangeConfig Exchange { get; set; }
     }
     internal class QueueConfig
     {
@@ -19,13 +18,6 @@
         public bool IsAutoDelete { get; set; }
         public string ExchangeName { get; set; }
         public string[] RoutingKeys { get; set; }
-    }
-
-    internal class ExchangeConfig
-    {
-        public string Name { get; set; }
-        public bool IsExclusive { get; set; }
-        public bool IsAutoDelete { get; set; }
     }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
