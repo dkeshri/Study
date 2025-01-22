@@ -40,7 +40,7 @@ var host = builder.UseConsoleLifetime().Build();
 
 using (IServiceScope serviceScope = host.Services.CreateScope())
 {
-    ISendMessage messageSender= serviceScope.ServiceProvider.GetRequiredService<ISendMessage>();
+    IMessageSender messageSender= serviceScope.ServiceProvider.GetRequiredService<IMessageSender>();
     string? message = "Hello Deepak";
     do
     {

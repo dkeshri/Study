@@ -10,8 +10,8 @@ namespace MessageQueueApp
 {
     internal class SendMessageService : IHostedService
     {
-        ISendMessage SendMessage { get; }
-        public SendMessageService(ISendMessage sendMessage)
+        IMessageSender SendMessage { get; }
+        public SendMessageService(IMessageSender sendMessage)
         {
             SendMessage = sendMessage;
         }

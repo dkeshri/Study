@@ -7,8 +7,8 @@ namespace IOTConcept.WebApi.Controllers
     public class RabbitMqController : IotConceptControllerBase
     {
         private readonly ILogger<RabbitMqController> _logger;
-        private readonly ISendMessage sendMessage;
-        public RabbitMqController(ILogger<RabbitMqController> logger, ISendMessage sendMessage)
+        private readonly IMessageSender sendMessage;
+        public RabbitMqController(ILogger<RabbitMqController> logger, IMessageSender sendMessage)
         {
             _logger = logger;
             this.sendMessage = sendMessage;
