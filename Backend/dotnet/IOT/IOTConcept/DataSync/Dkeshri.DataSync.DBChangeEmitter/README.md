@@ -24,12 +24,6 @@ This package uses the `IServiceCollection` to setup. There is an Extension `AddD
 
 You need to provide Message Broker Details (like `rabbitMq`) and `MsSql` Connection details to work this package.
 
-
-```csharp
-config.MessageBroker.ExchangeRoutingKey = "YourRoutingKey";
-config.MessageBroker.UseExchangeToSendMessage = true;
-```
-
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
 {

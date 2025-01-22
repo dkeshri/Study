@@ -8,8 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dkeshri.DataSync.DbChangeReceiver" Version="1.1.3" />
-		<PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="2.0.5" />
+		<PackageReference Include="Dkeshri.DataSync.DbChangeReceiver" Version="1.1.4" />
+		<PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="2.0.6" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
