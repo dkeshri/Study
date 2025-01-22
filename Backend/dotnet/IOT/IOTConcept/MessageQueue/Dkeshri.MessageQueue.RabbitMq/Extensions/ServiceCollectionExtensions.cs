@@ -45,11 +45,11 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
 
             if (config.RegisterReceiverServices) 
             {
-                messageBroker.Services.AddRbbitMqMessageReceiverServiceForQueue();
+                messageBroker.Services.AddMessageReceiverQueueService();
             }
         }
 
-        public static void AddRbbitMqMessageReceiverServiceForQueue(this IServiceCollection services) 
+        public static void AddMessageReceiverQueueService(this IServiceCollection services) 
         {
             services.AddSingleton<IMessageHandler, MessageReceiverHandler>();
             services.AddHostedService<MessageReceiverQueueService>();

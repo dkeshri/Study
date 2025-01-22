@@ -20,10 +20,15 @@ namespace MessageQueue.RabbitMq.Logic
         private string clientProvidedName;
         private QueueConfig _queueConfig;
         private ExchangeConfig _exchangeConfig;
+        private bool _registerSenderServices;
+        private bool _registerReceiverServices;
         private IConnection? Connection { get => CreateConnection(_connectionFactory); }
         public IModel? Channel { get => CreateChannelIfClosed(Connection); }
         public QueueConfig Queue { get => _queueConfig; }
         public ExchangeConfig Exchange { get => _exchangeConfig; }
+        public bool RegisterSenderServices { get => _registerSenderServices; }
+        public bool RegisterReceiverServices { get => _registerReceiverServices; }
+
         public RabbitMqConnection(RabbitMqConfig rabbitMqConfig)
         {
             _queueConfig = rabbitMqConfig.Queue;
@@ -33,6 +38,8 @@ namespace MessageQueue.RabbitMq.Logic
             userName = rabbitMqConfig.UserName;
             password = rabbitMqConfig.Password;
             clientProvidedName = rabbitMqConfig.ClientProvidedName;
+            _registerReceiverServices = rabbitMqConfig.RegisterReceiverServices;
+            _registerSenderServices = rabbitMqConfig.RegisterSenderServices;
             _connectionFactory = CreateConnectionFactory();
         }
 
