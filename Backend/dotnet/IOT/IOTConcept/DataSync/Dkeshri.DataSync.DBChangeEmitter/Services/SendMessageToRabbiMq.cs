@@ -11,27 +11,16 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
         private IMessageSender SendMessage { get; }
 
         private readonly string? _routingKey;
-        private readonly bool UseExchangeToSendMessage;
         public SendMessageToRabbiMq(IMessageSender sendMessage, DbChangeEmitterConfig config)
         {
             SendMessage = sendMessage;
             _routingKey = config.MessageBroker.ExchangeRoutingKey;
-            UseExchangeToSendMessage = config.MessageBroker.UseExchangeToSendMessage;
         }
         public bool SendMessageToRabbitMq(IReadOnlyCollection<TableChanges> tableChanges)
         {
             string message = SerializeJsonObject(tableChanges);
             Console.WriteLine(message);
-            if (UseExchangeToSendMessage) 
-            {
-                
-                return SendMessage.SendToExchange(message, _routingKey);
-            }
-            else
-            {
-                return SendMessage.SendToQueue(message);
-            }
-            
+            return SendMessage.SendToExchange(message, _routingKey);
         }
 
         private string SerializeJsonObject(IReadOnlyCollection<TableChanges> tableChanges)

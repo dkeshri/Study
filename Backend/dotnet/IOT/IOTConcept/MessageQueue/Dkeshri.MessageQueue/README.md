@@ -4,13 +4,13 @@ This is an MessageBroker interface that allow to implement various MessageBroker
 
 ## Interfaces
 
-`ISendMessage`, `IMessageReceiver`, `MessageBrokerFactory`
+`IMessageSender`, `IMessageReceiver`, `IStartup`, `MessageBrokerFactory`
 
 ## How it work
 
 `AddMessageBroker` serves as the starting point. Clients use this method with `IServiceCollection` and provide the MessageBroker configuration.
 
-It then utilizes the MessageBrokerFactory to create the sender (`ISendMessage`) and receiver (`IMessageReceiver`) objects. 
+It then utilizes the MessageBrokerFactory to create the sender (`IMessageSender`) and receiver (`IMessageReceiver`) objects. 
 These objects are registered in the `IServiceCollection` dependency injection (DI) container, 
  allowing clients to use these interfaces to send and receive messages.
 
@@ -22,11 +22,13 @@ The extension method `AddMessageBroker` for `IServiceCollection` helps register 
 **MessageBrokerFactory** 
 
 Is an abstract class contains `CreateSender` and `CreateReceiver`, Implemented library need to provide The CreaterFactory and Provide that Factory in `IServiceCollection`
-```chasrp
+
+```csharp
 public abstract class MessageBrokerFactory
     {
-        public abstract ISendMessage CreateSender();
+        public abstract IMessageSender CreateSender();
         public abstract IMessageReceiver CreateReceiver();
+        public abstract IStartup CreateInitializer();
     }
 ```
 
@@ -57,7 +59,7 @@ Provide Concreate Implementation of `MessageBrokerFactory`
 
 **Example** :
 ```csharp
-class RabbitMqMessageBroker : MessageBrokerFactory
+internal class RabbitMqMessageBroker : MessageBrokerFactory
 {
     private readonly IRabbitMqConnection _connection;
     private IMessageHandler? _messageHandler;
@@ -67,15 +69,20 @@ class RabbitMqMessageBroker : MessageBrokerFactory
         _messageHandler = messageHandler;
     }
 
+    public override IStartup CreateInitializer()
+    {
+        return new MessageBrokerInitializer(_connection);
+    }
+
     public override IMessageReceiver CreateReceiver()
     {
         return _messageHandler as IMessageReceiver
-            ?? throw new InvalidCastException("The injected IMessageHandler does not implement IMessageReceiver.");
+           ?? throw new InvalidCastException("The injected IMessageHandler does not implement IMessageReceiver.");
     }
 
-    public override ISendMessage CreateSender()
+    public override IMessageSender CreateSender()
     {
-        return new SendMessage(_connection);
+        return new MessageSender(_connection);
     }
 }
 ```

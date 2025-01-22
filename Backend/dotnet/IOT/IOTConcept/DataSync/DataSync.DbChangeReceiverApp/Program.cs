@@ -43,6 +43,9 @@ builder.ConfigureServices((hostContext, services) =>
                 rabbitMqConfig.Queue.QueueName = rabbitMqConfiguration.Queue.Name;
                 rabbitMqConfig.Queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
                 rabbitMqConfig.Queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
+                rabbitMqConfig.Queue.IsDurable = rabbitMqConfiguration.Queue.IsDurable;
+                rabbitMqConfig.Queue.IsAutoDelete = rabbitMqConfiguration.Queue.IsAutoDelete;
+                rabbitMqConfig.Queue.IsExclusive = rabbitMqConfiguration.Queue.IsExclusive;
             });
         }
 

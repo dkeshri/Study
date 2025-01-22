@@ -8,23 +8,13 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public string ClientProvidedName { get; set; }
-        public QueueConfig Queue { get; set; }
         public ExchangeConfig Exchange { get; set; }
-    }
-    internal class QueueConfig
-    {
-        public string Name { get; set; }
-        public bool IsDurable { get; set; }
-        public bool IsExclusive { get; set; }
-        public bool IsAutoDelete { get; set; }
-        public string ExchangeName { get; set; }
-        public List<string> RoutingKeys { get; set; }
     }
 
     internal class ExchangeConfig
     {
         public string Name { get; set; }
-        public bool IsExclusive { get; set; }
+        public bool IsDurable { get; set; }
         public bool IsAutoDelete { get; set; }
         public string RoutingKey { get; set; }
     }

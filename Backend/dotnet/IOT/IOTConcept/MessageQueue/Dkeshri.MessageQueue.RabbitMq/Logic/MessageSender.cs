@@ -18,7 +18,7 @@ namespace MessageQueue.RabbitMq.Logic
             exchangeConfig = rabbitMqConnection.Exchange;
         }
 
-        public bool SendToQueue(string message) => SendToQueue(queueConfig.QueueName, message);
+        public bool SendToQueue(string message) => SendToQueue(queueConfig.QueueName!, message);
 
         public bool SendToQueue(string queueName, string message)
         {
@@ -28,6 +28,11 @@ namespace MessageQueue.RabbitMq.Logic
                 Console.WriteLine($"Error: Can not publish message to queue : {queueName}, channel is null or closed!");
                 return false;
             }
+            channel.QueueDeclare(queue: queueName,
+                     durable: queueConfig.IsDurable,
+                     exclusive: queueConfig.IsExclusive,
+                     autoDelete: queueConfig.IsAutoDelete,
+                     arguments: queueConfig.Arguments);
             return PublishMessage(channel, message, queueName);
         }
 
