@@ -23,4 +23,4 @@ services:
     - RabbitMq__ClientProvidedName=Receiver
     - RabbitMq__Queue__Name=DataSyncQueue
     - RabbitMq__Queue__ExchangeName=DataSyncExchange
-    - RabbitMq__Queue__RoutingKeys=[\"EmitterToReceiver\"]
+    - RabbitMq__Queue__RoutingKeysCommaSaperated=EmitterToReceiver
