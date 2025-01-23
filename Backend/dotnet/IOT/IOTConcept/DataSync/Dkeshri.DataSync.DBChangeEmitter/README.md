@@ -1,6 +1,16 @@
-# Data-Sync-Emmiter
+# About
 
-This application help to track the change in `MsSql` Database changes and send that changes to `RabbitMq` Message broker. On Start of this application it create a Table called **ChangeTrackers**, Which contain list of tables that will be tracked. There is hosted service which check the Database change in every **10 secs** and Send that changes to RabbiMq queue (default_queue: DataSyncQueue).
+This library helps track changes in an `MSSQL` database and sends those changes to a message broker, such as RabbitMQ.
+* When the application starts, it creates a table called `ChangeTrackers`, which contains a list of tables to be tracked.
+* A hosted service runs every `10 seconds` to check for changes in the tables listed in `ChangeTrackers` and sends those changes to a Message Broker like `RabbitMq`.
+* Before processing changes in the tracked tables, the tables are sorted using `topological sorting`. 
+This ensures that changes to dependent tables are handled in the correct order, preventing foreign key conflicts during insert operations.
+
+This library serves as a companion to [Dkeshri.DataSync.DbChangeReceiver](https://www.nuget.org/packages/Dkeshri.DataSync.DbChangeReceiver), which reads the messages sent to the RabbitMQ queue by this library and applies the changes to the MSSQL database.
+
+We also provide a Docker image [dkeshri/data-sync-emitter](https://hub.docker.com/r/dkeshri/data-sync-emitter) 
+and [dkeshri/data-sync-receiver](https://hub.docker.com/r/dkeshri/data-sync-receiver) that implements this library. 
+You only need to supply the necessary details through environment variables.
 
 # Installation Steps
 
@@ -20,9 +30,13 @@ SET CHANGE_TRACKING = ON
 
 ## How to use
 
-This package uses the `IServiceCollection` to setup. There is an Extension `AddDataSyncDbChangeEmitter` Method is use to setup. 
+This package uses the `IServiceCollection` for setup. An extension method, `AddDataSyncDbChangeEmitter`, is provided to configure the package.
 
-You need to provide Message Broker Details (like `rabbitMq`) and `MsSql` Connection details to work this package.
+To use this package, you need to supply the connection details for both the message broker (e.g., RabbitMQ) and the MSSQL database.
+
+* To configure the database, the library offers the `AddDataLayer` method. For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
+
+> In the future, the library will support multiple message brokers and databases. However, currently, it supports only RabbitMQ as the message broker and MSSQL as the database.
 
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
@@ -35,7 +49,7 @@ services.AddDataSyncDbChangeEmitter((config) =>
         config.TransactionTimeOutInSec = 30;
     });
 
-    config.MessageBroker.ExchangeRoutingKey = "RouitngKey";
+    config.MessageBroker.ExchangeRoutingKey = "RouitngKey"; // This is required. ExchangeRoutingKey is any string value
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "rabbitMqHostIp";
@@ -43,11 +57,11 @@ services.AddDataSyncDbChangeEmitter((config) =>
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
         rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
-        rabbitMqConfig.Exchange.IsDurable = true;
+        rabbitMqConfig.Exchange.IsDurable = true; // this is required for durable exchange
     });
 });
 ```
-**Example**
+**Full Example**
 
 ```csharp
 using Dkeshri.DataSync.DBChangeEmitter.Extensions;
@@ -88,28 +102,31 @@ builder.RunConsoleAsync().Wait();
 
 ## Configuration.
 
-After running this application, it will perform **database migration**, creating a table named `ChangeTrackers` in your database.
+When this application runs, it performs a database migration and creates a table called `ChangeTrackers` in your database.
 
-You need to insert your table into the `ChangeTrackers` table. This table contains two columns: `TableName` and `ChangeVersion`. You need to set initial value as `0` to `ChangeVersion` column.
+* To start tracking changes, you need to manually insert the names of the tables you want to track into the ChangeTrackers table.
 
-use below query to insert tableName.
+* The `ChangeTrackers` table contains two columns:
+    a. `TableName`: Specifies the name of the table to be tracked.
+    b. `ChangeVersion`: Tracks the version of changes. You must set the initial value of the ChangeVersion column to `0`.
 
+Use below query to insert trackable tables.
 ```sql
 INSERT Into ChangeTrackers (TableName,ChangeVersion)
 VALUES('YourTableName',0);
 ```
-
-> Note: Make sure dependent tableName should be there in ChangeTrackers.
+**Note**: Ensure that dependent tables are also included in the ChangeTrackers table.
 
 **Example**
 
-let say you have two tables `orders` and `ordersSummary` tables, `Orders` table has foreign refrance of `ordersSummary` table then you have to insert both tableName (`orders` and `OrdersSummary`) in `ChangeTrackers` Table.
+If you have two tables, `Orders` and `OrdersSummary`, where the `Orders` table has a foreign key reference to the `OrdersSummary` table, 
+you must insert both table names (`Orders` and `OrdersSummary`) into the `ChangeTrackers` table.
 
-> After inserting tables in `ChangeTrackers` you need to restart Emitter Application, to Enable Change tracker on newly added Tables.
+> After adding tables to the `ChangeTrackers` table, 
+you need to restart the Emitter application to enable change tracking for the newly added tables.
 
-** If don't want to restert Emitter Application**
-
-Run below query to manually enable
+**If you don't want to restart the Emitter application**, 
+run the following query to manually enable change tracking
 
 ```sql
 ALTER TABLE TableName
