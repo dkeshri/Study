@@ -31,6 +31,24 @@ SET CHANGE_TRACKING = ON
 
 > Message Broker need to be running. (RabbitMq)
 
+you can use below docker command to setup rabbitMq
+
+```bash
+docker run -d -v rabbitmqv:/var/log/rabbitmq --hostname rmq --name RabbitMqServer \
+-p 5672:5672 -p 8080:15672 rabbitmq:3.13-management
+```
+Port 8080 is for management portal and access by below mention Login credentials.
+
+Click on the link for <a href='http://localhost:8080/'>Admin Portal</a>
+
+Port `5672` is use in communication during producing and consuming of message.
+
+**Login crediential**
+
+Default login crediential if we not specifiy during creation of docker container
+
+Username: `guest` and Password: `guest`
+
 ## How to use
 
 This package uses the `IServiceCollection` for setup. An extension method, `AddDataSyncDbChangeEmitter`, is provided to configure the package.
