@@ -12,6 +12,9 @@ We also provide a Docker image [dkeshri/data-sync-emitter](https://hub.docker.co
 and [dkeshri/data-sync-receiver](https://hub.docker.com/r/dkeshri/data-sync-receiver) that implements this library. 
 You only need to supply the necessary details through environment variables.
 
+
+> In the future, the library will support multiple message brokers and databases. However, currently, it supports only RabbitMQ as the message broker and MSSQL as the database.
+
 # Installation Steps
 
 ## Pre-requisite
@@ -36,7 +39,6 @@ To use this package, you need to supply the connection details for both the mess
 
 * To configure the database, the library offers the `AddDataLayer` method. For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
 
-> In the future, the library will support multiple message brokers and databases. However, currently, it supports only RabbitMQ as the message broker and MSSQL as the database.
 
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
