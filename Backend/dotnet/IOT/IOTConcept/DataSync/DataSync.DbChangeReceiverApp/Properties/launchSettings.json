@@ -6,9 +6,9 @@
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development",
         "RabbitMq__ClientProvidedName": "Receiver",
-        "RabbitMq__Queue__Name": "DataSyncQueue",
-        "RabbitMq__Queue__ExchangeName": "DataSyncExchange",
-        "RabbitMq__Queue__RoutingKeys": "[\"EmitterToReceiver\"]"
+        "RabbitMq__Queue__Name": "DataSyncQueueTest",
+        "RabbitMq__Queue__ExchangeName": "DataSyncExchangeTest",
+        "RabbitMq__Queue__RoutingKeysCommaSaperated": "EmitterToReceiverTest"
       }
     }
   }
