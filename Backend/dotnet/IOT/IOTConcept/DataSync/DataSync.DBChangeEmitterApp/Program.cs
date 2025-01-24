@@ -32,17 +32,19 @@ builder.ConfigureServices((hostContext, services) =>
         
         if(rabbitMqConfiguration != null)
         {
+            config.MessageRoutingKey = rabbitMqConfiguration.MessageRoutingKey;
             config.MessageBroker.ClientProvidedName = rabbitMqConfiguration.ClientProvidedName;
-            config.MessageBroker.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {
                 rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;
                 rabbitMqConfig.Port = rabbitMqConfiguration.Port;
                 rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
-                rabbitMqConfig.Exchange.ExchangeName = rabbitMqConfiguration.Exchange.Name;
-                rabbitMqConfig.Exchange.IsDurable = rabbitMqConfiguration.Exchange.IsDurable;
-                rabbitMqConfig.Exchange.AutoDelete = rabbitMqConfiguration.Exchange.IsAutoDelete;
+            }).UseExchange(exchange =>
+            {
+                exchange.ExchangeName = rabbitMqConfiguration.Exchange.Name;
+                exchange.IsDurable = rabbitMqConfiguration.Exchange.IsDurable;
+                exchange.AutoDelete = rabbitMqConfiguration.Exchange.IsAutoDelete;
             });
         }
         

@@ -41,12 +41,14 @@ builder.ConfigureServices((hostContext, services) =>
                 rabbitMqConfig.Port = rabbitMqConfiguration.Port;
                 rabbitMqConfig.UserName = rabbitMqConfiguration.UserName;
                 rabbitMqConfig.Password = rabbitMqConfiguration.Password;
-                rabbitMqConfig.Queue.QueueName = rabbitMqConfiguration.Queue.Name;
-                rabbitMqConfig.Queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
-                rabbitMqConfig.Queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
-                rabbitMqConfig.Queue.IsDurable = rabbitMqConfiguration.Queue.IsDurable;
-                rabbitMqConfig.Queue.IsAutoDelete = rabbitMqConfiguration.Queue.IsAutoDelete;
-                rabbitMqConfig.Queue.IsExclusive = rabbitMqConfiguration.Queue.IsExclusive;
+            }).UseQueue(queue =>
+            {
+                queue.QueueName = rabbitMqConfiguration.Queue.Name;
+                queue.ExchangeName = rabbitMqConfiguration.Queue.ExchangeName;
+                queue.RoutingKeys = rabbitMqConfiguration.Queue.RoutingKeys;
+                queue.IsDurable = rabbitMqConfiguration.Queue.IsDurable;
+                queue.IsAutoDelete = rabbitMqConfiguration.Queue.IsAutoDelete;
+                queue.IsExclusive = rabbitMqConfiguration.Queue.IsExclusive;
             });
         }
 
