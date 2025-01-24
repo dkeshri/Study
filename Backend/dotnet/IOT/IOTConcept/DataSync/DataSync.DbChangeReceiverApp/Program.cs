@@ -34,6 +34,7 @@ builder.ConfigureServices((hostContext, services) =>
     {
         if(rabbitMqConfiguration != null)
         {
+            config.MessageBroker.ClientProvidedName = rabbitMqConfiguration.ClientProvidedName;
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {
                 rabbitMqConfig.HostName = rabbitMqConfiguration.HostName;

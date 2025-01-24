@@ -14,7 +14,7 @@ namespace Dkeshri.DataSync.Common.Services
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        protected abstract Task OperationToPerforme(CancellationToken cancellationToken);
+        protected abstract Task OperationToPerform(CancellationToken cancellationToken);
         protected virtual Task OnStartup(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
@@ -35,7 +35,7 @@ namespace Dkeshri.DataSync.Common.Services
                         try
                         {
                             childCancellationTokenSource.CancelAfter((int)TimeSpan.FromMinutes(5).TotalMilliseconds);
-                            await OperationToPerforme(childCancellationTokenSource.Token).ConfigureAwait(false);
+                            await OperationToPerform(childCancellationTokenSource.Token).ConfigureAwait(false);
                         }
                         catch (OperationCanceledException operationCanceledException) when (childCancellationTokenSource.IsCancellationRequested
                         && !_cancellationTokenSource.IsCancellationRequested)

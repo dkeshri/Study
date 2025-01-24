@@ -8,13 +8,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dkeshri.DataSync.DBChangeEmitter" Version="1.1.4" />
-		<PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="2.0.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
+	  <ProjectReference Include="..\Dkeshri.DataSync.DBChangeEmitter\Dkeshri.DataSync.DBChangeEmitter.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings*.json">

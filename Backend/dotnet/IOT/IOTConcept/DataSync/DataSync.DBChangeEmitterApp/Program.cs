@@ -32,6 +32,7 @@ builder.ConfigureServices((hostContext, services) =>
         
         if(rabbitMqConfiguration != null)
         {
+            config.MessageBroker.ClientProvidedName = rabbitMqConfiguration.ClientProvidedName;
             config.MessageBroker.ExchangeRoutingKey = rabbitMqConfiguration.Exchange.RoutingKey;
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {

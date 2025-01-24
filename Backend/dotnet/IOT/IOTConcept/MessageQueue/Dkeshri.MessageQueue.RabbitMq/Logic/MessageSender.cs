@@ -28,11 +28,6 @@ namespace MessageQueue.RabbitMq.Logic
                 Console.WriteLine($"Error: Can not publish message to queue : {queueName}, channel is null or closed!");
                 return false;
             }
-            channel.QueueDeclare(queue: queueName,
-                     durable: queueConfig.IsDurable,
-                     exclusive: queueConfig.IsExclusive,
-                     autoDelete: queueConfig.IsAutoDelete,
-                     arguments: queueConfig.Arguments);
             return PublishMessage(channel, message, queueName);
         }
 

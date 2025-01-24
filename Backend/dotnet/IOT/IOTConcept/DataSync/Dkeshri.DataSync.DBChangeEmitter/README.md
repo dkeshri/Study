@@ -12,6 +12,9 @@ We also provide a Docker image [dkeshri/data-sync-emitter](https://hub.docker.co
 and [dkeshri/data-sync-receiver](https://hub.docker.com/r/dkeshri/data-sync-receiver) that implements this library. 
 You only need to supply the necessary details through environment variables.
 
+
+> In the future, the library will support multiple message brokers and databases. However, currently, it supports only RabbitMQ as the message broker and MSSQL as the database.
+
 # Installation Steps
 
 ## Pre-requisite
@@ -28,6 +31,24 @@ SET CHANGE_TRACKING = ON
 
 > Message Broker need to be running. (RabbitMq)
 
+you can use below docker command to setup rabbitMq
+
+```bash
+docker run -d -v rabbitmqv:/var/log/rabbitmq --hostname rmq --name RabbitMqServer \
+-p 5672:5672 -p 8080:15672 rabbitmq:3.13-management
+```
+Port 8080 is for management portal and access by below mention Login credentials.
+
+Click on the link for <a href='http://localhost:8080/'>Admin Portal</a>
+
+Port `5672` is use in communication during producing and consuming of message.
+
+**Login crediential**
+
+Default login crediential if we not specifiy during creation of docker container
+
+Username: `guest` and Password: `guest`
+
 ## How to use
 
 This package uses the `IServiceCollection` for setup. An extension method, `AddDataSyncDbChangeEmitter`, is provided to configure the package.
@@ -36,7 +57,6 @@ To use this package, you need to supply the connection details for both the mess
 
 * To configure the database, the library offers the `AddDataLayer` method. For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
 
-> In the future, the library will support multiple message brokers and databases. However, currently, it supports only RabbitMQ as the message broker and MSSQL as the database.
 
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>

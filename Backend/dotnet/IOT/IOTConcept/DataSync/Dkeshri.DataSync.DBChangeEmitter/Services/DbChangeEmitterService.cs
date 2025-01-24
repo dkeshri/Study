@@ -23,7 +23,7 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
             MessageBrokerInitService = messageBrokerInitService;
         }
 
-        protected override async Task OperationToPerforme(CancellationToken cancellationToken)
+        protected override async Task OperationToPerform(CancellationToken cancellationToken)
         {
             IReadOnlyCollection<TableChanges> tablesChanges = await DatabaseChangeTrackerService.GetChangesOfTrackedTableAsync();
 
@@ -58,8 +58,6 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Services
             {
                 DatabaseChangeTrackerService.ApplyMigration();
                 DatabaseChangeTrackerService.EnableChangeTrackingOnTables();
-
-                Console.WriteLine("Init Message Broker");
                 MessageBrokerInitService.InitMessageBroker();
             }
             return Task.CompletedTask;

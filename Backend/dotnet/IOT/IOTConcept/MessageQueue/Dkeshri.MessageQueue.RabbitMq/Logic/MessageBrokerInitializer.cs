@@ -2,6 +2,7 @@
 using Dkeshri.MessageQueue.RabbitMq.Extensions;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using RabbitMQ.Client;
+using System.Threading;
 
 namespace Dkeshri.MessageQueue.RabbitMq.Logic
 {
@@ -23,6 +24,7 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
         }
         public void OnStart()
         {
+            Console.WriteLine("Message Broker OnStart");
             IModel? channel = _connection.Channel;
             if (channel == null)
             {
@@ -40,39 +42,15 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
             }
 
         }
-        private void OnReceiverStart(IModel channel)
-        {
-
-            if (string.IsNullOrEmpty(queueConfig.QueueName))
-            {
-                Console.WriteLine("Error: Can't Create Exchange Queue Name is null or empty");
-                return;
-            }
-
-            if (!channel.IsOpen)
-            {
-                Console.WriteLine($"Error: Can't Create Queue: {queueConfig.QueueName}, channel is not open!");
-                return;
-            }
-            Console.WriteLine("Creating Queue");
-            channel.QueueDeclare(queue: queueConfig.QueueName,
-                    durable: queueConfig.IsDurable,
-                    exclusive: queueConfig.IsExclusive,
-                    autoDelete: queueConfig.IsAutoDelete,
-                    arguments: queueConfig.Arguments);
-            Console.WriteLine($"Queue: {queueConfig.QueueName} created!");
-
-        }
-
         private void OnSenderStart(IModel channel)
         {
-
+            Console.WriteLine("Message Broker: Sender OnStartUp");
             if (string.IsNullOrEmpty(exchangeConfig.ExchangeName))
             {
                 Console.WriteLine("Error: Can't Create Exchange: ExchangeName is null or empty");
                 return;
             }
-            Console.WriteLine("Creating Exchange");
+            Console.WriteLine($"Creating Exchange : {exchangeConfig.ExchangeName}");
             if (!channel.IsOpen)
             {
                 Console.WriteLine($"Error: Can't Create Exchange: {exchangeConfig.ExchangeName}, channel is not open!");
@@ -97,7 +75,94 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
             channel.ExchangeDeclare("alternate.exchange", ExchangeType.Fanout, durable: true);
             channel.QueueDeclare("unroutable.queue", durable: true, exclusive: false, autoDelete: false);
             channel.QueueBind("unroutable.queue", "alternate.exchange", "");
-            Console.WriteLine("Alternate Exchange Declared! and Bind to");
+            Console.WriteLine("Alternate Exchange Declared! and unroutable.queue is binded.");
+        }
+        private void OnReceiverStart(IModel channel)
+        {
+            Console.WriteLine("Message Broker: Receiver OnStartUp");
+            if (string.IsNullOrEmpty(queueConfig.QueueName))
+            {
+                Console.WriteLine("Error: Can't Create Exchange Queue Name is null or empty");
+                return;
+            }
+            Console.WriteLine($"Creating Queue: {queueConfig.QueueName}");
+            if (!channel.IsOpen)
+            {
+                Console.WriteLine($"Error: Can't Create Queue: {queueConfig.QueueName}, channel is not open!");
+                return;
+            }
+
+            createDeadLetterExchange(channel);
+            channel.QueueDeclare(queue: queueConfig.QueueName,
+                    durable: queueConfig.IsDurable,
+                    exclusive: queueConfig.IsExclusive,
+                    autoDelete: queueConfig.IsAutoDelete,
+                    arguments: queueConfig.Arguments);
+            Console.WriteLine($"Queue: {queueConfig.QueueName} created!");
+            if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
+            {
+                BindQueueWithExchange();
+            }
+            else
+            {
+                Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
+                Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
+            }
+
+
+        }
+        private void createDeadLetterExchange(IModel channel)
+        {
+            queueConfig.Arguments?.Add("x-dead-letter-exchange", "dead.letter.exchange");
+            Console.WriteLine("Declaring Dead-letter Exchange");
+            channel.ExchangeDeclare("dead.letter.exchange", ExchangeType.Fanout, durable: true);
+            channel.QueueDeclare("dead.letter.queue", durable: true, exclusive: false, autoDelete: false);
+            channel.QueueBind("dead.letter.queue", "dead.letter.exchange", "");
+            Console.WriteLine("Dead-letter Declared! and dead.letter.queue is binded.");
+        }
+        private void BindQueueWithExchange()
+        {
+            Console.WriteLine("Binding Queue with Exchange");
+            bool isBindToExchange = false;
+            IModel? channel = _connection.Channel;
+            while (!isBindToExchange)
+            {
+
+                try
+                {
+                    string[] routingKey = queueConfig.RoutingKeys;
+                    if (channel == null || channel.IsClosed)
+                    {
+                        channel = _connection.Channel;
+                    }
+                    foreach (var key in routingKey)
+                    {
+                        if (channel != null && channel.IsOpen)
+                        {
+                            channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, key);
+                            isBindToExchange = true;
+                            Console.WriteLine($"{queueConfig.QueueName} binds to Exchange {queueConfig.ExchangeName} routing key: {key}");
+                        }
+                    }
+                    if (routingKey.Length == 0)
+                    {
+                        if (channel != null && channel.IsOpen)
+                        {
+                            channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, string.Empty);
+                            isBindToExchange = true;
+                            Console.WriteLine($"{queueConfig.QueueName} binds to Exchange {queueConfig.ExchangeName}");
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exchange : {queueConfig.ExchangeName} does not exist");
+                    Console.WriteLine("Wating for Exchange to be created! re-try to bind");
+                    Thread.Sleep(TimeSpan.FromSeconds(10));
+                }
+            }
+
         }
 
     }

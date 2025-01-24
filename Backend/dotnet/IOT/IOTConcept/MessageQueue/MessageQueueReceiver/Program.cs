@@ -27,9 +27,8 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-            config.Queue.QueueName = "DeepakTest";
-            config.Queue.ExchangeName = "Sender_Exchange";
-            config.Queue.RoutingKeys = [ "test" ];
+            config.Queue.QueueName = "test";
+            config.Queue.IsDurable = true;
         });
 
     });
@@ -40,10 +39,13 @@ var host = builder.UseConsoleLifetime().Build();
 
 using (IServiceScope serviceScope = host.Services.CreateScope())
 {
+    var startup = serviceScope.ServiceProvider.GetRequiredService<IStartup>();
+    startup.OnStart();
+
     serviceScope.ServiceProvider.GetRequiredService<IMessageReceiver>().MessageHandler = (message) =>
     {
         Console.WriteLine(message);
-        return true;
+        return false;
     };
 }
 
