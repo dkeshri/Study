@@ -28,6 +28,10 @@ namespace Dkeshri.MessageQueue.RabbitMq.Handlers
             {
                 channel.BasicAck(ea.DeliveryTag, false);
             }
+            if(isMessageProcessed == false)
+            {
+                channel.BasicReject(ea.DeliveryTag, false);
+            }
         }
 
     }

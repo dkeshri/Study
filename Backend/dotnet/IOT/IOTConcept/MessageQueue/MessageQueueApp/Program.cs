@@ -28,7 +28,8 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-            config.Exchange.ExchangeName = "Sender_Exchange";
+            config.Queue.QueueName = "test";
+            config.Queue.IsDurable = true;
         });
 
     });
@@ -40,14 +41,17 @@ var host = builder.UseConsoleLifetime().Build();
 
 using (IServiceScope serviceScope = host.Services.CreateScope())
 {
+    var startup = serviceScope.ServiceProvider.GetRequiredService<IStartup>();
+    startup.OnStart();
     IMessageSender messageSender= serviceScope.ServiceProvider.GetRequiredService<IMessageSender>();
-    string? message = "Hello Deepak";
+    string? message = "";
     do
     {
-        messageSender.SendToExchange(message,"test");
+        messageSender.SendToQueue(message);
         Console.WriteLine("Enter Message to send: ");
         message = Console.ReadLine();
         
+
     }
     while (!string.IsNullOrEmpty(message));
 }
