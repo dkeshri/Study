@@ -8,9 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dkeshri.DataSync.DbChangeReceiver" Version="1.1.4" />
-		<PackageReference Include="Dkeshri.MessageQueue.RabbitMq" Version="2.0.6" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\MessageQueue\Dkeshri.MessageQueue.RabbitMq\Dkeshri.MessageQueue.RabbitMq.csproj" />
+	  <ProjectReference Include="..\Dkeshri.DataSync.DbChangeReceiver\Dkeshri.DataSync.DbChangeReceiver.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings*.json">

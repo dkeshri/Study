@@ -18,6 +18,7 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Handlers
         {
             try
             {
+                Console.WriteLine($"\nReceived Message at [UTC] : {DateTime.UtcNow}\n");
                 Console.WriteLine(message);
                 IReadOnlyCollection<TableChanges>? tableChanges = DeserializerDbChangesMessage(message);
                 

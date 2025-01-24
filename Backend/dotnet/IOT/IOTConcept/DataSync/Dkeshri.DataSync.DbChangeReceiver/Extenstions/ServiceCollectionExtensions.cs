@@ -54,7 +54,10 @@ namespace Dkeshri.DataSync.DbChangeReceiver.Extenstions
                 {
                     var messageHandler = scope.ServiceProvider.GetRequiredService<IRabbitMqMessageHandler>();
                     var messageReceiver = scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
+                    var messagrBrokerStartup = scope.ServiceProvider.GetRequiredService<IStartup>();
+                    messagrBrokerStartup.OnStart();
                     messageReceiver.MessageHandler = messageHandler.HandleMessage;
+
                 }
             }
 

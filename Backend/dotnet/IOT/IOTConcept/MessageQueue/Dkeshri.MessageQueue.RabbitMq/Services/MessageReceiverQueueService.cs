@@ -56,27 +56,20 @@ namespace MessageQueue.RabbitMq.Services
             try
             {
                 Console.WriteLine("Initializing Receiver with RabbitMq...");
-                channel?.QueueDeclare(queue: queueConfig.QueueName,
-                     durable: queueConfig.IsDurable,
-                     exclusive: queueConfig.IsExclusive,
-                     autoDelete: queueConfig.IsAutoDelete,
-                     arguments: queueConfig.Arguments);
-                channel?.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
                 bool isProcessingAlternateQueue = true;
                 if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
                 {
-                    channel = BindQueueWithExchange(cancellationToken);
-                    
                     (channel, isProcessingAlternateQueue) = ProcessMessageFromAlternateQueue();
                 }
                 else
                 {
-                    Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
-                    Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
+                    isProcessingAlternateQueue = false;
+                    Console.WriteLine($"No need to process message from unroutable.queue, exchange is Empty or null");
                 }
                 
                 if (!isProcessingAlternateQueue && channel != null && channel.IsOpen) 
                 {
+                    channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
                     var consumer = new EventingBasicConsumer(channel);
                     consumer.Received += (model, ea) =>
                     {
@@ -131,56 +124,6 @@ namespace MessageQueue.RabbitMq.Services
                 }
             }
 
-        }
-        private IModel? BindQueueWithExchange(CancellationToken? cancellationToken = null)
-        {
-            Console.WriteLine("Binding Queue with Exchange");
-            bool isBindToExchange = false;
-            IModel? channel = _connection.Channel;
-            while (!isBindToExchange && !_isQueueServiceStopping) 
-            {
-
-                try
-                {
-                    if (cancellationToken?.IsCancellationRequested == true)
-                    {
-                        _isQueueServiceStopping = true;
-                        break;
-                    }
-                    string[] routingKey = queueConfig.RoutingKeys;
-                    if(channel == null || channel.IsClosed)
-                    {
-                        channel = _connection.Channel;
-                    }
-                    foreach (var key in routingKey)
-                    {
-                        if (channel!=null && channel.IsOpen)
-                        {
-                            channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, key);
-                            isBindToExchange = true;
-                            Console.WriteLine($"{queueConfig.QueueName} binds to Exchange {queueConfig.ExchangeName} routing key: {key}");
-                        }
-                    }
-                    if (routingKey.Length == 0)
-                    {
-                        if (channel != null && channel.IsOpen)
-                        {
-                            channel.QueueBind(queueConfig.QueueName, queueConfig.ExchangeName, string.Empty);
-                            isBindToExchange = true;
-                            Console.WriteLine($"{queueConfig.QueueName} binds to Exchange {queueConfig.ExchangeName}");
-                        }
-                           
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Exchange : {queueConfig.ExchangeName} does not exist");
-                    Console.WriteLine("Wating for Exchange to be created! re-try to bind");
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
-                }
-            }
-            return channel;
-            
         }
         private (IModel?,bool) ProcessMessageFromAlternateQueue()
         {
