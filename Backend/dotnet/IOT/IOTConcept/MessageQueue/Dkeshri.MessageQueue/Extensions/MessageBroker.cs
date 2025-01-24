@@ -10,7 +10,6 @@ namespace Dkeshri.MessageQueue.Extensions
         public bool RegisterSenderServices { get; set; } = false;
         public bool RegisterReceiverServices { get; set; } = false;
         public string ClientProvidedName { get; set; } = MessageQueueConstant.UNKNOWN;
-        public string? ExchangeRoutingKey { get; set; }
         public MessageBroker(IServiceCollection services)
         {
             _services = services;

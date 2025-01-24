@@ -28,14 +28,14 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-            config.Queue.QueueName = "test";
-            config.Queue.IsDurable = true;
+        }).UseExchange(exchangeConfig =>
+        {
+            exchangeConfig.ExchangeName = "Deepak";
+            exchangeConfig.IsDurable = true;
         });
 
     });
 });
-
-
 
 var host = builder.UseConsoleLifetime().Build();
 
@@ -47,11 +47,11 @@ using (IServiceScope serviceScope = host.Services.CreateScope())
     string? message = "";
     do
     {
-        messageSender.SendToQueue(message);
+        string routingKey = "deepakRouting";
+        messageSender.SendToExchange(message, routingKey);
         Console.WriteLine("Enter Message to send: ");
         message = Console.ReadLine();
         
-
     }
     while (!string.IsNullOrEmpty(message));
 }

@@ -27,8 +27,12 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-            config.Queue.QueueName = "test";
-            config.Queue.IsDurable = true;
+        }).UseQueue(queueConfig =>
+        {
+            queueConfig.QueueName = "testQueue";
+            queueConfig.IsDurable = true;
+            queueConfig.ExchangeName = "Deepak";
+            queueConfig.RoutingKeys = ["deepakRouting"];
         });
 
     });
