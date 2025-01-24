@@ -29,9 +29,10 @@ builder.ConfigureServices((hostContext, services) =>
             config.ConnectionString = dbConnectionString;
             config.TransactionTimeOutInSec = dbTransationTimeOut;
         });
-        config.MessageRoutingKey = 
+        
         if(rabbitMqConfiguration != null)
         {
+            config.MessageRoutingKey = rabbitMqConfiguration.MessageRoutingKey;
             config.MessageBroker.ClientProvidedName = rabbitMqConfiguration.ClientProvidedName;
             config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
             {

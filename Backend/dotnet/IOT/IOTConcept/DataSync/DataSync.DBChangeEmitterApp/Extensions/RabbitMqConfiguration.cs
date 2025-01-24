@@ -8,7 +8,7 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public string ClientProvidedName { get; set; }
-        public string RoutingKey { get; set; }
+        public string MessageRoutingKey { get; set; }
         public ExchangeConfig Exchange { get; set; }
     }
 
