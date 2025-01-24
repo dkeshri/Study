@@ -24,6 +24,7 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
         }
         public void OnStart()
         {
+            Console.WriteLine("Message Broker OnStart");
             IModel? channel = _connection.Channel;
             if (channel == null)
             {
@@ -41,50 +42,15 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
             }
 
         }
-        private void OnReceiverStart(IModel channel)
-        {
-
-            if (string.IsNullOrEmpty(queueConfig.QueueName))
-            {
-                Console.WriteLine("Error: Can't Create Exchange Queue Name is null or empty");
-                return;
-            }
-            Console.WriteLine("Creating Queue");
-            if (!channel.IsOpen)
-            {
-                Console.WriteLine($"Error: Can't Create Queue: {queueConfig.QueueName}, channel is not open!");
-                return;
-            }
-            
-            createDeadLetterExchange(channel);
-            channel.QueueDeclare(queue: queueConfig.QueueName,
-                    durable: queueConfig.IsDurable,
-                    exclusive: queueConfig.IsExclusive,
-                    autoDelete: queueConfig.IsAutoDelete,
-                    arguments: queueConfig.Arguments);
-            Console.WriteLine($"Queue: {queueConfig.QueueName} created!");
-            if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
-            {
-                BindQueueWithExchange();
-            }
-            else
-            {
-                Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
-                Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
-            }
-            
-
-        }
-
         private void OnSenderStart(IModel channel)
         {
-
+            Console.WriteLine("Message Broker: Sender OnStartUp");
             if (string.IsNullOrEmpty(exchangeConfig.ExchangeName))
             {
                 Console.WriteLine("Error: Can't Create Exchange: ExchangeName is null or empty");
                 return;
             }
-            Console.WriteLine("Creating Exchange");
+            Console.WriteLine($"Creating Exchange : {exchangeConfig.ExchangeName}");
             if (!channel.IsOpen)
             {
                 Console.WriteLine($"Error: Can't Create Exchange: {exchangeConfig.ExchangeName}, channel is not open!");
@@ -111,7 +77,40 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
             channel.QueueBind("unroutable.queue", "alternate.exchange", "");
             Console.WriteLine("Alternate Exchange Declared! and unroutable.queue is binded.");
         }
+        private void OnReceiverStart(IModel channel)
+        {
+            Console.WriteLine("Message Broker: Receiver OnStartUp");
+            if (string.IsNullOrEmpty(queueConfig.QueueName))
+            {
+                Console.WriteLine("Error: Can't Create Exchange Queue Name is null or empty");
+                return;
+            }
+            Console.WriteLine($"Creating Queue: {queueConfig.QueueName}");
+            if (!channel.IsOpen)
+            {
+                Console.WriteLine($"Error: Can't Create Queue: {queueConfig.QueueName}, channel is not open!");
+                return;
+            }
 
+            createDeadLetterExchange(channel);
+            channel.QueueDeclare(queue: queueConfig.QueueName,
+                    durable: queueConfig.IsDurable,
+                    exclusive: queueConfig.IsExclusive,
+                    autoDelete: queueConfig.IsAutoDelete,
+                    arguments: queueConfig.Arguments);
+            Console.WriteLine($"Queue: {queueConfig.QueueName} created!");
+            if (!string.IsNullOrEmpty(queueConfig.ExchangeName))
+            {
+                BindQueueWithExchange();
+            }
+            else
+            {
+                Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
+                Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
+            }
+
+
+        }
         private void createDeadLetterExchange(IModel channel)
         {
             queueConfig.Arguments?.Add("x-dead-letter-exchange", "dead.letter.exchange");
