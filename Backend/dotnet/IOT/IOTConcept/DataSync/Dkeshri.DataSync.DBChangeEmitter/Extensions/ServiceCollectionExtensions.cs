@@ -16,7 +16,6 @@ namespace Dkeshri.DataSync.DBChangeEmitter.Extensions
             messageBroker.RegisterSenderServices = true;
             messageBroker.ClientProvidedName = "Sender";
             dbChangeEmitterConfig.MessageBroker = messageBroker;
-            dbChangeEmitterConfig.MessageBroker.ExchangeRoutingKey = "EmitterToReceiver";
             configuration.Invoke(dbChangeEmitterConfig);
             services.AddDataSyncDbChangeEmitter(dbChangeEmitterConfig);
         }

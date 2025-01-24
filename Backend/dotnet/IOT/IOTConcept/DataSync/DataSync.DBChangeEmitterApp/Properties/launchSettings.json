@@ -12,7 +12,7 @@
         "RabbitMq__Password": "guest",
         "RabbitMq__ClientProvidedName": "Sender",
         "RabbitMq__Exchange__Name": "DataSyncExchange",
-        "RabbitMq__Exchange__RoutingKey": "EmitterToReceiver"
+        "RabbitMq__RoutingKey": "EmitterToReceiver"
       }
     }
   }
