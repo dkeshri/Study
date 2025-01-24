@@ -5,6 +5,7 @@ using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using Dkeshri.MessageQueue.RabbitMq.Logic;
 using MessageQueue.RabbitMq.Logic;
 using MessageQueue.RabbitMq.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -12,24 +13,17 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
 {
     public static class ServiceCollectionExtensions
     {      
-        public static void AddRabbitMqServices(this MessageBroker messageBroker, Action<RabbitMqConfig> configuration)
+        public static RabbitMqConfig AddRabbitMqServices(this MessageBroker messageBroker, Action<RabbitMqConfig> configuration)
         {
             RabbitMqConfig rabbitMqConfig = new RabbitMqConfig();
-            rabbitMqConfig.Queue = new QueueConfig();
-            rabbitMqConfig.Queue.Arguments = new Dictionary<string, object>();
-            
-            rabbitMqConfig.Exchange = new ExchangeConfig();
-            rabbitMqConfig.Exchange.Arguments = new Dictionary<string, object>();
-            
             configuration.Invoke(rabbitMqConfig);
-            
             rabbitMqConfig.RegisterSenderServices = messageBroker.RegisterSenderServices;
             rabbitMqConfig.RegisterReceiverServices = messageBroker.RegisterReceiverServices;
             rabbitMqConfig.ClientProvidedName = messageBroker.ClientProvidedName;
-            messageBroker.AddRabbitMqServices(rabbitMqConfig);
+            return messageBroker.AddRabbitMqServices(rabbitMqConfig);
         }
 
-        public static void AddRabbitMqServices(this MessageBroker messageBroker, RabbitMqConfig rabbitMqConfig)
+        public static RabbitMqConfig AddRabbitMqServices(this MessageBroker messageBroker, RabbitMqConfig rabbitMqConfig)
         {
             if(messageBroker.Services == null)
             {
@@ -43,8 +37,22 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
 
             messageBroker.Services.AddSingleton<MessageBrokerFactory, RabbitMqMessageBroker>();
             rabbitMqConfig.AddRequeriedServices(messageBroker);
+            return rabbitMqConfig;
         }
 
+        public static void UseQueue(this RabbitMqConfig rabbitMqConfig, Action<QueueConfig> action)
+        {
+            QueueConfig queueConfig = new QueueConfig();
+            rabbitMqConfig.Queue = queueConfig;
+            action.Invoke(queueConfig);
+        }
+
+        public static void UseExchange(this RabbitMqConfig rabbitMqConfig, Action<ExchangeConfig> action)
+        {
+            ExchangeConfig exchangeConfig = new ExchangeConfig();
+            rabbitMqConfig.Exchange = exchangeConfig;
+            action.Invoke(exchangeConfig);
+        }
         private static void AddRequeriedServices(this RabbitMqConfig config, MessageBroker messageBroker)
         {
 
@@ -54,7 +62,7 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
             }
         }
 
-        public static void AddMessageReceiverQueueService(this IServiceCollection services) 
+        private static void AddMessageReceiverQueueService(this IServiceCollection services) 
         {
             services.AddSingleton<IMessageHandler, MessageReceiverHandler>();
             services.AddHostedService<MessageReceiverQueueService>();
