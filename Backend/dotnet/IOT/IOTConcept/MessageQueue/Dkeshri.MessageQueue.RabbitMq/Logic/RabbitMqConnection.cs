@@ -18,14 +18,14 @@ namespace MessageQueue.RabbitMq.Logic
         private string userName;
         private string password;
         private string clientProvidedName;
-        private QueueConfig _queueConfig;
-        private ExchangeConfig _exchangeConfig;
+        private QueueConfig? _queueConfig;
+        private ExchangeConfig? _exchangeConfig;
         private bool _registerSenderServices;
         private bool _registerReceiverServices;
         private IConnection? Connection { get => CreateConnection(_connectionFactory); }
         public IModel? Channel { get => CreateChannelIfClosed(Connection); }
-        public QueueConfig Queue { get => _queueConfig; }
-        public ExchangeConfig Exchange { get => _exchangeConfig; }
+        public QueueConfig? Queue { get => _queueConfig; }
+        public ExchangeConfig? Exchange { get => _exchangeConfig; }
         public bool RegisterSenderServices { get => _registerSenderServices; }
         public bool RegisterReceiverServices { get => _registerReceiverServices; }
 

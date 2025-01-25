@@ -56,7 +56,7 @@ This package uses the `IServiceCollection` for setup. An extension method, `AddD
 To use this package, you need to supply the connection details for both the message broker (e.g., RabbitMQ) and the MSSQL database.
 
 * To configure the database, the library offers the `AddDataLayer` method. For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
-
+* To configure exchange properties, call the `UseExchange` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
 
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
@@ -69,15 +69,17 @@ services.AddDataSyncDbChangeEmitter((config) =>
         config.TransactionTimeOutInSec = 30;
     });
 
-    config.MessageBroker.ExchangeRoutingKey = "RouitngKey"; // This is required. ExchangeRoutingKey is any string value
+    config.MessageRoutingKey = "RouitngKey"; // This is required. MessageRoutingKey is any string value
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "rabbitMqHostIp";
         rabbitMqConfig.Port = 5672;
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
-        rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
-        rabbitMqConfig.Exchange.IsDurable = true; // this is required for durable exchange
+    }).UseExchange(exchange =>
+    {
+        exchange.ExchangeName = "ExchangeName";
+        exchange.IsDurable = true; // this is required for durable exchange
     });
 });
 ```
@@ -105,15 +107,17 @@ builder.ConfigureServices((hostContext, services) =>
             config.TransactionTimeOutInSec = dbTransationTimeOut;
         });
 
-        config.MessageBroker.ExchangeRoutingKey = "RouitngKey";
+        config.MessageRoutingKey = "RouitngKey"; // This is required. MessageRoutingKey is any string value
         config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "rabbitMqHostIp";
             rabbitMqConfig.Port = 5672;
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
-            rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
-            rabbitMqConfig.Exchange.IsDurable = true;
+        }).UseExchange(exchange =>
+        {
+            exchange.ExchangeName = "ExchangeName";
+            exchange.IsDurable = true;
         });
     });
 });

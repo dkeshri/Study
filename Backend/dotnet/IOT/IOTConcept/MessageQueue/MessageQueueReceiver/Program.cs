@@ -29,10 +29,8 @@ builder.ConfigureServices((hostContext, services) =>
             config.Password = "guest";
         }).UseQueue(queueConfig =>
         {
-            queueConfig.QueueName = "testQueue";
+            queueConfig.QueueName = "TestQueue";
             queueConfig.IsDurable = true;
-            queueConfig.ExchangeName = "Deepak";
-            queueConfig.RoutingKeys = ["deepakRouting"];
         });
 
     });

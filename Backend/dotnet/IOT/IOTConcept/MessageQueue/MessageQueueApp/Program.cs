@@ -28,10 +28,10 @@ builder.ConfigureServices((hostContext, services) =>
             config.Port = 5672;
             config.UserName = "guest";
             config.Password = "guest";
-        }).UseExchange(exchangeConfig =>
+        }).UseQueue(config =>
         {
-            exchangeConfig.ExchangeName = "Deepak";
-            exchangeConfig.IsDurable = true;
+            config.QueueName = "TestQueue";
+            config.IsDurable = true;
         });
 
     });
@@ -48,10 +48,11 @@ using (IServiceScope serviceScope = host.Services.CreateScope())
     do
     {
         string routingKey = "deepakRouting";
-        messageSender.SendToExchange(message, routingKey);
+       
         Console.WriteLine("Enter Message to send: ");
         message = Console.ReadLine();
-        
+        messageSender.SendToQueue(message);
+
     }
     while (!string.IsNullOrEmpty(message));
 }
