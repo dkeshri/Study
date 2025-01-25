@@ -3,7 +3,7 @@
 This library creates a queue that binds to the exchange created by `Dkeshri.DataSync.DBChangeEmitter`. 
 When a message is received in the queue from the exchange, it applies the changes to an `MSSQL` database.
 
-* When configuring the queue using the `UseQueue` extension method, ensure that the same exchange name and routing key specified in the `DBChangeEmitter` application are provided.
+* When configuring the queue using the `UseQueue` extension method, ensure that the same exchange name and routing key specified in the `Sender` application are provided.
 
 This library complements [Dkeshri.DataSync.DBChangeEmitter](https://www.nuget.org/packages/Dkeshri.DataSync.DBChangeEmitter), which sends messages to a RabbitMQ exchange. 
 The exchange then routes these messages to the queues bound to it using routing keys.
@@ -47,9 +47,9 @@ To use this package, you need to supply the connection details for both the mess
 * For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
 * To configure `Queue` properties, call the `UseQueue` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
 
-**Receive Message from Queue**
-
 **Step 1**
+
+* When configuring the queue using the `UseQueue` extension method, ensure that the `exchange name and routing key` matches the one specified in the `Sender` application while setup Exchange Property in `UseExchange` Method.
 
 ```csharp
 services.AddDbChangeReceiver((config) =>
