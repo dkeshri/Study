@@ -1,11 +1,13 @@
 # About
-This library complements [Dkeshri.DataSync.DBChangeEmitter](https://www.nuget.org/packages/Dkeshri.DataSync.DBChangeEmitter), which sends messages to a RabbitMQ exchange. 
-The exchange then routes these messages to the queues bound to it using routing keys.
 
 This library creates a queue that binds to the exchange created by `Dkeshri.DataSync.DBChangeEmitter`. 
 When a message is received in the queue from the exchange, it applies the changes to an `MSSQL` database.
 
-* During configuring queue here via UseQueue Extention method, Make sure to provide same Exchange name and routing key that are provide in `DBChangeEmitter` application
+* When configuring the queue using the `UseQueue` extension method, ensure that the same exchange name and routing key specified in the `DBChangeEmitter` application are provided.
+
+This library complements [Dkeshri.DataSync.DBChangeEmitter](https://www.nuget.org/packages/Dkeshri.DataSync.DBChangeEmitter), which sends messages to a RabbitMQ exchange. 
+The exchange then routes these messages to the queues bound to it using routing keys.
+
 
 We also provide a Docker image [dkeshri/data-sync-emitter](https://hub.docker.com/r/dkeshri/data-sync-emitter) 
 and [dkeshri/data-sync-receiver](https://hub.docker.com/r/dkeshri/data-sync-receiver) that implements this library. 
