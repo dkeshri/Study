@@ -43,8 +43,9 @@ This package uses the `IServiceCollection` for setup. An extension method, `AddD
 
 To use this package, you need to supply the connection details for both the message broker (e.g., RabbitMQ) and the MSSQL database.
 
-* To configure the database, the library offers the `AddDataLayer` method. For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
-* To configure queue properties, call the `UseQueue` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
+* To configure the database, the library offers the `AddDataLayer` method. 
+* For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
+* To configure `Queue` properties, call the `UseQueue` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
 
 **Receive Message from Queue**
 
