@@ -56,7 +56,7 @@ This package uses the `IServiceCollection` for setup. An extension method, `AddD
 To use this package, you need to supply the connection details for both the message broker (e.g., RabbitMQ) and the MSSQL database.
 
 * To configure the database, the library offers the `AddDataLayer` method. For message broker configuration, you need to include the [Dkeshri.MessageQueue.RabbitMq](https://www.nuget.org/packages/Dkeshri.MessageQueue.RabbitMq) package and then call AddRabbitMqServices on the config.MessageBroker property.
-
+* To configure exchange properties, call the `UseExchange` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
 
 ```csharp
 services.AddDataSyncDbChangeEmitter((config) =>
