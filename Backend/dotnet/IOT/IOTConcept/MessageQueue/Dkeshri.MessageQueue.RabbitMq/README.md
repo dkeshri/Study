@@ -1,44 +1,73 @@
 ﻿# About
 
-This will help the user manage the connection and allow them to send messages to the RabbitMQ queue. 
-Additionally, there is a RabbitMQ queue receiver that retrieves the messages.
+This library helps users manage connections and facilitates sending and receiving messages to and from RabbitMQ exchanges and queues. Additionally, it includes a RabbitMQ queue receiver for retrieving messages.
 
 ## Package Dependency
 ```csharp
 Dkeshri.MessageQueue
 ```
-## How to Configure
+## How to Use
 
 This package uses the `IServiceCollection` to setup. We have an Extension Method **AddMessageBroker** in `Dkeshri.MessageQueue` provide **MessageBroker** object to setup Message Broker Propery.
 
-There is another extension method `AddRabbitMqServices` provided in `Dkeshri.MessageQueue.RabbitMq` is use to setup RabbitMq Connections. 
+There is another extension method `AddRabbitMqServices` provided in this library which is use to setup RabbitMq Connections. 
 
 > `AddRabbitMqServices` is extention to `MessageBroker`
 
 **Register Sender**
 > Note Make sure to set `RegisterSenderServices` to `true`
 
-**Sender For Exchange** When you want to send message to `Exchange` this is the prefered way.
+**Sender For Exchange** When you want to send message to `Exchange` below is the prefered way.
 
-Step 1
+Call the `UseExchange` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
+
+**Step 1**
 
 ```csharp
 services.AddMessageBroker(messageBroker =>
 {
     messageBroker.RegisterSenderServices = true; // Set True to register Sender services
     messageBroker.ClientProvidedName = "Sender"; // Sender or Any name you like
-    messageBroker.MessageBroker.ExchangeRoutingKey = "RoutingKey";
     messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "RabbitMqHost";
         rabbitMqConfig.Port = 5672; // your RabbitMq Port
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
-        rabbitMqConfig.Exchange.ExchangeName = "Your_ExchangeName";
+    }).UseExchange(exchange =>
+    {
+        exchange.ExchangeName = "ExchangeName";
+        exchange.IsDurable = true; // this is required for durable exchange
     });
 });
 ```
-Step 2
+
+OR
+
+**Sender For Queue** When you want to send message to `queue`, below is the prefered way.
+
+Call the `UseQueue` extension method on the `RabbitMqConfig` object returned by the `AddRabbitMqServices` method.
+
+```csharp
+services.AddMessageBroker(messageBroker =>
+{
+    messageBroker.RegisterSenderServices = true; // Set True to register Sender services
+    messageBroker.ClientProvidedName = "Sender"; // Sender or Any name you like
+    messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
+    {
+        rabbitMqConfig.HostName = "RabbitMqHost";
+        rabbitMqConfig.Port = 5672; // your RabbitMq Port
+        rabbitMqConfig.UserName = "username";
+        rabbitMqConfig.Password = "password";
+    }).UseQueue(queueConfig =>
+    {
+        queueConfig.QueueName = "YourQueueName";
+        queueConfig.IsDurable = true;
+    });
+});
+```
+
+**Step 2**
 
 There is an `IStartup` Interface provided by Message Broker, that will use Init `Exchange`, Please call it in main method, this interface is Registed in `IServiceCollection` DI container.
 ```csharp
@@ -57,29 +86,13 @@ internal class MessageBrokerInitService : IMessageBrokerInitService
 }
 ```
 
-**Sender For Queue** When you want to send message to `queue` not to `Exchange`
-
-```csharp
-services.AddMessageBroker(messageBroker =>
-{
-    messageBroker.RegisterSenderServices = true; // Set True to register Sender services
-    messageBroker.ClientProvidedName = "Sender"; // Sender or Any name you like
-    messageBroker.MessageBroker.ExchangeRoutingKey = "RoutingKey";
-    messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
-    {
-        rabbitMqConfig.HostName = "RabbitMqHost";
-        rabbitMqConfig.Port = 5672; // your RabbitMq Port
-        rabbitMqConfig.UserName = "username";
-        rabbitMqConfig.Password = "password";
-        rabbitMqConfig.Queue.QueueName = "YourQueueName";
-    });
-});
-```
-
 **Register Receiver**
 
-> Note Make sure to set `RegisterReceiverServices` to `true`. If you only want to reveive message from Queue then Please do not provide `ExchangeName` and `RoutingKeys`.
+> **Note**: Ensure that `RegisterReceiverServices` is set to true. 
+Provide `ExchangeName` and `RoutingKeys` only if the sender application is sending messages to the exchange; otherwise, omit them.
 
+* When configuring the queue using the `UseQueue` extension method, ensure that the exchange name matches the one specified in the `Sender` application.
+* Additionally, provide the same **routing key** used for sending messages to the exchange in the `Sender` application.
 ```csharp
 services.AddMessageBroker(messageBroker =>
 {
@@ -91,9 +104,15 @@ services.AddMessageBroker(messageBroker =>
         rabbitMqConfig.Port = 5672; // your RabbitMq Port
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
-        rabbitMqConfig.Queue.QueueName = "YourQueueName";
-        rabbitMqConfig.Queue.ExchangeName = "YourSenderExchangeName";
-        rabbitMqConfig.Queue.RoutingKeys = [ "routingKey1" ];
+    }).UseQueue(config =>
+    {
+        config.QueueName = "YourQueueName";
+        config.IsDurable = true;
+        // Use below Propery only and only if you are using `UseExchange` to send the message to RabbitMq Exchnage. 
+        // so the Queue will bind to exchange via routing key
+        config.ExchangeName = "YourSenderExchangeName"; // 
+        config.RoutingKeys = ["routingKey1"];
+
     });
 });
 ```
@@ -150,14 +169,16 @@ builder.ConfigureServices((hostContext, services) =>
     {
         messageBroker.RegisterSenderServices = true; // Set True to register Sender services
         messageBroker.ClientProvidedName = "SenderTest"; // Sender or Any name you like
-        messageBroker.MessageBroker.ExchangeRoutingKey = "RoutingKey";
         messageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "RabbitMqHost";
             rabbitMqConfig.Port = 5672; // your RabbitMq Port
-            rabbitMqConfig.Exchange.ExchangeName = "Your_ExchangeName";
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
+        }).UseExchange(exchange =>
+        {
+            exchange.ExchangeName = "ExchangeName";
+            exchange.IsDurable = true; // this is required for durable exchange
         });
     });
 
@@ -186,7 +207,11 @@ The `IMessageReceiver` interface includes a delegate:
 
 This allows you to provide a callback method that will be invoked when a message is received from the RabbitMQ queue.
 
-> Note: Ensure that `RegisterReceiverServices` is set to `true` during configuration. This is necessary for the `IMessageReceiver` interface to be provided. 
+> Note: Ensure that `RegisterReceiverServices` is set to true. This is necessary for the `IMessageReceiver` interface to be provided. 
+Provide `ExchangeName` and `RoutingKeys` only if the sender application is sending messages to the exchange; otherwise, omit them.
+
+* When configuring the queue using the `UseQueue` extension method, ensure that the exchange name matches the one specified in the `Sender` application.
+* Additionally, provide the same **routing key** used for sending messages to the exchange in the `Sender` application.
 
 As demonstrated in the code below:
 
@@ -204,9 +229,15 @@ builder.ConfigureServices((hostContext, services) =>
             rabbitMqConfig.Port = 5672; // your RabbitMq Port
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
-            rabbitMqConfig.Queue.QueueName = "YourQueueName";
-            rabbitMqConfig.Queue.ExchangeName = "Your_ExchangeName";
-            rabbitMqConfig.Queue.RoutingKeys = [ "routingKey1" ];
+        }).UseQueue(config =>
+        {
+            config.QueueName = "YourQueueName";
+            config.IsDurable = true;
+            // Use below Propery only and only if you are using `UseExchange` to send the message to RabbitMq Exchnage. 
+            // so the Queue will bind to exchange via routing key
+            config.ExchangeName = "YourSenderExchangeName"; // 
+            config.RoutingKeys = ["routingKey1"];
+
         });
     });
 });
@@ -216,6 +247,9 @@ var host = builder.UseConsoleLifetime().Build();
 using (var scope = host.Services.CreateScope())
 {
     var messageReceiver = scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
+    var startup = scope.ServiceProvider.GetRequiredService<IStartup>();
+    // make sure to call OnStart(), it Is important to create Queue.
+    startup.OnStart();
     messageReceiver.MessageHandler = (message) =>
     {
         // After Process Message and return boolean value.
