@@ -69,15 +69,17 @@ services.AddDataSyncDbChangeEmitter((config) =>
         config.TransactionTimeOutInSec = 30;
     });
 
-    config.MessageBroker.ExchangeRoutingKey = "RouitngKey"; // This is required. ExchangeRoutingKey is any string value
+    config.MessageRoutingKey = "RouitngKey"; // This is required. MessageRoutingKey is any string value
     config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
     {
         rabbitMqConfig.HostName = "rabbitMqHostIp";
         rabbitMqConfig.Port = 5672;
         rabbitMqConfig.UserName = "username";
         rabbitMqConfig.Password = "password";
-        rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
-        rabbitMqConfig.Exchange.IsDurable = true; // this is required for durable exchange
+    }).UseExchange(exchange =>
+    {
+        exchange.ExchangeName = "ExchangeName";
+        exchange.IsDurable = true; // this is required for durable exchange
     });
 });
 ```
@@ -105,15 +107,17 @@ builder.ConfigureServices((hostContext, services) =>
             config.TransactionTimeOutInSec = dbTransationTimeOut;
         });
 
-        config.MessageBroker.ExchangeRoutingKey = "RouitngKey";
+        config.MessageRoutingKey = "RouitngKey"; // This is required. MessageRoutingKey is any string value
         config.MessageBroker.AddRabbitMqServices((rabbitMqConfig) =>
         {
             rabbitMqConfig.HostName = "rabbitMqHostIp";
             rabbitMqConfig.Port = 5672;
             rabbitMqConfig.UserName = "username";
             rabbitMqConfig.Password = "password";
-            rabbitMqConfig.Exchange.ExchangeName = "ExchangeName";
-            rabbitMqConfig.Exchange.IsDurable = true;
+        }).UseExchange(exchange =>
+        {
+            exchange.ExchangeName = "ExchangeName";
+            exchange.IsDurable = true;
         });
     });
 });
