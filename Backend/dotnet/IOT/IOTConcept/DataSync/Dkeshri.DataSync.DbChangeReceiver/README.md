@@ -74,7 +74,7 @@ services.AddDbChangeReceiver((config) =>
 });
 ```
 
-**Step 2 ** : After Service Configuration call `UseDbChangeReceiver` Extension Method of `Ihost`
+**Step 2** : After Service Configuration call `UseDbChangeReceiver` Extension Method of `Ihost`
 
 ```csharp
 var host = builder.UseConsoleLifetime().Build();
