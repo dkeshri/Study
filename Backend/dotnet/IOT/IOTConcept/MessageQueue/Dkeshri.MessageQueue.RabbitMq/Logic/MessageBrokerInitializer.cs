@@ -3,14 +3,15 @@ using Dkeshri.MessageQueue.RabbitMq.Extensions;
 using Dkeshri.MessageQueue.RabbitMq.Interfaces;
 using RabbitMQ.Client;
 using System.Threading;
+using System.Threading.Channels;
 
 namespace Dkeshri.MessageQueue.RabbitMq.Logic
 {
     internal class MessageBrokerInitializer : IStartup
     {
         private readonly IRabbitMqConnection _connection;
-        private readonly QueueConfig queueConfig;
-        private readonly ExchangeConfig exchangeConfig;
+        private readonly QueueConfig? queueConfig;
+        private readonly ExchangeConfig? exchangeConfig;
         private readonly bool _registerSenderServices;
         private readonly bool _registerReceiverServices;
         public MessageBrokerInitializer(IRabbitMqConnection rabbitMqConnection)
@@ -45,32 +46,36 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
         private void OnSenderStart(IModel channel)
         {
             Console.WriteLine("Message Broker: Sender OnStartUp");
-            if (string.IsNullOrEmpty(exchangeConfig.ExchangeName))
-            {
-                Console.WriteLine("Error: Can't Create Exchange: ExchangeName is null or empty");
-                return;
-            }
-            Console.WriteLine($"Creating Exchange : {exchangeConfig.ExchangeName}");
             if (!channel.IsOpen)
             {
-                Console.WriteLine($"Error: Can't Create Exchange: {exchangeConfig.ExchangeName}, channel is not open!");
+                Console.WriteLine($"Error: Channel is not open!");
                 return;
             }
-            
-            createAlternateExchange(channel);
-            channel.ExchangeDeclare(
-                exchange: exchangeConfig.ExchangeName,
-                type: exchangeConfig.ExchangeType,
-                durable: exchangeConfig.IsDurable,
-                autoDelete: exchangeConfig.AutoDelete,
-                arguments: exchangeConfig.Arguments
-            );
-            Console.WriteLine($"Exchange: {exchangeConfig.ExchangeName} created!");
+
+            if (exchangeConfig != null && !string.IsNullOrEmpty(exchangeConfig.ExchangeName))
+            {
+                Console.WriteLine($"Creating Exchange : {exchangeConfig.ExchangeName}");
+                createAlternateExchange(channel);
+                channel.ExchangeDeclare(
+                    exchange: exchangeConfig.ExchangeName,
+                    type: exchangeConfig.ExchangeType,
+                    durable: exchangeConfig.IsDurable,
+                    autoDelete: exchangeConfig.AutoDelete,
+                    arguments: exchangeConfig.Arguments
+                );
+                Console.WriteLine($"Exchange: {exchangeConfig.ExchangeName} created!");
+            }
+
+            if (queueConfig != null && !string.IsNullOrEmpty(queueConfig.QueueName))
+            {
+                createQueue(channel);
+            }
+
         }
 
         private void createAlternateExchange(IModel channel)
         {
-            exchangeConfig.Arguments?.Add("alternate-exchange", "alternate.exchange");
+            exchangeConfig?.Arguments.Add("alternate-exchange", "alternate.exchange");
             Console.WriteLine("Declaring Alternate Exchange");
             channel.ExchangeDeclare("alternate.exchange", ExchangeType.Fanout, durable: true);
             channel.QueueDeclare("unroutable.queue", durable: true, exclusive: false, autoDelete: false);
@@ -80,18 +85,20 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
         private void OnReceiverStart(IModel channel)
         {
             Console.WriteLine("Message Broker: Receiver OnStartUp");
-            if (string.IsNullOrEmpty(queueConfig.QueueName))
-            {
-                Console.WriteLine("Error: Can't Create Exchange Queue Name is null or empty");
-                return;
-            }
-            Console.WriteLine($"Creating Queue: {queueConfig.QueueName}");
             if (!channel.IsOpen)
             {
-                Console.WriteLine($"Error: Can't Create Queue: {queueConfig.QueueName}, channel is not open!");
+                Console.WriteLine($"Error: channel is not open!");
                 return;
             }
-
+            if (queueConfig != null && !string.IsNullOrEmpty(queueConfig.QueueName))
+            {
+                createQueue(channel);
+            }
+            
+        }
+        private void createQueue(IModel channel)
+        {
+            Console.WriteLine($"Creating Queue: {queueConfig!.QueueName}");
             createDeadLetterExchange(channel);
             channel.QueueDeclare(queue: queueConfig.QueueName,
                     durable: queueConfig.IsDurable,
@@ -108,8 +115,6 @@ namespace Dkeshri.MessageQueue.RabbitMq.Logic
                 Console.WriteLine($"Queue: {queueConfig.QueueName} did not bind to any Exchange, Exchnage name not provided!");
                 Console.WriteLine("Queue is standalone. Receive Messages if directly Publish to Queue!");
             }
-
-
         }
         private void createDeadLetterExchange(IModel channel)
         {
