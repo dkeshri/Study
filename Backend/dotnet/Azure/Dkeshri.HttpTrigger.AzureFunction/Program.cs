@@ -11,11 +11,11 @@ namespace Dkeshri.HttpTrigger.AzureFunction
             FunctionsDebugger.Enable();
 
             var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults( builder =>
+                .ConfigureFunctionsWorkerDefaults((context, builder) =>
                 {
                     builder.Services.AddScoped<TestClass>();
-                })
-                .Build();
+
+                }).Build();
 
             host.Run();
         }
