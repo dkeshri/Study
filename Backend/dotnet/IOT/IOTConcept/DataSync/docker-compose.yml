@@ -9,8 +9,9 @@ services:
     - RabbitMq__UserName=guest
     - RabbitMq__Password=guest
     - RabbitMq__ClientProvidedName=Sender
+    - RabbitMq__MessageRoutingKey=EmitterToReceiver
     - RabbitMq__Exchange__Name=DataSyncExchange
-    - RabbitMq__Exchange__RoutingKey=EmitterToReceiver
+    
   data-sync-receiver:
     container_name: data-sync-receiver
     image: dkeshri/data-sync-receiver:latest
