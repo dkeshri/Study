@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -8,10 +9,12 @@ namespace Dkeshri.HttpTrigger.AzureFunction
     public class Function1
     {
         private readonly ILogger _logger;
+        private TestClass _testClass;
 
-        public Function1(ILoggerFactory loggerFactory)
+        public Function1(ILoggerFactory loggerFactory,TestClass testClass)
         {
             _logger = loggerFactory.CreateLogger<Function1>();
+            _testClass = testClass;
         }
 
         [Function("Function1")]
@@ -23,6 +26,8 @@ namespace Dkeshri.HttpTrigger.AzureFunction
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
             response.WriteString("Welcome to Azure Functions!");
+
+            Console.WriteLine("Deepsk Guid "+ _testClass.ID);
 
             return response;
         }

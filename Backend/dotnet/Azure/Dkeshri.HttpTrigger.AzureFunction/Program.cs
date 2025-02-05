@@ -1,4 +1,5 @@
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Dkeshri.HttpTrigger.AzureFunction
@@ -10,7 +11,10 @@ namespace Dkeshri.HttpTrigger.AzureFunction
             FunctionsDebugger.Enable();
 
             var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
+                .ConfigureFunctionsWorkerDefaults( builder =>
+                {
+                    builder.Services.AddScoped<TestClass>();
+                })
                 .Build();
 
             host.Run();
