@@ -85,7 +85,7 @@ az login
 
     ![ModuleType](./imgs/ModuleType.png)
 
-4. Provide Module Name: Using Default Name `SampleModule`
+4. Provide Module Name: `TestModule`
     ![ModuleName](./imgs/ModuleName.png)
 
 5. Provide Docker Image Container Registry: Using default local registry
@@ -94,6 +94,8 @@ az login
 > After all above steps you will see these project structure as below Image.
 
 ![Project Structure](./imgs/ProjectStructure.png)
+
+6. There is an issue in Extention It is not creating `module.json` and `Dockerfile` for C# module. so please add manually.
 
 
 
