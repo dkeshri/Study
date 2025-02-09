@@ -95,8 +95,29 @@ az login
 
 ![Project Structure](./imgs/ProjectStructure.png)
 
-6. There is an issue in Extention It is not creating `module.json` and `Dockerfile` for C# module. so please add manually.
+### Issue in `Azure IoT Edge` Extension
+There is an issue in `Azure IoT Edge` Extention by default it is not creating `module.json` and `Dockerfile` for C# module. so please add manually.
+    
+    ![Missing file](./imgs/missingFile.png)
 
+## Build And Run Soluton in IoTEdgehubdev Simulator
+> Make sure to run docker desktop/service before below steps.
+
+1. Right Click on `deployment.debug.template.json` file and select **Build and Run IOT Edge Solution In Simulator**. as in below screen.
+    ![BuildRunSolution](./imgs/BuildRunSolution.png)
+
+    It will run the registry image
+    ![alt text](./imgs/registryImage.png)
+
+2. If iotedgehubdev not setup
+    A notification will pop-up to setup click on setup button.
+
+    ![iotedgehubdev setup notification](./imgs/setupNotification.png)
+
+    * Provide IoT Hub Connection string 
+        ![IoT_Hub connection string](./imgs/iothubConnectionString.png)
+
+3. After iotedgehubdev setup re-run Step 1 again i.e => Right Click on `deployment.debug.template.json` file and select **Build and Run IOT Edge Solution In Simulator**.
 
 
 
