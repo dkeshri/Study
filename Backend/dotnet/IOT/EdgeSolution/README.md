@@ -97,7 +97,8 @@ az login
 
 ### Issue in `Azure IoT Edge` Extension
 There is an issue in `Azure IoT Edge` Extention by default it is not creating `module.json` and `Dockerfile` for C# module. so please add manually.
-    ![Missing file](./imgs/missingFile.png)
+
+![Missing file](./imgs/missingFile.png)
 
 ## Build And Run Soluton in IoTEdgehubdev Simulator
 > Make sure to run docker desktop/service before below steps.
