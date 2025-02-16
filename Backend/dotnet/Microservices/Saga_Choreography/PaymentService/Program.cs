@@ -1,3 +1,4 @@
+using Contract;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,9 +20,6 @@ builder.Services.AddMassTransit(x =>
 var app = builder.Build();
 app.Run();
 
-public record PaymentProcessed(Guid OrderId);
-public record InventoryUpdated(Guid OrderId);
-public record PaymentFailed(Guid OrderId, string Reason);
 public class PaymentProcessedConsumer : IConsumer<PaymentProcessed>
 {
     public async Task Consume(ConsumeContext<PaymentProcessed> context)
