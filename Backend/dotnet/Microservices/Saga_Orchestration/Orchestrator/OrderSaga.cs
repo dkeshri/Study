@@ -26,28 +26,34 @@ namespace Orchestrator
 
             Initially(
                 When(OrderCreated)
-                    .Then(ctx => Console.WriteLine($"Order {ctx.Instance.OrderId} created."))
-                    .Publish(ctx => new ProcessPayment(ctx.Instance.OrderId, ctx.Instance.Amount))
+                    .Then(ctx =>
+                    {
+                        ctx.Saga.OrderId = ctx.Message.OrderId;
+                        ctx.Saga.Amount = ctx.Message.Amount;
+                    })
+                    .Publish(ctx => new ProcessPayment(ctx.Saga.OrderId, ctx.Saga.Amount))
                     .TransitionTo(ProcessingPayment)
             );
 
             During(ProcessingPayment,
                 When(PaymentProcessed)
-                    .Then(ctx => Console.WriteLine($"Payment processed for Order {ctx.Instance.OrderId}"))
-                    .Publish(ctx => new UpdateInventory(ctx.Instance.OrderId))
+                    .Then(ctx => Console.WriteLine($"Payment processed for Order {ctx.Saga.OrderId}"))
+                    .Publish(ctx => new UpdateInventory(ctx.Saga.OrderId))
                     .TransitionTo(UpdatingInventory),
 
                 When(PaymentFailed)
-                    .Then(ctx => Console.WriteLine($"Payment failed for Order {ctx.Instance.OrderId}. Rolling back."))
-                    .Publish(ctx => new RollbackOrder(ctx.Instance.OrderId))
+                    .Then(ctx => Console.WriteLine($"Payment failed for Order {ctx.Saga.OrderId}. Rolling back."))
+                    .Publish(ctx => new RollbackOrder(ctx.Saga.OrderId))
                     .TransitionTo(RolledBack)
             );
 
             During(UpdatingInventory,
                 When(InventoryUpdated)
-                    .Then(ctx => Console.WriteLine($"Inventory updated for Order {ctx.Instance.OrderId}"))
+                    .Then(ctx => Console.WriteLine($"Inventory updated for Order {ctx.Saga.OrderId}"))
                     .TransitionTo(Completed)
             );
+
+            SetCompletedWhenFinalized();
         }
     }
 }
