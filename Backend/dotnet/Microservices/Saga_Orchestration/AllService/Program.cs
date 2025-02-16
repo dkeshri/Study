@@ -1,8 +1,11 @@
 // Program.cs - Saga Orchestration Setup
+using AllService;
+using Contract;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHostedService<OrderBackgroundService>();
 // Configure MassTransit with Saga
 builder.Services.AddMassTransit(x =>
 {
@@ -25,6 +28,7 @@ builder.Services.AddMassTransit(x =>
 
 var app = builder.Build();
 app.Run();
+
 
 // Saga State Definition
 public class OrderState : SagaStateMachineInstance
@@ -49,26 +53,26 @@ public class OrderSaga : MassTransitStateMachine<OrderState>
 
         Initially(
             When(OrderCreated)
-                .Then(ctx => Console.WriteLine($"Order {ctx.Instance.OrderId} created."))
-                .Publish(ctx => new ProcessPayment(ctx.Instance.OrderId, ctx.Instance.Amount))
+                .Then(ctx => Console.WriteLine($"Order {ctx.Saga.OrderId} created."))
+                .Publish(ctx => new ProcessPayment(ctx.Saga.OrderId, ctx.Saga.Amount))
                 .TransitionTo(ProcessingPayment)
         );
 
         During(ProcessingPayment,
             When(PaymentProcessed)
-                .Then(ctx => Console.WriteLine($"Payment processed for Order {ctx.Instance.OrderId}"))
-                .Publish(ctx => new UpdateInventory(ctx.Instance.OrderId))
+                .Then(ctx => Console.WriteLine($"Payment processed for Order {ctx.Saga.OrderId}"))
+                .Publish(ctx => new UpdateInventory(ctx.Saga.OrderId))
                 .TransitionTo(UpdatingInventory),
 
             When(PaymentFailed)
-                .Then(ctx => Console.WriteLine($"Payment failed for Order {ctx.Instance.OrderId}. Rolling back."))
-                .Publish(ctx => new RollbackOrder(ctx.Instance.OrderId))
+                .Then(ctx => Console.WriteLine($"Payment failed for Order {ctx.Saga.OrderId}. Rolling back."))
+                .Publish(ctx => new RollbackOrder(ctx.Saga.OrderId))
                 .TransitionTo(RolledBack)
         );
 
         During(UpdatingInventory,
             When(InventoryUpdated)
-                .Then(ctx => Console.WriteLine($"Inventory updated for Order {ctx.Instance.OrderId}"))
+                .Then(ctx => Console.WriteLine($"Inventory updated for Order {ctx.Saga.OrderId}"))
                 .TransitionTo(Completed)
         );
     }
@@ -83,15 +87,6 @@ public class OrderSaga : MassTransitStateMachine<OrderState>
     public Event<PaymentFailed> PaymentFailed { get; private set; }
     public Event<InventoryUpdated> InventoryUpdated { get; private set; }
 }
-
-// Messages
-public record OrderCreated(Guid OrderId, decimal Amount);
-public record ProcessPayment(Guid OrderId, decimal Amount);
-public record PaymentProcessed(Guid OrderId);
-public record PaymentFailed(Guid OrderId, string Reason);
-public record UpdateInventory(Guid OrderId);
-public record InventoryUpdated(Guid OrderId);
-public record RollbackOrder(Guid OrderId);
 
 // Consumers
 public class PaymentConsumer : IConsumer<ProcessPayment>
@@ -128,8 +123,3 @@ public class PaymentFailedConsumer : IConsumer<RollbackOrder>
         Console.WriteLine($"Rolling back order {context.Message.OrderId}");
     }
 }
-
-// Publishing an OrderCreated event to start the process
-//var bus = app.Services.GetRequiredService<IBus>();
-//await bus.Publish(new OrderCreated(Guid.NewGuid(), 100.0m));
-//Console.WriteLine("OrderCreated event published.");
