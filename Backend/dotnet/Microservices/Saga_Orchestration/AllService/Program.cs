@@ -130,6 +130,6 @@ public class PaymentFailedConsumer : IConsumer<RollbackOrder>
 }
 
 // Publishing an OrderCreated event to start the process
-var bus = app.Services.GetRequiredService<IBus>();
-await bus.Publish(new OrderCreated(Guid.NewGuid(), 100.0m));
-Console.WriteLine("OrderCreated event published.");
+//var bus = app.Services.GetRequiredService<IBus>();
+//await bus.Publish(new OrderCreated(Guid.NewGuid(), 100.0m));
+//Console.WriteLine("OrderCreated event published.");
