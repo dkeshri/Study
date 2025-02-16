@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<PaymentProcessedConsumer>();
+    x.SetKebabCaseEndpointNameFormatter();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
@@ -13,7 +14,7 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-        cfg.ReceiveEndpoint("payment-service-queue", e => e.ConfigureConsumer<PaymentProcessedConsumer>(context));
+        cfg.ConfigureEndpoints(context);
     });
 });
 

@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMassTransit(x =>
 {
+    x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<InventoryUpdatedConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -13,7 +14,9 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-        cfg.ReceiveEndpoint("inventory-service-queue", e => e.ConfigureConsumer<InventoryUpdatedConsumer>(context));
+        //cfg.ReceiveEndpoint("inventory-service-queue", e => e.ConfigureConsumer<InventoryUpdatedConsumer>(context));
+        cfg.ConfigureEndpoints(context);
+
     });
 });
 

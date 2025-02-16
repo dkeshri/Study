@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderCreatedConsumer>();
+    x.SetKebabCaseEndpointNameFormatter();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
@@ -14,7 +15,14 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-        cfg.ReceiveEndpoint("order-service-queue", e => e.ConfigureConsumer<OrderCreatedConsumer>(context));
+
+        // It will register the consumer with provide endpoint
+        //cfg.ReceiveEndpoint("order-service-queue", e => e.ConfigureConsumer<OrderCreatedConsumer>(context));
+
+        // It will Auto create Endpoints Baseed on IConsumer Type 
+        // OrderCreated is the Type of consumer so it will create order-created Queue in RabbitMq.
+        // Name formate will be decided by SetKebabCaseEndpointNameFormatter(); at line 10.
+        cfg.ConfigureEndpoints(context);
     });
 });
 builder.Services.AddHostedService<CreateOrder>();
