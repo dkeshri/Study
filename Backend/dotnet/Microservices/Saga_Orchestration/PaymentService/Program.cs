@@ -1,31 +1,31 @@
-using Contract;
+﻿using Contract;
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Configure MassTransit with Saga
-builder.Services.AddMassTransit(x =>
+var builder = Host.CreateDefaultBuilder(args);
+builder.ConfigureServices(services =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<PaymentConsumer>();
-    x.AddConsumer<PaymentFailedConsumer>();
-
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
+        x.SetKebabCaseEndpointNameFormatter();
+        x.AddConsumer<PaymentConsumer>();
+        x.AddConsumer<PaymentFailedConsumer>();
 
-        cfg.ConfigureEndpoints(context);
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
     });
 });
 
-var app = builder.Build();
-app.Run();
-
-
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();
 public class PaymentConsumer : IConsumer<ProcessPayment>
 {
     public async Task Consume(ConsumeContext<ProcessPayment> context)
@@ -46,8 +46,10 @@ public class PaymentConsumer : IConsumer<ProcessPayment>
 
 public class PaymentFailedConsumer : IConsumer<RollbackOrder>
 {
-    public async Task Consume(ConsumeContext<RollbackOrder> context)
+    public Task Consume(ConsumeContext<RollbackOrder> context)
     {
         Console.WriteLine($"Rolling back order {context.Message.OrderId}");
+        return Task.CompletedTask;
     }
 }
+
