@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Dkeshri.WebApi.Services;
+using Serilog;
 
 namespace Dkeshri.WebApi.Extensions
 {
@@ -12,6 +13,17 @@ namespace Dkeshri.WebApi.Extensions
             Log.Warning("This is a warning message"); // Will be logged
             Log.Error("This is an error message");    // Will be logged
             Log.Fatal("This is a fatal message");     // Will be logged
+        }
+
+        public static void AddServices(this IServiceCollection services) 
+        {
+            services.AddSingleton<ISingleton,DemoService>();    
+            services.AddTransient<ITransient,DemoService>();    
+            services.AddScoped<IScope,DemoService>();
+
+
+            services.AddTransient<LoggerService>();
+
         }
     }
 }
