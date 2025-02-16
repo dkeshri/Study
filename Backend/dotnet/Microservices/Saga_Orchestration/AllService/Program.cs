@@ -19,7 +19,7 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-
+        cfg.UseInMemoryOutbox(context);
         cfg.ConfigureEndpoints(context);
     });
 });
@@ -40,6 +40,14 @@ public class OrderState : SagaStateMachineInstance
 // Saga State Machine
 public class OrderSaga : MassTransitStateMachine<OrderState>
 {
+    public State ProcessingPayment { get; set; }
+    public State UpdatingInventory { get; set; }
+    public State RolledBack { get; set; }
+    public State Completed { get; set; }
+    public Event<OrderCreated> OrderCreated { get; set; }
+    public Event<PaymentProcessed> PaymentProcessed { get; set; }
+    public Event<PaymentFailed> PaymentFailed { get; set; }
+    public Event<InventoryUpdated> InventoryUpdated { get; set; }
     public OrderSaga()
     {
         InstanceState(x => x.CurrentState);
@@ -51,7 +59,11 @@ public class OrderSaga : MassTransitStateMachine<OrderState>
 
         Initially(
             When(OrderCreated)
-                .Then(ctx => Console.WriteLine($"Order {ctx.Saga.OrderId} created."))
+                .Then(ctx =>
+                {
+                    ctx.Saga.OrderId = ctx.Message.OrderId;
+                    ctx.Saga.Amount = ctx.Message.Amount;
+                })
                 .Publish(ctx => new ProcessPayment(ctx.Saga.OrderId, ctx.Saga.Amount))
                 .TransitionTo(ProcessingPayment)
         );
@@ -73,17 +85,13 @@ public class OrderSaga : MassTransitStateMachine<OrderState>
                 .Then(ctx => Console.WriteLine($"Inventory updated for Order {ctx.Saga.OrderId}"))
                 .TransitionTo(Completed)
         );
+
+        SetCompletedWhenFinalized();
     }
 
-    public State ProcessingPayment { get; private set; }
-    public State UpdatingInventory { get; private set; }
-    public State RolledBack { get; private set; }
-    public State Completed { get; private set; }
+    
 
-    public Event<OrderCreated> OrderCreated { get; private set; }
-    public Event<PaymentProcessed> PaymentProcessed { get; private set; }
-    public Event<PaymentFailed> PaymentFailed { get; private set; }
-    public Event<InventoryUpdated> InventoryUpdated { get; private set; }
+    
 }
 
 // Consumers
@@ -116,8 +124,10 @@ public class InventoryConsumer : IConsumer<UpdateInventory>
 
 public class PaymentFailedConsumer : IConsumer<RollbackOrder>
 {
-    public async Task Consume(ConsumeContext<RollbackOrder> context)
+    public Task Consume(ConsumeContext<RollbackOrder> context)
     {
+        
         Console.WriteLine($"Rolling back order {context.Message.OrderId}");
+        return Task.CompletedTask;
     }
 }
