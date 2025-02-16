@@ -4,8 +4,6 @@ using Contract;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddHostedService<OrderBackgroundService>();
 // Configure MassTransit with Saga
 builder.Services.AddMassTransit(x =>
 {
@@ -25,7 +23,7 @@ builder.Services.AddMassTransit(x =>
         cfg.ConfigureEndpoints(context);
     });
 });
-
+builder.Services.AddHostedService<OrderBackgroundService>();
 var app = builder.Build();
 app.Run();
 
