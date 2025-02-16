@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "OrderService\OrderService.csproj", "{2BAF8E81-D75D-4A76-9D66-9C5AA02A32DE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService", "PaymentService\PaymentService.csproj", "{DE85FD53-32C6-4F3F-BB38-B7478A20CC71}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventeryService", "InventeryService\InventeryService.csproj", "{C5E53182-6469-454C-BE1D-5ED92F2D2F07}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Contract\Contract.csproj", "{D906DCAB-A722-49DD-A424-644A91C72788}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrator", "Orchestrator\Orchestrator.csproj", "{8D6EC664-4F2D-4EA8-8C39-5B69F8895C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventeryService", "InventeryService\InventeryService.csproj", "{F1A1E56E-CEAD-4BB2-8DCC-8524527FA953}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService", "PaymentService\PaymentService.csproj", "{D1FB7CD7-5A15-40BF-8537-D3F3151F21F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "OrderService\OrderService.csproj", "{755DAD8B-8F81-4BA6-9123-C2E0467F1707}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,18 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2BAF8E81-D75D-4A76-9D66-9C5AA02A32DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BAF8E81-D75D-4A76-9D66-9C5AA02A32DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BAF8E81-D75D-4A76-9D66-9C5AA02A32DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BAF8E81-D75D-4A76-9D66-9C5AA02A32DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE85FD53-32C6-4F3F-BB38-B7478A20CC71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE85FD53-32C6-4F3F-BB38-B7478A20CC71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE85FD53-32C6-4F3F-BB38-B7478A20CC71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE85FD53-32C6-4F3F-BB38-B7478A20CC71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5E53182-6469-454C-BE1D-5ED92F2D2F07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5E53182-6469-454C-BE1D-5ED92F2D2F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5E53182-6469-454C-BE1D-5ED92F2D2F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5E53182-6469-454C-BE1D-5ED92F2D2F07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D906DCAB-A722-49DD-A424-644A91C72788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D906DCAB-A722-49DD-A424-644A91C72788}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D906DCAB-A722-49DD-A424-644A91C72788}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +27,18 @@ Global
 		{8D6EC664-4F2D-4EA8-8C39-5B69F8895C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D6EC664-4F2D-4EA8-8C39-5B69F8895C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D6EC664-4F2D-4EA8-8C39-5B69F8895C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1A1E56E-CEAD-4BB2-8DCC-8524527FA953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1A1E56E-CEAD-4BB2-8DCC-8524527FA953}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1A1E56E-CEAD-4BB2-8DCC-8524527FA953}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1A1E56E-CEAD-4BB2-8DCC-8524527FA953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1FB7CD7-5A15-40BF-8537-D3F3151F21F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1FB7CD7-5A15-40BF-8537-D3F3151F21F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1FB7CD7-5A15-40BF-8537-D3F3151F21F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1FB7CD7-5A15-40BF-8537-D3F3151F21F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{755DAD8B-8F81-4BA6-9123-C2E0467F1707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{755DAD8B-8F81-4BA6-9123-C2E0467F1707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{755DAD8B-8F81-4BA6-9123-C2E0467F1707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{755DAD8B-8F81-4BA6-9123-C2E0467F1707}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

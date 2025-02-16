@@ -1,13 +1,13 @@
-﻿
-using Contract;
+﻿using Contract;
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 
 namespace OrderService
 {
-    public class CreateOrderService : BackgroundService
+    internal class CreateOrderBackgroundService : BackgroundService
     {
         IBus bus;
-        public CreateOrderService(IBus bus)
+        public CreateOrderBackgroundService(IBus bus)
         {
             this.bus = bus;
         }
@@ -16,7 +16,7 @@ namespace OrderService
             while (!stoppingToken.IsCancellationRequested)
             {
                 // Publishing an OrderCreated event to start the process
-                Task.Delay(2000).Wait();    
+                Task.Delay(2000).Wait();
                 var order = new OrderCreated(Guid.NewGuid(), 100.0m);
                 await bus.Publish(order);
                 Console.WriteLine($"OrderCreated event published with orderId: {order.OrderId}");

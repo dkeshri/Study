@@ -1,24 +1,28 @@
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 using Orchestrator;
 using Orchestrator.States;
 
-var builder = WebApplication.CreateBuilder(args);
 
-// Configure MassTransit with Saga
-builder.Services.AddMassTransit(x =>
+
+var builder = Host.CreateDefaultBuilder(args);
+builder.ConfigureServices(services =>
 {
-    x.AddSagaStateMachine<OrderSaga, OrderState>().InMemoryRepository();
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
+        x.AddSagaStateMachine<OrderSaga, OrderState>().InMemoryRepository();
+        x.UsingRabbitMq((context, cfg) =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
         });
-
-        cfg.ConfigureEndpoints(context);
     });
-});
 
-var app = builder.Build();
-app.Run();
+});
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();

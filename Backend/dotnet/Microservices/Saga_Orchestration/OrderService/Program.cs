@@ -1,26 +1,29 @@
-// Program.cs - Saga Orchestration Setup
+﻿using Contract;
 using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using OrderService;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddHostedService<CreateOrderService>();
-// Configure MassTransit with Saga
-builder.Services.AddMassTransit(x =>
+var builder = Host.CreateDefaultBuilder(args);
+builder.ConfigureServices(services =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddHostedService<CreateOrderBackgroundService>();
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
 
-        cfg.ConfigureEndpoints(context);
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
     });
+
 });
 
-var app = builder.Build();
-app.Run();
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();
