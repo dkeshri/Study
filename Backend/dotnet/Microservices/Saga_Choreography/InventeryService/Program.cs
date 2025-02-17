@@ -1,27 +1,31 @@
 using Contract;
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 
-builder.Services.AddMassTransit(x =>
+builder.ConfigureServices(services =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<InventoryUpdatedConsumer>();
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-        //cfg.ReceiveEndpoint("inventory-service-queue", e => e.ConfigureConsumer<InventoryUpdatedConsumer>(context));
-        cfg.ConfigureEndpoints(context);
+        x.SetKebabCaseEndpointNameFormatter();
+        x.AddConsumer<InventoryUpdatedConsumer>();
 
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
     });
 });
 
-var app = builder.Build();
-app.Run();
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();
 
 public class InventoryUpdatedConsumer : IConsumer<InventoryUpdated>
 {

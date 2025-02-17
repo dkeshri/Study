@@ -1,17 +1,16 @@
 ﻿
 using Contract;
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 
 namespace OrderService
 {
     public class CreateOrder : BackgroundService
     {
         IBus bus;
-        ILogger<CreateOrder> logger;
-        public CreateOrder(IBus bus,ILogger<CreateOrder> logger)
+        public CreateOrder(IBus bus)
         {
             this.bus = bus;
-            this.logger = logger;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -19,7 +18,7 @@ namespace OrderService
             {
                 await Task.Delay(1000);
                 var order = new OrderCreated(Guid.NewGuid(), 100.0m);
-                logger.LogInformation($"Order {order.OrderId} created.");
+                Console.WriteLine($"Order {order.OrderId} created.");
                 try
                 {
                     await bus.Publish(order);

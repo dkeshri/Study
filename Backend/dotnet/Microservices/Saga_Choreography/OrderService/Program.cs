@@ -1,44 +1,40 @@
 using Contract;
 using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using OrderService;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 
-builder.Services.AddMassTransit(x =>
+builder.ConfigureServices(services =>
 {
-    x.AddConsumer<OrderCreatedConsumer>();
-    x.SetKebabCaseEndpointNameFormatter();
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddHostedService<CreateOrder>();
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
+        x.SetKebabCaseEndpointNameFormatter();
+        x.AddConsumer<OrderCreatedConsumer>();
+
+        x.UsingRabbitMq((context, cfg) =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
         });
-
-        // It will register the consumer with provide endpoint
-        //cfg.ReceiveEndpoint("order-service-queue", e => e.ConfigureConsumer<OrderCreatedConsumer>(context));
-
-        // It will Auto create Endpoints Baseed on IConsumer Type 
-        // Example: OrderCreated is the Type of consumer so it will create order-created Queue in RabbitMq.
-        // Name formate will be decided by SetKebabCaseEndpointNameFormatter(); at line 10.
-        cfg.ConfigureEndpoints(context);
     });
 });
-builder.Services.AddHostedService<CreateOrder>();
-var app = builder.Build();
-app.Run();
+
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();
 
 public class OrderCreatedConsumer : IConsumer<OrderCreated>
 {
-    ILogger<OrderCreatedConsumer> logger;
-    public OrderCreatedConsumer(ILogger<OrderCreatedConsumer> logger)
-    {
-        this.logger = logger;
-    }
     public async Task Consume(ConsumeContext<OrderCreated> context)
     {
-        logger.LogInformation($"Order {context.Message.OrderId} created.");
+        Console.WriteLine($"Order {context.Message.OrderId} created.");
         await context.Publish(new PaymentProcessed(context.Message.OrderId));
     }
 }
