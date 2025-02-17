@@ -21,6 +21,6 @@
 
     *Saga Pattern*
     
-    [Saga_Choreography](./Backend/dotnet/Microservices/Saga_Choreography/)
+    [Saga_Choreography](./Backend/dotnet/Microservices/SagaPattern/Saga_Choreography/)
 
-    [Saga_Orchestration](./Backend/dotnet/Microservices/Saga_Orchestration/)
+    [Saga_Orchestration](./Backend/dotnet/Microservices/SagaPattern/Saga_Orchestration/)
