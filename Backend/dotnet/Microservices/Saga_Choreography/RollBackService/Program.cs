@@ -1,27 +1,31 @@
 using Contract;
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 
-builder.Services.AddMassTransit(x =>
+builder.ConfigureServices(services =>
 {
-    x.AddConsumer<PaymentFailedConsumer>();
-    x.SetKebabCaseEndpointNameFormatter();
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-        //cfg.ReceiveEndpoint("rollback-queue", e => e.ConfigureConsumer<PaymentFailedConsumer>(context));
+        x.SetKebabCaseEndpointNameFormatter();
+        x.AddConsumer<PaymentFailedConsumer>();
 
-        cfg.ConfigureEndpoints(context);
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
     });
 });
 
-var app = builder.Build();
-app.Run();
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();
 
 public class PaymentFailedConsumer : IConsumer<PaymentFailed>
 {

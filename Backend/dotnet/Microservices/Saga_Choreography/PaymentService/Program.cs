@@ -1,25 +1,31 @@
 using Contract;
 using MassTransit;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 
-builder.Services.AddMassTransit(x =>
+builder.ConfigureServices(services =>
 {
-    x.AddConsumer<PaymentProcessedConsumer>();
-    x.SetKebabCaseEndpointNameFormatter();
-    x.UsingRabbitMq((context, cfg) =>
+    services.AddMassTransit(x =>
     {
-        cfg.Host("localhost", "/", h =>
+        x.SetKebabCaseEndpointNameFormatter();
+        x.AddConsumer<PaymentProcessedConsumer>();
+
+        x.UsingRabbitMq((context, cfg) =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            cfg.Host("localhost", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
         });
-        cfg.ConfigureEndpoints(context);
     });
 });
 
-var app = builder.Build();
-app.Run();
+var host = builder.UseConsoleLifetime().Build();
+host.RunAsync().Wait();
 
 public class PaymentProcessedConsumer : IConsumer<PaymentProcessed>
 {
