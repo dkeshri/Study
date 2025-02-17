@@ -10,7 +10,7 @@ builder.ConfigureServices(services =>
     services.AddHostedService<CreateOrderBackgroundService>();
     services.AddMassTransit(x =>
     {
-
+        x.SetKebabCaseEndpointNameFormatter();
         x.UsingRabbitMq((context, cfg) =>
         {
             cfg.Host("localhost", "/", h =>

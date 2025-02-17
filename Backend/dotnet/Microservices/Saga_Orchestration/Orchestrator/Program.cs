@@ -10,6 +10,7 @@ builder.ConfigureServices(services =>
 {
     services.AddMassTransit(x =>
     {
+        x.SetKebabCaseEndpointNameFormatter();
         x.AddSagaStateMachine<OrderSaga, OrderState>().InMemoryRepository();
         x.UsingRabbitMq((context, cfg) =>
         {
