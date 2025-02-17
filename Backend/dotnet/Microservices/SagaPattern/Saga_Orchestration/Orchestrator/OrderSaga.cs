@@ -8,13 +8,15 @@ namespace Orchestrator
     {
         public State ProcessingPayment { get; private set; }
         public State UpdatingInventory { get; private set; }
-        public State RolledBack { get; private set; }
+        public State CancelingOrder { get; private set; }
+        public State CanceledOrder { get; private set; }
         public State Completed { get; private set; }
 
         public Event<OrderCreated> OrderCreated { get; private set; }
         public Event<PaymentProcessed> PaymentProcessed { get; private set; }
         public Event<PaymentFailed> PaymentFailed { get; private set; }
         public Event<InventoryUpdated> InventoryUpdated { get; private set; }
+        public Event<OrderCanceled> OrderCanceled { get; private set; }
         public OrderSaga()
         {
             InstanceState(x => x.CurrentState);
@@ -23,6 +25,7 @@ namespace Orchestrator
             Event(() => PaymentProcessed, x => x.CorrelateById(ctx => ctx.Message.OrderId));
             Event(() => PaymentFailed, x => x.CorrelateById(ctx => ctx.Message.OrderId));
             Event(() => InventoryUpdated, x => x.CorrelateById(ctx => ctx.Message.OrderId));
+            Event(() => OrderCanceled, x => x.CorrelateById(ctx => ctx.Message.OrderId));
 
             Initially(
                 When(OrderCreated)
@@ -42,9 +45,9 @@ namespace Orchestrator
                     .TransitionTo(UpdatingInventory),
 
                 When(PaymentFailed)
-                    .Then(ctx => Console.WriteLine($"Payment failed for Order {ctx.Saga.OrderId}. Rolling back."))
-                    .Publish(ctx => new RollbackOrder(ctx.Saga.OrderId))
-                    .TransitionTo(RolledBack)
+                    .Then(ctx => Console.WriteLine($"Payment failed for Order {ctx.Saga.OrderId}. Cancling Order."))
+                    .Publish(ctx => new CancelOrder(ctx.Saga.OrderId))
+                    .TransitionTo(CancelingOrder)
             );
 
             During(UpdatingInventory,
@@ -53,7 +56,11 @@ namespace Orchestrator
                     .TransitionTo(Completed)
             );
 
-            SetCompletedWhenFinalized();
+            During(CancelingOrder,
+                When(OrderCanceled)
+                .Then(ctx => Console.WriteLine($"Order Canceled for Order {ctx.Saga.OrderId}"))
+                .TransitionTo(CanceledOrder)
+            );
         }
     }
 }
