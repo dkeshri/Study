@@ -15,7 +15,7 @@ A saga is a sequence of operations that ensures consistency across multiple micr
         * **Inventory Service** → Reserves stock → Emits `StockReserved` event.
         * If inventory reservation fails, a `StockFailed` event triggers a rollback (compensating transactions).
     
-    [Saga_Choreography_Project](./SagaPattern/Saga_Choreography/)
+    [Saga_Choreography_Project](./Saga_Choreography/)
 
 2. **Orchestration-Based Saga**
     * A central Saga Orchestrator manages the transaction flow.
@@ -27,4 +27,4 @@ A saga is a sequence of operations that ensures consistency across multiple micr
         * Orchestrator calls **Inventory Service** → Stock reserved.
         * If any step fails, the Orchestrator triggers compensating actions (e.g., refund payment, cancel order).
     
-    [Saga_Orchestration_Project](./SagaPattern/Saga_Orchestration/)
+    [Saga_Orchestration_Project](./Saga_Orchestration/)
