@@ -9,7 +9,6 @@ builder.ConfigureServices(services =>
     {
         x.SetKebabCaseEndpointNameFormatter();
         x.AddConsumer<PaymentConsumer>();
-        x.AddConsumer<PaymentFailedConsumer>();
 
         x.UsingRabbitMq((context, cfg) =>
         {
@@ -41,15 +40,6 @@ public class PaymentConsumer : IConsumer<ProcessPayment>
             Console.WriteLine($"Payment failed for Order {context.Message.OrderId}");
             await context.Publish(new PaymentFailed(context.Message.OrderId, "Insufficient funds"));
         }
-    }
-}
-
-public class PaymentFailedConsumer : IConsumer<RollbackOrder>
-{
-    public Task Consume(ConsumeContext<RollbackOrder> context)
-    {
-        Console.WriteLine($"Rolling back order {context.Message.OrderId}");
-        return Task.CompletedTask;
     }
 }
 
