@@ -1,4 +1,4 @@
-namespace OrderService
+namespace AuthService
 {
     public class WeatherForecast
     {
@@ -9,6 +9,5 @@ namespace OrderService
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
         public string? Summary { get; set; }
-        public string ServiceName { get; set; } = "OrderService";
     }
 }
