@@ -1,3 +1,6 @@
+using InventeryService.Data.Entities;
+using InventeryService.Data.Interfaces.Repositories;
+using InventeryService.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventeryService.Controllers
@@ -6,28 +9,32 @@ namespace InventeryService.Controllers
     [Route("[controller]")]
     public class InventeriesController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        IInventoryRepository inventoryRepository;
 
         private readonly ILogger<InventeriesController> _logger;
 
-        public InventeriesController(ILogger<InventeriesController> logger)
+        public InventeriesController(ILogger<InventeriesController> logger,IInventoryRepository inventoryRepository)
         {
             _logger = logger;
+            this.inventoryRepository = inventoryRepository;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet]
+        public ActionResult<Inventory> Get(Guid id)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            Inventory? inventory = inventoryRepository.GetInventory(id);
+            if (inventory == null)
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return NotFound();
+            }
+            return Ok(inventory);
+        }
+
+        [HttpPost]
+        public ActionResult<Inventory> CreateInventory(InventoryDto inventoryDto) 
+        {
+            Inventory createdInventory = inventoryRepository.CreateInventory(inventoryDto);
+            return Ok(createdInventory);
         }
     }
 }
