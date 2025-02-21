@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OrderService.Data.Entities;
+using OrderService.Data.Interfaces.Repositories;
+using OrderService.Dtos;
 
 namespace OrderService.Controllers
 {
@@ -6,25 +9,29 @@ namespace OrderService.Controllers
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+
+        IOrderRepository _orderRepository;
+        public OrdersController(IOrderRepository orderRepository)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-        public OrdersController()
-        {
-            
+            _orderRepository = orderRepository;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public ActionResult<Order> Get(Guid id)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            Order? order = _orderRepository.GetOrder(id);
+            if (order == null)
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return NotFound();
+            }
+            return Ok(order);
+        }
+
+        [HttpPost]
+        public ActionResult<Order> CreateOrder(OrderDto order)
+        {
+            Order createdOrder= _orderRepository.CreateOrder(order);
+            return Ok(createdOrder);
         }
     }
 }
