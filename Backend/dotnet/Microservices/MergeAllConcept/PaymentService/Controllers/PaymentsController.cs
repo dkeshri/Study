@@ -38,6 +38,7 @@ namespace PaymentService.Controllers
             Payment item = _paymentRepository.ProcessPayment(paymentDto);
 
             var success = new Random().Next(2) == 0;
+            success = true;
             if (success)
             {
                 bus.Publish(new PaymentProcessed(paymentDto.OrderId)).Wait();

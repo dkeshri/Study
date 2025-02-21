@@ -14,7 +14,7 @@ namespace OrderService.Consumers
         public Task Consume(ConsumeContext<UpdateOrderStatus> context)
         {
             Console.WriteLine($"Updating Order : {context.Message.OrderId} Status : {context.Message.Status}");
-            _orderRepository.UpdateOrderStaus(context.Message.OrderId, nameof(UpdateOrderStatus));
+            _orderRepository.UpdateOrderStaus(context.Message.OrderId, context.Message.Status);
             return Task.CompletedTask;
         }
     }
