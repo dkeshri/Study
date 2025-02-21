@@ -6,7 +6,7 @@ namespace OrderService.Data.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        public List<Order> Orders { get; private set; }
+        private List<Order> Orders { get; }
         public OrderRepository(InMemoryData inMemoryData)
         {
             Orders = inMemoryData.Orders;

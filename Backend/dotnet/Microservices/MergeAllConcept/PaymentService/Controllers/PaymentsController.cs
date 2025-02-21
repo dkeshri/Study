@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PaymentService.Data.Entities;
+using PaymentService.Data.Interfaces;
+using PaymentService.Dtos;
 
 namespace PaymentService.Controllers
 {
@@ -6,25 +9,28 @@ namespace PaymentService.Controllers
     [Route("[controller]")]
     public class PaymentsController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        IPaymentRepository _paymentRepository;
+        public PaymentsController(IPaymentRepository paymentRepository)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-        public PaymentsController()
-        {
-
+            _paymentRepository = paymentRepository;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public ActionResult<Payment> Get(Guid id)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            Payment? payment = _paymentRepository.GetPayment(id);
+            if (payment == null)
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return NotFound();
+            }
+            return Ok(payment);
+        }
+
+        [HttpPost]
+        public ActionResult<Payment> ProcessPayment(PaymentDto paymentDto)
+        {
+            Payment item = _paymentRepository.ProcessPayment(paymentDto);
+            return Ok(item);
         }
     }
 }
