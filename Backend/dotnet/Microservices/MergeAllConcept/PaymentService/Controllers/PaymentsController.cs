@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Contract;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using PaymentService.Data.Entities;
 using PaymentService.Data.Interfaces;
 using PaymentService.Dtos;
@@ -9,10 +11,14 @@ namespace PaymentService.Controllers
     [Route("[controller]")]
     public class PaymentsController : ControllerBase
     {
+        IBus bus;
         IPaymentRepository _paymentRepository;
-        public PaymentsController(IPaymentRepository paymentRepository)
+        private readonly ILogger<PaymentsController> _logger;
+        public PaymentsController(ILogger<PaymentsController> logger, IPaymentRepository paymentRepository, IBus bus)
         {
+            _logger = logger;
             _paymentRepository = paymentRepository;
+            this.bus = bus;
         }
 
         [HttpGet]
@@ -30,6 +36,19 @@ namespace PaymentService.Controllers
         public ActionResult<Payment> ProcessPayment(PaymentDto paymentDto)
         {
             Payment item = _paymentRepository.ProcessPayment(paymentDto);
+
+            var success = new Random().Next(2) == 0;
+            success = true;
+            if (success)
+            {
+                bus.Publish(new PaymentProcessed(paymentDto.OrderId)).Wait();
+                _logger.LogInformation($"PaymentProcessed event published with orderId: {paymentDto.OrderId}");
+            }
+            else
+            {
+                _logger.LogInformation($"Payment failed for Order {paymentDto.OrderId}");
+                bus.Publish(new PaymentFailed(paymentDto.OrderId, "Insufficient funds")).Wait();
+            }
             return Ok(item);
         }
     }

@@ -30,5 +30,16 @@ namespace OrderService.Data.Repositories
             Order? order = Orders.FirstOrDefault(o => o.Id == id);
             return order;
         }
+
+        public bool UpdateOrderStaus(Guid id, string status)
+        {
+            var order = GetOrder(id);
+            if (order == null)
+            {
+                return false;
+            }
+            order.Status = status;
+            return true;
+        }
     }
 }
