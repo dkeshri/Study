@@ -8,4 +8,5 @@
     public record InventoryUpdated(Guid OrderId);
     public record CancelOrder(Guid OrderId);
     public record OrderCanceled(Guid OrderId);
+    public record UpdateOrderStatus(Guid OrderId,string Status);
 }

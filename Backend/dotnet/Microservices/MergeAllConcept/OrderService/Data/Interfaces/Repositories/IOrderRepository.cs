@@ -7,5 +7,6 @@ namespace OrderService.Data.Interfaces.Repositories
     {
         public Order CreateOrder(OrderDto order);
         public Order? GetOrder(Guid id);
+        public bool UpdateOrderStaus(Guid id,string status);
     }
 }

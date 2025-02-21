@@ -13,5 +13,7 @@ namespace PaymentService.Dtos
         [Required]
         public decimal Amount { get; set; }
 
+        public Guid OrderId { get; set; }
+
     }
 }
