@@ -30,9 +30,12 @@
     * **Color Space**: 709
     * **Color Range**: Full (for better contrast in dark/light areas)
 
+3. **Encoder: H.264** for Youtube Video
+    I am keeoing bit rate 25000 and max Bitrate 40000kbps
 
+    ![H264](./Imgs/OBS/H264.png)
 
-3. Screen Shots if Settings
+4. Screen Shots if Settings
 
     **Video**
 
