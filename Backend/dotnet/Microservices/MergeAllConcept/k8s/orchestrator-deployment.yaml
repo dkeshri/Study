@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: orchestrator
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: orchestrator
@@ -15,3 +15,4 @@ spec:
       containers:
       - name: orchestrator
         image: dkeshri/microservice-orchestrator:latest
+        imagePullPolicy: Never

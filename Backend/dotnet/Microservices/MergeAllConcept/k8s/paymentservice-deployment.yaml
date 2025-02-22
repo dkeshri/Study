@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: paymentservice
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: paymentservice
@@ -15,6 +15,7 @@ spec:
       containers:
       - name: paymentservice
         image: dkeshri/microservice-payment-service:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
 ---

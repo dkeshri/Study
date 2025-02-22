@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: apigateway
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: apigateway
@@ -15,6 +15,7 @@ spec:
       containers:
       - name: apigateway
         image: dkeshri/microservice-apigateway:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
 ---

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: inventoryservice
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: inventoryservice
@@ -15,6 +15,7 @@ spec:
       containers:
       - name: inventoryservice
         image: dkeshri/microservice-inventory-service:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
 ---

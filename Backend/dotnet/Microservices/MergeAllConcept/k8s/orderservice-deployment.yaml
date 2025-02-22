@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: orderservice
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: orderservice
@@ -15,6 +15,7 @@ spec:
       containers:
       - name: orderservice
         image: dkeshri/microservice-order-service:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
 ---
