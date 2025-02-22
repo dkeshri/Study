@@ -34,6 +34,8 @@
 
 3. Screen Shots if Settings
 
+    **Video**
+
     *Video Formate*
     ![Output_Recoding1](./Imgs/OBS/Out_Rec1.png)
     *Encoder Property*
@@ -41,4 +43,18 @@
     *Video Colour*
     ![VideoColor](./Imgs/OBS/Videocolor.png)
 
-
+    **Audio**
+    *Audio Setting*
+    
+    ![AudioSetting](./Imgs/OBS/AudioFilter.png)
+    
+    *Audio Filter*
+    > You need to add all these filters initially these filters will not be there.
+    * Noise Suppresser
+        ![Noise_Suppresser](./Imgs/OBS/AudioNoise.png)
+    * Compresser
+        ![Compresser](./Imgs/OBS/AudioCompresser.png)
+    * Limiter
+        ![Limitter](./Imgs/OBS/AudioLimiter.png)
+    * Noise Gate
+        ![Noise_Gate](./Imgs/OBS/Audio_nioseGate.png)
