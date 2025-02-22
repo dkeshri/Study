@@ -38,11 +38,18 @@
 4. Screen Shots if Settings
 
     **Video**
+    * QuickSync HEVC(H.265)
 
-    *Video Formate*
-    ![Output_Recoding1](./Imgs/OBS/Out_Rec1.png)
-    *Encoder Property*
-    ![EncoderSetting](./Imgs/OBS/encoder.png)
+        *Video Formate*
+
+        ![Output_Recoding_H.265](./Imgs/OBS/Out_Rec_h265.png)
+        *Encoder Property*
+        ![EncoderSetting_H.265](./Imgs/OBS/encoder_h265.png)
+
+    * QuickSync H.264(H.265)
+        ![Output_Recoding_H.264](./Imgs/OBS/OutRec_H.264.png)
+        ![EncoderSetting_H.265](./Imgs/OBS/encoder_h264.png)
+        
     *Video Colour*
     ![VideoColor](./Imgs/OBS/Videocolor.png)
 
