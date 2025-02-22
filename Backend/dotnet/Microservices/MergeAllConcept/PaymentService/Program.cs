@@ -13,11 +13,9 @@ builder.Services.AddServices();
 builder.Services.AddMassTransit();
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();

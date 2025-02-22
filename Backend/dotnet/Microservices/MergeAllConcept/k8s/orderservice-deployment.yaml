@@ -1,32 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigateway
+  name: orderservice
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: apigateway
+      app: orderservice
   template:
     metadata:
       labels:
-        app: apigateway
+        app: orderservice
     spec:
       containers:
-      - name: apigateway
-        image: apigateway:latest
+      - name: orderservice
+        image: dkeshri/microservice-order-service:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: apigateway-service
+  name: orderservice-service
 spec:
   selector:
-    app: apigateway
+    app: orderservice
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer
+  type: ClusterIP
