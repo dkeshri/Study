@@ -2,6 +2,7 @@
 [![dkeshri](https://img.shields.io/badge/dkeshri-yellow?logo=github)](https://github.com/dkeshri/Study)
 
 # Table Of Content
+* [Video Editing Settings](./VideoEditing/README.md)
 * [Ef Core Migration](./Backend/README.md)
 * [System Design](./Backend/dotnet/dkeshri/SystemDesign/)
     
