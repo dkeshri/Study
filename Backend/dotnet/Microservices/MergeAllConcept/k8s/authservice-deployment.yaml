@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orderservice
+  name: authservice
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: orderservice
+      app: authservice
   template:
     metadata:
       labels:
-        app: orderservice
+        app: authservice
     spec:
       containers:
-      - name: orderservice
+      - name: authservice
         image: dkeshri/microservice-auth-service:latest
         imagePullPolicy: Never
         ports:
@@ -22,10 +22,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: orderservice-service
+  name: authservice-service
 spec:
   selector:
-    app: orderservice
+    app: authservice
   ports:
     - protocol: TCP
       port: 80
