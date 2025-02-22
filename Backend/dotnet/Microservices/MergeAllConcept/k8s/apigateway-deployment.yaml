@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: apigateway
-        image: apigateway:latest
+        image: dkeshri/microservice-apigateway:latest
         ports:
         - containerPort: 80
 ---

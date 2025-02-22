@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: inventoryservice
-        image: inventoryservice:latest
+        image: dkeshri/microservice-inventory-service:latest
         ports:
         - containerPort: 80
 ---

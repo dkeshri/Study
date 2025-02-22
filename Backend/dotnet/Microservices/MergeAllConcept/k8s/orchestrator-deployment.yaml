@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
       - name: orchestrator
-        image: orchestratorservice:latest
+        image: dkeshri/microservice-orchestrator:latest

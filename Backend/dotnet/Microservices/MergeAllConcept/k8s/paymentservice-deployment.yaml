@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: paymentservice
-        image: paymentservice:latest
+        image: dkeshri/microservice-payment-service:latest
         ports:
         - containerPort: 80
 ---
