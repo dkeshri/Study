@@ -30,16 +30,26 @@
     * **Color Space**: 709
     * **Color Range**: Full (for better contrast in dark/light areas)
 
+3. **Encoder: H.264** for Youtube Video
+    I am keeoing bit rate 25000 and max Bitrate 40000kbps
 
+    ![H264](./Imgs/OBS/H264.png)
 
-3. Screen Shots if Settings
+4. Screen Shots if Settings
 
     **Video**
+    * QuickSync HEVC(H.265)
 
-    *Video Formate*
-    ![Output_Recoding1](./Imgs/OBS/Out_Rec1.png)
-    *Encoder Property*
-    ![EncoderSetting](./Imgs/OBS/encoder.png)
+        *Video Formate*
+
+        ![Output_Recoding_H.265](./Imgs/OBS/Out_Rec_h265.png)
+        *Encoder Property*
+        ![EncoderSetting_H.265](./Imgs/OBS/encoder_h265.png)
+
+    * QuickSync H.264(H.265)
+        ![Output_Recoding_H.264](./Imgs/OBS/OutRec_H.264.png)
+        ![EncoderSetting_H.265](./Imgs/OBS/encoder_h264.png)
+        
     *Video Colour*
     ![VideoColor](./Imgs/OBS/Videocolor.png)
 
@@ -57,4 +67,4 @@
     * Limiter
         ![Limitter](./Imgs/OBS/AudioLimiter.png)
     * Noise Gate
-        ![Noise_Gate](./Imgs/OBS/Audio_nioseGate.png)
+        ![Noise_Gate](./Imgs/OBS/AudioNoiseGate.png)
