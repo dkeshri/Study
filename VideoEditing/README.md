@@ -57,4 +57,4 @@
     * Limiter
         ![Limitter](./Imgs/OBS/AudioLimiter.png)
     * Noise Gate
-        ![Noise_Gate](./Imgs/OBS/Audio_nioseGate.png)
+        ![Noise_Gate](./Imgs/OBS/AudioNoiseGate.png)
