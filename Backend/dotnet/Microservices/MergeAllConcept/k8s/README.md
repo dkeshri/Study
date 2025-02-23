@@ -225,3 +225,21 @@ Access RabbitMQ: [http://localhost:15672](http://localhost:15672)
     kubectl port-forward service/orderservice-service 7222:80 
     ```
     You can Access it on host machine on **Port**: `7222` of `locahost` as URL: [http://localhost:7222/swagger](http://localhost:7222/swagger)
+
+**Command	Description**
+
+| Parameter                    | Description     |
+|----------------------------- |-----------------|
+| `kubectl get nodes -o wide`  | Show all nodes (master & workers) |
+| `kubectl get pods -o wide` | 	Show where pods are running  |
+| `kubectl get services -o wide`    | 	Show service details   |
+| `kubectl get pod <pod-name> -o wide`|	Show node of a specific pod|
+| `kubectl describe node <node-name>`|	Show node details|
+| `kubectl cluster-info`|	Check if cluster is running|
+| `kubectl get nodes -o wide`|  Check node status (master & workers)|
+| `kubectl get pods -A -o wide`|   See all pods and where they are running |	
+| `kubectl get pods -n kube-system`|	Check core Kubernetes system components|
+| `kubectl get events --sort-by=.metadata.creationTimestamp`|	Show cluster events (errors, warnings)|
+| `kubectl get componentstatuses`|	Check Kubernetes component health|
+| `kubectl top nodes`|	Show resource usage per node|
+| `kubectl top pods -A`	|   Show resource usage per pod|
