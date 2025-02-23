@@ -1,19 +1,35 @@
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orchestrator;
 using Orchestrator.Data;
+using Orchestrator.Extensions;
 using Orchestrator.States;
 
 
 
 var builder = Host.CreateDefaultBuilder(args);
-builder.ConfigureServices(services =>
+builder.ConfigureAppConfiguration((context, config) =>
 {
+    var env = context.HostingEnvironment;
+    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true) // Read from appsettings.json
+          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+          .AddEnvironmentVariables(); // Read from environment variables
+});
+builder.ConfigureServices((hostContext, services) =>
+{
+    string dbConnectionString = hostContext.Configuration.GetDbConnectionString();
+    int dbTransationTimeOut = hostContext.Configuration.GetDbTransactionTimeOutInSec();
+    var rabbitMqConfiguration = hostContext.Configuration.GetRabbitMqConfiguration();
     services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer("Server=localhost,1433;Database=OrchestratorDb;User Id=sa;Password=MsSqlServer@2023;TrustServerCertificate=True;Encrypt=False;"));
+    {
+        options.UseSqlServer(dbConnectionString);
+    });
+        
+        
     services.AddMassTransit(x =>
     {
         x.SetKebabCaseEndpointNameFormatter();
@@ -25,16 +41,20 @@ builder.ConfigureServices(services =>
             r.LockStatementProvider = new SqlServerLockStatementProvider();
         });
 
-        x.UsingRabbitMq((context, cfg) =>
+        if(rabbitMqConfiguration != null)
         {
-            cfg.Host("rabbitmq-service", "/", h =>
+            x.UsingRabbitMq((context, cfg) =>
             {
-                h.Username("guest");
-                h.Password("guest");
-            });
+                cfg.Host(rabbitMqConfiguration.HostName, "/", h =>
+                {
+                    h.Username(rabbitMqConfiguration.UserName);
+                    h.Password(rabbitMqConfiguration.Password);
+                });
 
-            cfg.ConfigureEndpoints(context);
-        });
+                cfg.ConfigureEndpoints(context);
+            });
+        }
+        
     });
 
 });

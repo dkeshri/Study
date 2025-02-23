@@ -3,6 +3,7 @@ using InventeryService.Data;
 using InventeryService.Data.Interfaces.Repositories;
 using InventeryService.Data.Repositories;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 
 namespace InventeryService.Extensions
 {
@@ -14,22 +15,26 @@ namespace InventeryService.Extensions
             services.AddSingleton<IInventoryRepository, InventoryRepository>();
         }
 
-        public static void AddMassTransit(this IServiceCollection services)
+        public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddMassTransit(x =>
             {
                 x.SetKebabCaseEndpointNameFormatter();
                 x.AddConsumer<InventoryConsumer>();
-                x.UsingRabbitMq((context, cfg) =>
+                var rabbitMqConfiguration = configuration.GetRabbitMqConfiguration();
+                if (rabbitMqConfiguration != null)
                 {
-                    cfg.Host("rabbitmq-service", "/", h =>
+                    x.UsingRabbitMq((context, cfg) =>
                     {
-                        h.Username("guest");
-                        h.Password("guest");
-                    });
+                        cfg.Host(rabbitMqConfiguration.HostName, "/", h =>
+                        {
+                            h.Username(rabbitMqConfiguration.UserName);
+                            h.Password(rabbitMqConfiguration.Password);
+                        });
 
-                    cfg.ConfigureEndpoints(context);
-                });
+                        cfg.ConfigureEndpoints(context);
+                    });
+                }
             });
         }
     }
