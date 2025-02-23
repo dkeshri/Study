@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     env:
-      image_name: dkeshri/microservice-orchestrator
+      image_name: microservice-orchestrator
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -22,5 +22,5 @@ jobs:
       - name: Build And Push ApiGateway
         working-directory: ./Backend/dotnet/Microservices/MergeAllConcept
         run: |
-          docker build -f ./Orchestrator/Dockerfile --rm -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:${{env.version}} -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:latest .
+          docker build --rm -f ./Orchestrator/Dockerfile -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:${{env.version}} -t ${{secrets.DOCKER_USERNAME}}/${{env.image_name}}:latest .
           docker push ${{secrets.DOCKER_USERNAME}}/${{env.image_name}} --all-tags
