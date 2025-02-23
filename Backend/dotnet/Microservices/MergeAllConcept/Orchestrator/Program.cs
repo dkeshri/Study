@@ -28,8 +28,7 @@ builder.ConfigureServices((hostContext, services) =>
     {
         options.UseSqlServer(dbConnectionString);
     });
-        
-        
+
     services.AddMassTransit(x =>
     {
         x.SetKebabCaseEndpointNameFormatter();
@@ -59,4 +58,5 @@ builder.ConfigureServices((hostContext, services) =>
 
 });
 var host = builder.UseConsoleLifetime().Build();
+host.MigrateDatabase();
 host.RunAsync().Wait();
