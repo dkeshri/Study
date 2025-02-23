@@ -15,7 +15,6 @@ spec:
       containers:
       - name: inventoryservice
         image: dkeshri/microservice-inventory-service:latest
-        imagePullPolicy: Never
         ports:
         - containerPort: 8080
 ---

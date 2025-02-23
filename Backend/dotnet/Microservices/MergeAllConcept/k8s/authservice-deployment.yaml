@@ -15,7 +15,6 @@ spec:
       containers:
       - name: authservice
         image: dkeshri/microservice-auth-service:latest
-        imagePullPolicy: Never
         ports:
         - containerPort: 8080
 ---

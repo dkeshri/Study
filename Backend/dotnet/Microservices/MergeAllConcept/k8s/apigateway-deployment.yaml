@@ -15,7 +15,6 @@ spec:
       containers:
       - name: apigateway
         image: dkeshri/microservice-apigateway:latest
-        imagePullPolicy: Never
         ports:
         - containerPort: 8080
 ---

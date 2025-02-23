@@ -15,4 +15,3 @@ spec:
       containers:
       - name: orchestrator
         image: dkeshri/microservice-orchestrator:latest
-        imagePullPolicy: Never
