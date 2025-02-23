@@ -36,10 +36,8 @@ namespace PaymentService.Controllers
         public ActionResult<Payment> ProcessPayment(PaymentDto paymentDto)
         {
             Payment item = _paymentRepository.ProcessPayment(paymentDto);
-
-            var success = new Random().Next(2) == 0;
-            success = true;
-            if (success)
+            var isPaymentCancled = paymentDto.IsPaymentCanceled;
+            if (!isPaymentCancled)
             {
                 bus.Publish(new PaymentProcessed(paymentDto.OrderId)).Wait();
                 _logger.LogInformation($"PaymentProcessed event published with orderId: {paymentDto.OrderId}");
