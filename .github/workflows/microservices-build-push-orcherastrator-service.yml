@@ -1,4 +1,4 @@
-name: Microservices-Api
+name: Microservices-Orchestrator-Service
 env:
   version: ${{vars.MICROSERVICE_APIGATEWAY_MAJOR}}.${{vars.MICROSERVICE_APIGATEWAY_MINOR}}.${{github.run_number}}
 on:
