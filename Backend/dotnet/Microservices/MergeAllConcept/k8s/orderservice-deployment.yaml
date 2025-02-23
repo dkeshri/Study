@@ -15,7 +15,6 @@ spec:
       containers:
       - name: orderservice
         image: dkeshri/microservice-order-service:latest
-        imagePullPolicy: Never
         ports:
         - containerPort: 8080
 ---

@@ -15,7 +15,6 @@ spec:
       containers:
       - name: paymentservice
         image: dkeshri/microservice-payment-service:latest
-        imagePullPolicy: Never
         ports:
         - containerPort: 8080
 ---
