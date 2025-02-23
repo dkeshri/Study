@@ -15,5 +15,7 @@ namespace PaymentService.Dtos
 
         public Guid OrderId { get; set; }
 
+        public bool IsPaymentCanceled { get; set; }
+
     }
 }

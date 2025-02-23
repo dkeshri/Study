@@ -10,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddServices();
-builder.Services.AddMassTransit();
+builder.Services.AddMassTransit(builder.Configuration);
 var app = builder.Build();
 
 
