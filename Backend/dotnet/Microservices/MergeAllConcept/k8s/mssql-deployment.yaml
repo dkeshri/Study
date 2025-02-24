@@ -48,8 +48,10 @@ metadata:
 spec:
   selector:
     app: mssql
+  type: NodePort  # Exposes the DB outside the cluster
   ports:
     - protocol: TCP
       port: 1433 # Inside Kubernetes
       targetPort: 1433  # Inside the container
+      nodePort: 31433   # Exposed port on host (must be between 30000-32767)
       
