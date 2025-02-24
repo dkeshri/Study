@@ -1,4 +1,5 @@
-﻿using InventeryService.Consumers;
+﻿using Contract.Data.Context;
+using InventeryService.Consumers;
 using InventeryService.Data;
 using InventeryService.Data.Interfaces.Repositories;
 using InventeryService.Data.Repositories;
@@ -11,8 +12,8 @@ namespace InventeryService.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<InMemoryData>();
-            services.AddSingleton<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<IDataContext, InventoryDbContext>();
+            services.AddScoped<IInventoryRepository, InventoryRepository>();
         }
 
         public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)

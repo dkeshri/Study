@@ -12,11 +12,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddServices();
 builder.Services.AddMassTransit(builder.Configuration);
 var app = builder.Build();
+app.MigrateDatabase();
 
-
-    app.UseSwagger();
-    app.UseSwaggerUI();
-// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
