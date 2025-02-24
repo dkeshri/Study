@@ -202,6 +202,32 @@ Now, let’s configure Horizontal Pod Autoscaler (HPA) to dynamically scale your
     ```
     If it’s running, proceed.
 
+    if any issue even if not worked then do below steps
+
+    * Delete and Reinstall Metrics Server
+    Try deleting the existing Metrics Server and reinstalling:
+        ```bash
+        kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+        kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+        ```
+    * Allow Insecure TLS (If Needed)
+        If you're on Docker Desktop or Minikube, it might fail due to certificate issues. Fix it by patching the deployment:
+
+        ```bash
+        kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+        ```
+        *Then restart:*
+        ```bash
+        kubectl delete pod -n kube-system -l k8s-app=metrics-server 
+        ```
+
+        Running the above command will force Kubernetes to delete the Metrics Server pod, and the Deployment will automatically create a new one:
+
+        *Check if restared*
+        ```bash
+        kubectl get pods -n kube-system
+        ```
+        Yes it Worked!
 2. **Add Resource Limits in Deployments**
 
     HPA requires resource requests and limits to be set in deployments.
@@ -310,16 +336,17 @@ Now, let's configure Prometheus to collect metrics and Grafana to visualize them
 
 | Parameter                    | Description     |
 |----------------------------- |-----------------|
-| `kubectl get nodes -o wide`  | Show all nodes (master & workers) |
 | `kubectl get pods -o wide` | 	Show where pods are running  |
-| `kubectl get services -o wide`    | 	Show service details   |
 | `kubectl get pod <pod-name> -o wide`|	Show node of a specific pod|
-| `kubectl describe node <node-name>`|	Show node details|
-| `kubectl cluster-info`|	Check if cluster is running|
-| `kubectl get nodes -o wide`|  Check node status (master & workers)|
 | `kubectl get pods -A -o wide`|   See all pods and where they are running |	
 | `kubectl get pods -n kube-system`|	Check core Kubernetes system components|
+| `kubectl top pods -A`	|   Show resource usage per pod|
+| `kubectl get nodes -o wide`  | Show all nodes (master & workers) |
+| `kubectl describe node <node-name>`|	Show node details|
+| `kubectl get services -o wide`    | 	Show service details   |
+| `kubectl cluster-info`|	Check if cluster is running|
+| `kubectl get nodes -o wide`|  Check node status (master & workers)|
 | `kubectl get events --sort-by=.metadata.creationTimestamp`|	Show cluster events (errors, warnings)|
 | `kubectl get componentstatuses`|	Check Kubernetes component health|
 | `kubectl top nodes`|	Show resource usage per node|
-| `kubectl top pods -A`	|   Show resource usage per pod|
+| `kubectl get hpa`|    Check the horizontal-pod-autoscale status|
