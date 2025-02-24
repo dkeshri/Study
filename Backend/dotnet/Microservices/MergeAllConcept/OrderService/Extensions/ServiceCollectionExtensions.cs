@@ -11,8 +11,8 @@ namespace OrderService.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<IDataContext,OrderDbContext>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddScoped<IDataContext,OrderDbContext>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             
         }
 

@@ -12,8 +12,8 @@ namespace InventeryService.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<IDataContext, InventoryDbContext>();
-            services.AddSingleton<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<IDataContext, InventoryDbContext>();
+            services.AddScoped<IInventoryRepository, InventoryRepository>();
         }
 
         public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)

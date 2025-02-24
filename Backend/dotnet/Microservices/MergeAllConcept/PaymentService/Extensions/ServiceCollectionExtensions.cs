@@ -11,8 +11,8 @@ namespace PaymentService.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<IDataContext,PaymentDbContext>();
-            services.AddSingleton<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IDataContext,PaymentDbContext>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
         }
         public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)
         {
