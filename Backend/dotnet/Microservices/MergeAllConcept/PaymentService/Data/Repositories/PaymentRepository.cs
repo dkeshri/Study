@@ -1,4 +1,6 @@
-﻿using PaymentService.Data.Entities;
+﻿using Contract.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using PaymentService.Data.Entities;
 using PaymentService.Data.Interfaces;
 using PaymentService.Dtos;
 
@@ -6,12 +8,13 @@ namespace PaymentService.Data.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
-        private List<Payment> Payments { get;  }
-        public PaymentRepository(InMemoryData inMemoryData)
+        protected IDataContext DataContext { get; }
+        public DbSet<Payment> Payments => DataContext.DbContext.Set<Payment>();
+        public PaymentRepository(IDataContext dataContext)
         {
-            Payments = inMemoryData.Payments;
+            DataContext = dataContext;
         }
-
+        
         public Payment ProcessPayment(PaymentDto paymentDto)
         {
             Payment payment = new Payment()
@@ -21,16 +24,18 @@ namespace PaymentService.Data.Repositories
                 CardNumber = paymentDto.CardNumber,
                 Name = paymentDto.Name,
                 CVV = paymentDto.CVV,
-                Status = "PaymentRequestGenerated",
+                OrderId = paymentDto.OrderId,
+                Status = paymentDto.IsPaymentCanceled ? "PaymentCanceled":"PaymentSucceeded",
             };
 
             Payments.Add(payment);
+            DataContext.DbContext.SaveChanges();
             return payment;
         }
 
         public Payment? GetPayment(Guid id)
         {
-            Payment? payment = Payments.FirstOrDefault(o => o.Id == id);
+            Payment? payment = Payments.AsNoTracking().FirstOrDefault(o => o.Id == id);
             return payment;
         }
     }

@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Contract.Data.Context;
+using MassTransit;
 using OrderService.Consumers;
 using OrderService.Data;
 using OrderService.Data.Interfaces.Repositories;
@@ -10,7 +11,7 @@ namespace OrderService.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<InMemoryData>();
+            services.AddSingleton<IDataContext,OrderDbContext>();
             services.AddSingleton<IOrderRepository, OrderRepository>();
             
         }

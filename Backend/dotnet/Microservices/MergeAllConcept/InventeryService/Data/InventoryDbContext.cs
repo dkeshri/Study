@@ -34,6 +34,6 @@ namespace InventeryService.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public virtual DbSet<Inventory> Payments { get; set; }
+        public virtual DbSet<Inventory> Inventories { get; set; }
     }
 }

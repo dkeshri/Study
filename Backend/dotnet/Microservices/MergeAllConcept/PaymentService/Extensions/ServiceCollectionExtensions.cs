@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Contract.Data.Context;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using PaymentService.Data;
 using PaymentService.Data.Interfaces;
@@ -10,7 +11,7 @@ namespace PaymentService.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<InMemoryData>();
+            services.AddSingleton<IDataContext,PaymentDbContext>();
             services.AddSingleton<IPaymentRepository, PaymentRepository>();
         }
         public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)
