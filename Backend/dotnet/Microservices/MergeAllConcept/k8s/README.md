@@ -310,9 +310,9 @@ Now, let's configure Prometheus to collect metrics and Grafana to visualize them
         🔄 Step 2: Ensure Helm Applies the Change
         After deleting the DaemonSet, force Helm to reapply your configuration:
 
-        TO disable this `monitoring-prometheus-node-exporter` Please create a file called: [promethus-node-exporter.yaml](./monitoring/promethus-node-exporter.yaml) and run below command from the directory of created file
+        TO disable this `monitoring-prometheus-node-exporter` Please create a file called: [prometheus-node-exporter.yaml](./monitoring/prometheus-node-exporter.yaml) and run below command from the directory of created file
         ```bash
-        helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values promethus-node-exporter.yaml --force
+        helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values prometheus-node-exporter.yaml --force
         ```
         The `--force` flag forces Helm to reapply changes, ensuring node-exporter stays disabled.
 
@@ -320,6 +320,13 @@ Now, let's configure Prometheus to collect metrics and Grafana to visualize them
         Check if the DaemonSet is removed:
         ```bash
         kubectl get ds -n monitoring
+        ```
+
+        If Still not gone Please uninstall monitoring and then re install
+
+        ```bash
+        helm uninstall monitoring -n monitoring
+        helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values prometheus-node-exporter.yaml
         ```
 
 2. **Expose Prometheus & Grafana Locally**
