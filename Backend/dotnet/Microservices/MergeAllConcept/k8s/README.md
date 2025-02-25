@@ -14,6 +14,8 @@ Kubernetes is an open-source container orchestration platform that automates the
 
 Overall, Kubernetes is essential for modern cloud-native applications, enabling developers and organizations to deploy and manage applications at scale with high resilience and automation.
 
+## Setup Kubernetes locally 
+
 1. **Enable Kubernetes in Docker Desktop**
     1. Open Docker Desktop.
     2. Go to Settings > Kubernetes.
