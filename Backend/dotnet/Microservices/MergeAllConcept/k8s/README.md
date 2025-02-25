@@ -300,36 +300,30 @@ Now, let's configure Prometheus to collect metrics and Grafana to visualize them
         ![MonitoringPods](./imgs/monitoringPods.png)
     6. Got Error for `monitoring-prometheus-node-exporter`
         This Error is for Windows Machine It is not able access cpu and other details of host machine
-        
-        🔄 Step 1: Manually Delete the DaemonSet
 
-        Even after disabling node-exporter in values.yaml, Helm might not remove it automatically. To delete it manually, run:
+        🔄 Step 1: Upgrage Setting 
+
+        Please create a file called: [prometheus-node-exporter.yaml](./monitoring/prometheus-node-exporter.yaml) and run below command from the directory of created file
         ```bash
-        kubectl delete ds monitoring-prometheus-node-exporter -n monitoring
-        ```
-        This will remove the `DaemonSet` from the `monitoring` namespace.
-
-        🔄 Step 2: Ensure Helm Applies the Change
-        After deleting the DaemonSet, force Helm to reapply your configuration:
-
-        TO disable this `monitoring-prometheus-node-exporter` Please create a file called: [prometheus-node-exporter.yaml](./monitoring/prometheus-node-exporter.yaml) and run below command from the directory of created file
-        ```bash
-        helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values prometheus-node-exporter.yaml --force
+        helm upgrade monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values .\prometheus-node-exporter.yaml --force
         ```
         The `--force` flag forces Helm to reapply changes, ensuring node-exporter stays disabled.
 
-        🔍 Step 3: Verify If It's Gone
-        Check if the DaemonSet is removed:
+        🔍 Step 2: Verify If It's Running
         ```bash
-        kubectl get ds -n monitoring
+        kubectl get pods -n monitoring
         ```
 
-        If Still not gone Please uninstall monitoring and then re install
-
+        **How To Uninstall in Helm**
         ```bash
         helm uninstall monitoring -n monitoring
+        ```
+        **How to install with some modified setting**
+        ```bash
         helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values prometheus-node-exporter.yaml
         ```
+
+        
 
 2. **Expose Prometheus & Grafana Locally**
 
@@ -547,3 +541,4 @@ kubectl config set-context --current --namespace=mynamespace
 | `kubectl top nodes`|	Show resource usage per node|
 | `kubectl get hpa`|    Check the horizontal-pod-autoscale status|
 | `kubectl edit daemonset monitoring-prometheus-node-exporter -n monitoring`|   Edit the damonset for monitoring-prometheus-node-exporter |
+| `kubectl get ds -n monitoring`|   Lists `DaemonSets` in the monitoring namespace.|
