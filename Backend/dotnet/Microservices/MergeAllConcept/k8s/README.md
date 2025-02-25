@@ -14,6 +14,8 @@ Kubernetes is an open-source container orchestration platform that automates the
 
 Overall, Kubernetes is essential for modern cloud-native applications, enabling developers and organizations to deploy and manage applications at scale with high resilience and automation.
 
+## Setup Kubernetes locally 
+
 1. **Enable Kubernetes in Docker Desktop**
     1. Open Docker Desktop.
     2. Go to Settings > Kubernetes.
@@ -291,12 +293,88 @@ Now, let's configure Prometheus to collect metrics and Grafana to visualize them
         ```bash
         helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
         ```
-    Check the installation:
-    ```bash
-    kubectl get pods -n monitoring
-    ```
+    4. Check the installation:
+        ```bash
+        kubectl get pods -n monitoring
+        ```
+        ![MonitoringPods](./imgs/monitoringPods.png)
+    6. Got Error for `monitoring-prometheus-node-exporter`
+        This Error is for Windows Machine It is not able access cpu and other details of host machine
+
+        🔄 Step 1: Upgrage Setting 
+
+        Please create a file called: [prometheus-node-exporter.yaml](./monitoring/prometheus-node-exporter.yaml) and run below command from the directory of created file
+        ```bash
+        helm upgrade monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values .\prometheus-node-exporter.yaml --force
+        ```
+        The `--force` flag forces Helm to reapply changes, ensuring node-exporter stays disabled.
+
+        🔍 Step 2: Verify If It's Running
+        ```bash
+        kubectl get pods -n monitoring
+        ```
+
+        **How To Uninstall in Helm**
+        ```bash
+        helm uninstall monitoring -n monitoring
+        ```
+        **How to install with some modified setting**
+        ```bash
+        helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values prometheus-node-exporter.yaml
+        ```
+
+        
+
+2. **Expose Prometheus & Grafana Locally**
+
+**Prometheus**
+
+Port-forward Prometheus to access the dashboard:
+```bash
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090:9090
+```
+Now, open http://localhost:9090 in your browser.
+
+**Grafana**
+
+Port-forward Grafana:
+```bash
+kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+```
+Now, open http://localhost:3000.
+
+Username: `admin`
+Password: `prom-operator`
+
+3. **Configure Grafana to Use Prometheus**
+
+1. Open `http://localhost:3000`.
+2. Go to `Configuration → Data Sources`.
+3. Click *Add Data Source*.
+4. Select *Prometheus*.
+5. Set the URL to: `http://monitoring-kube-prometheus-prometheus.monitoring:9090`.
+6. Click **Save & Test.**
+
+4. **Import Prebuilt Dashboards**
+
+1. Go to Grafana → Dashboards.
+2. Click Import.
+3. Enter ID: 315 (for Kubernetes cluster monitoring).
+4. Click Load → Select Prometheus Data Source → Click Import.
+
+Now, you’ll see real-time monitoring of CPU, memory, and pod status.
 
 ## What is a Namespace in Kubernetes?
+
+A `namespace` in Kubernetes is a virtual cluster within a physical cluster. It allows you to separate resources logically, making it easier to manage multiple teams, projects, or environments within a single Kubernetes cluster.
+
+Namespaces help in:
+
+* Isolating resources between different teams or applications.
+* Avoiding name conflicts (e.g., two different teams can create a orderservice pod in different namespaces).
+* Applying resource limits (like CPU, memory) at the namespace level.
+
+**What is the Default Namespace?**
 
 If you do not specify a namespace in your deployment.yaml, Kubernetes automatically assigns the resource to the default namespace.
 
@@ -462,3 +540,5 @@ kubectl config set-context --current --namespace=mynamespace
 | `kubectl get componentstatuses`|	Check Kubernetes component health|
 | `kubectl top nodes`|	Show resource usage per node|
 | `kubectl get hpa`|    Check the horizontal-pod-autoscale status|
+| `kubectl edit daemonset monitoring-prometheus-node-exporter -n monitoring`|   Edit the damonset for monitoring-prometheus-node-exporter |
+| `kubectl get ds -n monitoring`|   Lists `DaemonSets` in the monitoring namespace.|

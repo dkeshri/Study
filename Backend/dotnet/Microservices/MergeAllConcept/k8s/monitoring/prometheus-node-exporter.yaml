@@ -1,0 +1,8 @@
+prometheus-node-exporter:
+  enabled: true
+  hostRootFsMount:
+    enabled: false  # Disable direct host root filesystem mount
+  extraArgs:
+    - "--path.rootfs=/host"
+  securityContext:
+    privileged: false  # Avoid privileged mode issue
