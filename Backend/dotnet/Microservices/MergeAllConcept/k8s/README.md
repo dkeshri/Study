@@ -291,12 +291,87 @@ Now, let's configure Prometheus to collect metrics and Grafana to visualize them
         ```bash
         helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
         ```
-    Check the installation:
-    ```bash
-    kubectl get pods -n monitoring
-    ```
+    4. Check the installation:
+        ```bash
+        kubectl get pods -n monitoring
+        ```
+        ![MonitoringPods](./imgs/monitoringPods.png)
+    6. Got Error for `monitoring-prometheus-node-exporter`
+        This Error is for Windows Machine It is not able access cpu and other details of host machine
+        
+        🔄 Step 1: Manually Delete the DaemonSet
+
+        Even after disabling node-exporter in values.yaml, Helm might not remove it automatically. To delete it manually, run:
+        ```bash
+        kubectl delete ds monitoring-prometheus-node-exporter -n monitoring
+        ```
+        This will remove the `DaemonSet` from the `monitoring` namespace.
+
+        🔄 Step 2: Ensure Helm Applies the Change
+        After deleting the DaemonSet, force Helm to reapply your configuration:
+
+        TO disable this `monitoring-prometheus-node-exporter` Please create a file called: [promethus-node-exporter.yaml](./monitoring/promethus-node-exporter.yaml) and run below command from the directory of created file
+        ```bash
+        helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --values promethus-node-exporter.yaml --force
+        ```
+        The `--force` flag forces Helm to reapply changes, ensuring node-exporter stays disabled.
+
+        🔍 Step 3: Verify If It's Gone
+        Check if the DaemonSet is removed:
+        ```bash
+        kubectl get ds -n monitoring
+        ```
+
+2. **Expose Prometheus & Grafana Locally**
+
+**Prometheus**
+
+Port-forward Prometheus to access the dashboard:
+```bash
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090:9090
+```
+Now, open http://localhost:9090 in your browser.
+
+**Grafana**
+
+Port-forward Grafana:
+```bash
+kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+```
+Now, open http://localhost:3000.
+
+Username: `admin`
+Password: `prom-operator`
+
+3. **Configure Grafana to Use Prometheus**
+
+1. Open `http://localhost:3000`.
+2. Go to `Configuration → Data Sources`.
+3. Click *Add Data Source*.
+4. Select *Prometheus*.
+5. Set the URL to: `http://monitoring-kube-prometheus-prometheus.monitoring:9090`.
+6. Click **Save & Test.**
+
+4. **Import Prebuilt Dashboards**
+
+1. Go to Grafana → Dashboards.
+2. Click Import.
+3. Enter ID: 315 (for Kubernetes cluster monitoring).
+4. Click Load → Select Prometheus Data Source → Click Import.
+
+Now, you’ll see real-time monitoring of CPU, memory, and pod status.
 
 ## What is a Namespace in Kubernetes?
+
+A `namespace` in Kubernetes is a virtual cluster within a physical cluster. It allows you to separate resources logically, making it easier to manage multiple teams, projects, or environments within a single Kubernetes cluster.
+
+Namespaces help in:
+
+* Isolating resources between different teams or applications.
+* Avoiding name conflicts (e.g., two different teams can create a orderservice pod in different namespaces).
+* Applying resource limits (like CPU, memory) at the namespace level.
+
+**What is the Default Namespace?**
 
 If you do not specify a namespace in your deployment.yaml, Kubernetes automatically assigns the resource to the default namespace.
 
