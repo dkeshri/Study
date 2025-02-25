@@ -34,8 +34,12 @@
 
         * [Ocelot](./Backend/dotnet/Microservices/ApiGateway/Ocelot/)
 
-    * *Kubernetes*
+    * *Kubernetes (k8s)*
 
-        * [Kubernetes(k8s)](./Backend/dotnet/Microservices/MergeAllConcept/k8s/)
+        * [Setup locally](./Backend/dotnet/Microservices/MergeAllConcept/k8s/)
+        * [Horizontal Pod Autoscaler (HPA)](./Backend/dotnet/Microservices/MergeAllConcept/k8s/hpa/README.md)
+        * [Logging & Monitoring in Kubernetes with Prometheus and Grafana](./Backend/dotnet/Microservices/MergeAllConcept/k8s/monitoring/README.md)
+        * [Namespace in Kubernetes](./Backend/dotnet/Microservices/MergeAllConcept/k8s/namespace/README.md)
+        * [Commands in Kubernetes](./Backend/dotnet/Microservices/MergeAllConcept/k8s/commands/README.md)
 
 
