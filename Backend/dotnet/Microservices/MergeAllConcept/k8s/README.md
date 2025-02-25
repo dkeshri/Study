@@ -537,3 +537,4 @@ kubectl config set-context --current --namespace=mynamespace
 | `kubectl get componentstatuses`|	Check Kubernetes component health|
 | `kubectl top nodes`|	Show resource usage per node|
 | `kubectl get hpa`|    Check the horizontal-pod-autoscale status|
+| `kubectl edit daemonset monitoring-prometheus-node-exporter -n monitoring`|   Edit the damonset for monitoring-prometheus-node-exporter |
