@@ -19,3 +19,20 @@ spec:
         cpu: "250m"
     ports:
       - containerPort: 8080
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-api-service
+  namespace: dkeshri
+spec:
+  selector:
+    app.dkeshri.io/instance: order-api-instance
+  type: NodePort # Exposes the api to outside the cluster
+  ports:
+  - port: 80    # Inside Kubernetes
+    targetPort: 8080 # Inside the container
+    nodePort: 30000     # Exposed port on host (must be between 30000-32767)
+
