@@ -3,8 +3,8 @@ using InventeryService.Consumers;
 using InventeryService.Data;
 using InventeryService.Data.Interfaces.Repositories;
 using InventeryService.Data.Repositories;
+using InventeryService.Middleware;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
 
 namespace InventeryService.Extensions
 {
@@ -14,6 +14,7 @@ namespace InventeryService.Extensions
         {
             services.AddScoped<IDataContext, InventoryDbContext>();
             services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<PrometheusMetricsMiddleware>();
         }
 
         public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)

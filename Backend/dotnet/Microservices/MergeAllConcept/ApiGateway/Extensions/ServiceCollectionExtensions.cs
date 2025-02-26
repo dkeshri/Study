@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using ApiGateway.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -21,6 +22,7 @@ namespace ApiGateway.Extensions
                         };
                     }
                 );
+            services.AddScoped<PrometheusMetricsMiddleware>();
         }
     }
 }

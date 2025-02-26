@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using PaymentService.Data;
 using PaymentService.Data.Interfaces;
 using PaymentService.Data.Repositories;
+using PaymentService.Middleware;
 
 namespace PaymentService.Extensions
 {
@@ -13,6 +14,7 @@ namespace PaymentService.Extensions
         {
             services.AddScoped<IDataContext,PaymentDbContext>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<PrometheusMetricsMiddleware>();
         }
         public static void AddMassTransit(this IServiceCollection services,IConfiguration configuration)
         {
