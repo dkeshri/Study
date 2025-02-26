@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: order-api-pod
+  namespace: dkeshri
+  labels:
+    app.dkeshri.io/name: order-api           # We can define multiple labels, it depends on you 
+    app.dkeshri.io/instance: order-api-instance # which label you want to use.
+spec:
+  containers:
+  - name: order-api-container
+    image: dkeshri/microservice-order-service:latest
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "250m"   # 0.25 vCPU
+      limits:
+        memory: "128Mi"
+        cpu: "250m"
+    ports:
+      - containerPort: 8080
