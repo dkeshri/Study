@@ -4,6 +4,7 @@ using OrderService.Consumers;
 using OrderService.Data;
 using OrderService.Data.Interfaces.Repositories;
 using OrderService.Data.Repositories;
+using OrderService.Middleware;
 
 namespace OrderService.Extensions
 {
@@ -13,7 +14,8 @@ namespace OrderService.Extensions
         {
             services.AddScoped<IDataContext,OrderDbContext>();
             services.AddScoped<IOrderRepository, OrderRepository>();
-            
+            services.AddScoped<PrometheusMetricsMiddleware>();
+
         }
 
         public static void AddMassTransit(this IServiceCollection services, IConfiguration configuration) 

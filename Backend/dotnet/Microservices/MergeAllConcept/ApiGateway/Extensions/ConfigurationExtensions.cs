@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace ApiGateway.Extensions
+﻿namespace ApiGateway.Extensions
 {
     public static class ConfigurationExtensions
     {

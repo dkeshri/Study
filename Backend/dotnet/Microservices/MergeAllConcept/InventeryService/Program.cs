@@ -1,4 +1,6 @@
 using InventeryService.Extensions;
+using InventeryService.Middleware;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,13 +14,13 @@ builder.Services.AddServices();
 builder.Services.AddMassTransit(builder.Configuration);
 var app = builder.Build();
 app.MigrateDatabase();
+app.UseMiddleware<PrometheusMetricsMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
+app.UseHttpMetrics();
 app.MapControllers();
-
+app.MapMetrics();
+app.MapControllers();
 app.Run();
