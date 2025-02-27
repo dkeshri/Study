@@ -47,14 +47,14 @@ Overall, Kubernetes is essential for modern cloud-native applications, enabling 
     > Create a k8s folder and define YAML files.
     Deployment for OrderService
 
-    * [apigateway-deployment.yaml](./apigateway-deployment.yaml)
-    * [authservice-deployment.yaml](./authservice-deployment.yaml)
-    * [orchestrator-deployment.yaml](./orchestrator-deployment.yaml)
-    * [orderservice-deployment.yaml](./orderservice-deployment.yaml)
-    * [paymentservice-deployment.yaml](./paymentservice-deployment.yaml)
-    * [inventoryservice-deployment.yaml](./inventoryservice-deployment.yaml)
-    * [mssql-deployment.yaml](./mssql-deployment.yaml)
-    * [rabbitmq-deployment.yaml](./rabbitmq-deployment.yaml)
+    * [apigateway-deployment.yaml](./deployments/apigateway-deployment.yaml)
+    * [authservice-deployment.yaml](./deployments/auth-api-deployment.yaml)
+    * [orchestrator-deployment.yaml](./deployments/orchestrator-deployment.yaml)
+    * [orderservice-deployment.yaml](./deployments/order-api-deployment.yaml)
+    * [paymentservice-deployment.yaml](./deployments/payment-api-deployment.yaml)
+    * [inventoryservice-deployment.yaml](./deployments/inventory-api-deployment.yaml)
+    * [mssql-deployment.yaml](./deployments/inventory-api-deployment.yaml)
+    * [rabbitmq-deployment.yaml](./deployments/rabbitmq-deployment.yaml)
 
 4. **Deploy Services to Kubernetes**
     
