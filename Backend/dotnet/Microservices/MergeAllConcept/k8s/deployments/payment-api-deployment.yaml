@@ -15,7 +15,7 @@ spec:
       namespace: dkeshri
     spec:
       containers:
-      - name: auth-api
+      - name: payment-api
         image: dkeshri/microservice-payment-service:latest
         ports:
         - containerPort: 8080
