@@ -1,22 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: order-api
+  namespace: dkeshri
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: myapp
+      dkeshri.io/api: order-api
   template:
     metadata:
       labels:
-        app: myapp
+        dkeshri.io/api: order-api
+      namespace: dkeshri
     spec:
       containers:
-      - name: myapp
-        image: <Image>
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+      - name: order-api
+        image: dkeshri/microservice-order-service:latest
         ports:
-        - containerPort: <Port>
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice-service
+  namespace: dkeshri
+spec:
+  selector:
+    dkeshri.io/api: order-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

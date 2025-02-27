@@ -47,14 +47,14 @@ Overall, Kubernetes is essential for modern cloud-native applications, enabling 
     > Create a k8s folder and define YAML files.
     Deployment for OrderService
 
-    * [apigateway-deployment.yaml](./apigateway-deployment.yaml)
-    * [authservice-deployment.yaml](./authservice-deployment.yaml)
-    * [orchestrator-deployment.yaml](./orchestrator-deployment.yaml)
-    * [orderservice-deployment.yaml](./orderservice-deployment.yaml)
-    * [paymentservice-deployment.yaml](./paymentservice-deployment.yaml)
-    * [inventoryservice-deployment.yaml](./inventoryservice-deployment.yaml)
-    * [mssql-deployment.yaml](./mssql-deployment.yaml)
-    * [rabbitmq-deployment.yaml](./rabbitmq-deployment.yaml)
+    * [apigateway-deployment.yaml](./deployments/apigateway-deployment.yaml)
+    * [auth-api-deployment.yaml](./deployments/auth-api-deployment.yaml)
+    * [orchestrator-deployment.yaml](./deployments/orchestrator-deployment.yaml)
+    * [order-api-deployment.yaml](./deployments/order-api-deployment.yaml)
+    * [payment-api-deployment.yaml](./deployments/payment-api-deployment.yaml)
+    * [inventory-api-deployment.yaml](./deployments/inventory-api-deployment.yaml)
+    * [mssql-db-statefulset.yaml](./deployments/mssql-db-statefulset.yaml)
+    * [rabbitmq-deployment.yaml](./deployments/rabbitmq-deployment.yaml)
 
 4. **Deploy Services to Kubernetes**
     
@@ -104,7 +104,7 @@ kubectl get pods -n ingress-nginx
 
 ### Create an Ingress Resource
 *Create an Ingress Resource*
-Save as [apigateway-ingress.yaml](./apigateway-ingress.yaml)
+Save as [apigateway-ingress.yaml](./deployments/apigateway-ingress.yaml)
 
 
 *Modify Your Hosts File (Windows)*
@@ -126,7 +126,7 @@ Now, you can access API Gateway at [http://apigateway.local.](http://apigateway.
 
 *Deploy RabbitMQ*
 
-[rabbitmq-deployment.yaml](./rabbitmq-deployment.yaml)
+[rabbitmq-deployment.yaml](./deployments/rabbitmq-deployment.yaml)
 
 Apply it
 
@@ -148,7 +148,7 @@ Password: **guest**
 
 Smilarly You can Also Access You OrderService and Other Deployed Services
 
-Example My OrderService is Exposed in Kuberneties on Port `80` as you mapped you OrderService ContainerPort `8080` in  [orderservice-deployment.yaml](./orderservice-deployment.yaml)
+Example My OrderService is Exposed in Kuberneties on Port `80` as you mapped you OrderService ContainerPort `8080` in  [order-api-deployment.yaml](./deployments/order-api-deployment.yaml)
 
 To Access on host machine you can access you Service to Kubernetes Expose only as below
 

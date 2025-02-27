@@ -2,15 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rabbitmq
+  namespace: dkeshri
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rabbitmq
+      dkeshri.io/message-broker: rabbitmq
   template:
     metadata:
       labels:
-        app: rabbitmq
+        dkeshri.io/message-broker: rabbitmq
+      namespace: dkeshri
     spec:
       containers:
       - name: rabbitmq
@@ -23,14 +25,19 @@ spec:
           value: "guest"
         - name: RABBITMQ_DEFAULT_PASS
           value: "guest"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: rabbitmq-service
+  namespace: dkeshri
 spec:
   selector:
-    app: rabbitmq
+    dkeshri.io/message-broker: rabbitmq
   ports:
     - name: amqp
       protocol: TCP
