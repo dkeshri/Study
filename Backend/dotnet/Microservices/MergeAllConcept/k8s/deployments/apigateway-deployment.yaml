@@ -2,29 +2,36 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigateway
+  namespace: dkeshri
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: apigateway
+      dkeshri.io/apigateway: apigateway
   template:
     metadata:
       labels:
-        app: apigateway
+        dkeshri.io/apigateway: apigateway
+      namespace: dkeshri
     spec:
       containers:
       - name: apigateway
         image: dkeshri/microservice-apigateway:latest
         ports:
         - containerPort: 8080
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: apigateway-service
+  namespace: dkeshri
 spec:
   selector:
-    app: apigateway
+    dkeshri.io/apigateway: apigateway
   ports:
     - protocol: TCP
       port: 80

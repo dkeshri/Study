@@ -1,30 +1,22 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mssql-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi  # Adjust storage as needed
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: mssql-deployment
+  name: mssql-database
+  namespace: dkeshri
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: mssql
+      dkeshri.io/database: mssql-database
+  serviceName: mssql-service
+  replicas: 1
   template:
     metadata:
       labels:
-        app: mssql
+        dkeshri.io/database: mssql-database 
+        namespace: dkeshri
     spec:
       containers:
-      - name: mssql
+      - name: mssql-database
         image: mcr.microsoft.com/mssql/server:2022-latest
         ports:
         - containerPort: 1433
@@ -34,24 +26,29 @@ spec:
         - name: MSSQL_SA_PASSWORD
           value: MsSqlServer@2023
         volumeMounts:
-        - name: mssql-storage
+        - name: mssql-db-pvc
           mountPath: /var/opt/mssql
-      volumes:
-      - name: mssql-storage
-        persistentVolumeClaim:
-          claimName: mssql-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: mssql-db-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mssql-service
+  namespace: dkeshri
 spec:
   selector:
-    app: mssql
+    dkeshri.io/database: mssql-database
   type: NodePort  # Exposes the DB outside the cluster
   ports:
     - protocol: TCP
       port: 1433 # Inside Kubernetes
       targetPort: 1433  # Inside the container
-      nodePort: 31433   # Exposed port on host (must be between 30000-32767)
-      
+      nodePort: 30000   # Exposed port on host (must be between 30000-32767)
