@@ -25,7 +25,7 @@ spec:
           value: "guest"
         - name: RABBITMQ_DEFAULT_PASS
           value: "guest"
-          resources:
+        resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
