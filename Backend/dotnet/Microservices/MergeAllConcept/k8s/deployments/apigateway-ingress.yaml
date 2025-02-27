@@ -4,6 +4,7 @@ metadata:
   name: apigateway-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+  namespace: dkeshri
 spec:
   ingressClassName: nginx
   rules:
@@ -15,6 +16,5 @@ spec:
         backend:
           service:
             name: apigateway-service
-            namespace: dkeshri
             port:
               number: 80

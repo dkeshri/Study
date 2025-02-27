@@ -7,7 +7,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: orchestrator
+      dkeshri.io/app: orchestrator
   template:
     metadata:
       labels:

@@ -37,6 +37,23 @@
     ```
     You can Access it on host machine on **Port**: `7222` of `locahost` as URL: [http://localhost:7222/swagger](http://localhost:7222/swagger)
 
+
+
+## Delete 
+
+**Delete all from namespce**
+
+namespace : dkeshri
+
+```bash
+kubectl delete all --all -n dkeshri
+```
+* This deletes:
+
+    `Pods, Services, Deployments,StatefulSets,DaemonSets, ReplicaSets, PersistentVolumeClaims (PVCs), ConfigMaps, Secrets,
+ Other resource types`
+
+
 **Command	Description**
 
 | Parameter                    | Description     |
