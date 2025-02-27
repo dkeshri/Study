@@ -15,5 +15,6 @@ spec:
         backend:
           service:
             name: apigateway-service
+            namespace: dkeshri
             port:
               number: 80

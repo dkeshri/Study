@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: orchestrator
+  namespace: dkeshri
 spec:
   replicas: 1
   selector:
@@ -10,8 +11,16 @@ spec:
   template:
     metadata:
       labels:
-        app: orchestrator
+        dkeshri.io/app: orchestrator
+      namespace: dkeshri
     spec:
       containers:
       - name: orchestrator
         image: dkeshri/microservice-orchestrator:latest
+        resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
