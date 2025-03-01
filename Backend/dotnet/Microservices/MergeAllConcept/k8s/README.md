@@ -44,7 +44,7 @@ Overall, Kubernetes is essential for modern cloud-native applications, enabling 
 
 3. **Write Kubernetes Deployment & Service Files**
 
-    > Create a k8s folder and define YAML files.
+    > Create a `deployments` directory and define YAML files.
     Deployment for OrderService
 
     * [apigateway-deployment.yaml](./deployments/apigateway-deployment.yaml)
@@ -59,11 +59,14 @@ Overall, Kubernetes is essential for modern cloud-native applications, enabling 
 4. **Deploy Services to Kubernetes**
     
     1. *Apply the deployments*:
-    > Make sure to run below command from **Parent Directory** of `k8s` -> `MergeAllConcept` directory.
+    > Make sure to run below command from **Parent Directory** of `deployments` -> `k8s` directory.
+
+    To Deploy all resources run below command.
+
     ```bash
-    kubectl apply -f ./k8s
+    kubectl apply -f ./deployments
     ```
-    If you are in current directoy of deployments.yaml files then you can run the command as below
+    If you are in current directoy of resources.yaml files then you can run the command as below
 
     ```bash
     kubectl apply -f .

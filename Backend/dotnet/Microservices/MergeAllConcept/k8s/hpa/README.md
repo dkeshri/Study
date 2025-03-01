@@ -47,22 +47,22 @@ Now, let’s configure Horizontal Pod Autoscaler (HPA) to dynamically scale your
 
     HPA requires resource requests and limits to be set in deployments.
 
-    *Example: Modify* : [orderservice-deployment.yaml](./orderservice-deployment.yaml)
+    *Example: Modify* : [order-api-deployment.yaml](../deployments/order-api-deployment.yaml)
 
     add `resources` in above deployment file under `containers` as below screen.
     ![Order_Servie_hpa](../imgs/order_service_hpa.png)
 
-    *Apply changes:*
+    *Apply changes:* from `k8s` directory.
 
     ```bash
-    kubectl apply -f orderservice-deployment.yaml
+    kubectl apply -f ./deployments/orderservice-deployment.yaml
     ```
 3. **Deploy HPA for OrderService**
 
     *Create a new file:* [orderservice-hpa.yaml](./orderservice-hpa.yaml)
 
     *Apply it:*
-
+    > make sure to be in current directory of `orderservice-hpa.yaml`
     ```bash
     kubectl apply -f orderservice-hpa.yaml
     ```
