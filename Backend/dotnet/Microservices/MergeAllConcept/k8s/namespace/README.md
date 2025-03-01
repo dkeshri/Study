@@ -32,7 +32,7 @@ If you want to explicitly assign your `orderservice` to a namespace, add the `na
 
 ![order_namespace](../imgs/order_namespace.png)
 
-Modified OrderService : [orderservice-deployment.yaml](../orderservice-deployment.yaml)
+Modified OrderService : [order-api-deployment.yaml](../deployments/order-api-deployment.yaml)
 
 
 **How to Create and Use a Custom Namespace?**
@@ -43,7 +43,7 @@ Modified OrderService : [orderservice-deployment.yaml](../orderservice-deploymen
     ```
 2.  Deploy resources into this namespace:
     ```bash
-    kubectl apply -f orderservice-deployment.yaml --namespace=mynamespace
+    kubectl apply -f order-api-deployment.yaml --namespace=mynamespace
     ```
 3. Switch to a namespace (so you don’t need to specify --namespace every time):
     ```bash
@@ -56,11 +56,6 @@ kubectl get namespaces
 ```
 
 **Example:** 
-
-Keeping `Ingress` Service in `default` namespace but using `apigateway-service` from `mynamespace`
-
-![Ingress_apigatway](../imgs/Ingress_apigateway.png)
-
 
 **Impact on Services**
 
