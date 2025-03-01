@@ -187,7 +187,7 @@ kubectl rollout restart deployment orchestrator -n dkeshri
 ### Final Checks
 Run
 ```bash
-kubectl get pods
+kubectl get pods -n dkeshri
 ```
 
 **Ensure all services are Running.**

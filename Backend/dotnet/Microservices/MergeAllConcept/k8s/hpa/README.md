@@ -72,12 +72,23 @@ Now, let’s configure Horizontal Pod Autoscaler (HPA) to dynamically scale your
     *Check the HPA status:*
 
     ```bash
-    kubectl get hpa
+    kubectl get hpa -n dkeshri
     ```
+
+    ![hpa_status_unkonwn](../imgs/hpa_status_unkonwn.png)
+
+    Please wait for 5 to 10 mins, allow hpa to capture metrics from metrix-server. then you surly get status as below.
+
+    Re-run above aommand to fetch status.
+
+    ![hpa_status](../imgs/hpa_status.png)
+
+    Please add some load on you service it will definatly increase pod as needed.
+    
     Test scaling:
 
     ```bash
-    kubectl get pods
+    kubectl get pods -n dkeshri
     ```
     If CPU usage increases, Kubernetes will scale up `OrderService` pods automatically.
 
