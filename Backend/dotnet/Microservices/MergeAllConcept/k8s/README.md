@@ -44,8 +44,9 @@ Overall, Kubernetes is essential for modern cloud-native applications, enabling 
 
 3. **Write Kubernetes Deployment & Service Files**
 
-    > Create a `deployments` directory and define YAML files.
-    Deployment for OrderService
+    > We are using namespace dkeshri in all below deployment resources. so please use `-n dkeshri` with each kubectl command. or move current context from `default` to `dkeshri` namespace. 
+
+    Create a `deployments` directory and define deployment resources YAML files.
 
     * [apigateway-deployment.yaml](./deployments/apigateway-deployment.yaml)
     * [auth-api-deployment.yaml](./deployments/auth-api-deployment.yaml)
@@ -74,11 +75,11 @@ Overall, Kubernetes is essential for modern cloud-native applications, enabling 
 
     2. *Check if pods are running*:
     ```bash
-    kubectl get pods
+    kubectl get pods -n dkeshri
     ```
     3. *Check services*:
     ```bash
-    kubectl get services
+    kubectl get services -n dkeshri
     ```
 Your services should now be running and scaled as specified.
 
@@ -93,7 +94,7 @@ Your services should now be running and scaled as specified.
 
 **Install Ingress Controller (if not installed)**
 
-Since you're using Docker Desktop's Kubernetes, you need an Ingress controller like **Nginx**.
+Since you're using Docker Desktop's Kubernetes. you need an Ingress controller like **Nginx**.
 
 *Run:*
 
@@ -107,7 +108,8 @@ kubectl get pods -n ingress-nginx
 
 ### Create an Ingress Resource
 *Create an Ingress Resource*
-Save as [apigateway-ingress.yaml](./deployments/apigateway-ingress.yaml)
+
+Save as [apigateway-ingress.yaml](./apigateway-ingress.yaml)
 
 
 *Modify Your Hosts File (Windows)*
@@ -134,14 +136,14 @@ Now, you can access API Gateway at [http://apigateway.local.](http://apigateway.
 Apply it
 
 ```bash
-kubectl apply -f rabbitmq-deployment.yaml
+kubectl apply -f ./deployments/rabbitmq-deployment.yaml
 ```
 
 **Access RabbitMQ Dashboard**
 Forward the `RabbitMQ` management port to your local machine:
 
 ```bash
-kubectl port-forward service/rabbitmq-service 15672:15672
+kubectl port-forward service/rabbitmq-service 15672:15672 -n dkeshri
 ```
 Now, open [http://localhost:15672/](http://localhost:15672/) in your browser.
 
@@ -175,9 +177,11 @@ You can Access it on host machine on **Port**: `7222` of `locahost` as URL: [htt
 ```
 *Rebuild your microservices and restart the Kubernetes deployment:*
 
+Example: 
 ```bash
-kubectl rollout restart deployment orderservice
-kubectl rollout restart deployment orchestrator
+kubectl rollout restart deployment order-api -n dkeshri
+
+kubectl rollout restart deployment orchestrator -n dkeshri
 ```
 
 ### Final Checks
