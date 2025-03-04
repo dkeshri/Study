@@ -8,14 +8,9 @@ namespace Dkeshri.AzureFunctions
 {
     public class DemoDependency
     {
-        public DemoDependency()
-        {
-            
-        }   
-
         public void LogDemoDependency()
         {
-            Console.WriteLine("Logging Demo dependencies");
+            Console.WriteLine("Logging DemoDependency!");
         }
     }
 }
