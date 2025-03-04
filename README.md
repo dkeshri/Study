@@ -12,7 +12,10 @@
 * [Azure](./Backend/dotnet/Azure/)   
     
     * *Function Apps*
-        * [HttpTrigger](./Backend/dotnet/Azure/Dkeshri.HttpTrigger.AzureFunction/)
+    
+        * [HttpTrigger](./Backend/dotnet/Azure/Dkeshri.AzureFunctions/Functions/HttpTriggerFunction.cs)
+
+        * [TimeTrigger](./Backend/dotnet/Azure/Dkeshri.AzureFunctions/Functions/TimeTriggerFunction.cs)
 
 * [IOT](./Backend/dotnet/IOT/)
 
