@@ -2,7 +2,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Dkeshri.HttpTrigger.AzureFunction
+namespace Dkeshri.AzureFunctions
 {
     internal class Program
     {
@@ -13,9 +13,13 @@ namespace Dkeshri.HttpTrigger.AzureFunction
             var host = new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults((context, builder) =>
                 {
-                    builder.Services.AddScoped<TestClass>();
+                    builder.Services.AddScoped<DemoDependency>();
+                    builder.Services.AddApplicationInsightsTelemetryWorkerService();
+                    builder.Services.ConfigureFunctionsApplicationInsights();
 
-                }).Build();
+
+                })
+                .Build();
 
             host.Run();
         }

@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "Dkeshri.HttpTrigger.AzureFunction": {
+    "Dkeshri.AzureFunctions": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7247",
+      "commandLineArgs": "--port 7157",
       "launchBrowser": false
     }
   }
