@@ -17,6 +17,8 @@
 
         * [TimeTrigger](./Backend/dotnet/Azure/Dkeshri.AzureFunctions/Functions/TimeTriggerFunction.cs)
 
+        * [BlobTrigger](./Backend/dotnet/Azure/Dkeshri.AzureFunctions/Functions/BlobTriggerFunction.cs)
+
 * [IOT](./Backend/dotnet/IOT/)
 
     * [EdgeSolution](./Backend/dotnet/IOT/EdgeSolution/)
