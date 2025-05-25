@@ -51,12 +51,8 @@ namespace QuestPdfDemo
             container.Row(row =>
             {
                 row.RelativeItem(3f)
-                .AlignLeft()
                 .Column(col =>
                 {
-                    col.Item()
-                    .Text("Invoice from 12-09-2025 to 12-10-2025").FontFamily(BoldFont).FontSize(15);
-                    col.Item().PaddingTop(10);
                     col.Item()
                     .Text("One Stop Kirana Store").Bold();
                     col.Item()
@@ -74,12 +70,10 @@ namespace QuestPdfDemo
                         row.RelativeItem().Text("8505996726");
                     });
                 });
-                row.RelativeItem(1.5f)
-                .AlignLeft()
+                row.RelativeItem(1f)
                 .Column(col =>
                 {
                     string formatedDate = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    col.Spacing(1);
                     col.Item().Row(row =>
                     {
                         row.AutoItem().Text("Date: ").Bold();
@@ -87,16 +81,65 @@ namespace QuestPdfDemo
                     });
 
                     col.Item()
-                    .Text("Deepak Keshri");
+                    .Text("Deepak Keshri").Bold();
                     col.Item().Row(row =>
                     {
                         row.AutoItem().Text("Phone: ").Bold();
                         row.RelativeItem().Text("8505996726");
                     });
+
+                    col.Item().Row(row =>
+                    {
+                        row.AutoItem().Text("Bill Amount").Bold();
+                        row.RelativeItem().Text("1934.6").AlignRight();
+                    });
+                    col.Item().Row(row =>
+                    {
+                        row.AutoItem().Text("Prev. Arrear").Bold().FontColor(Colors.Red.Medium);
+                        row.RelativeItem().Text("0").AlignRight().FontColor(Colors.Red.Medium);
+                    });
+                    col.Item().Row(row =>
+                    {
+                        row.AutoItem().Text("Discount").Bold().FontColor(Colors.Green.Medium);
+                        row.RelativeItem().Text("0").AlignRight().FontColor(Colors.Green.Medium);
+                    });
+                    
+                });
+            });
+
+        }
+
+        protected void PaymentDetails(IContainer container)
+        {
+            container.PaddingTop(10).Row(row =>
+            {
+                row.RelativeItem(3f)
+                .Column(col =>
+                {
+                    col.Item().Text("Invoice Period").FontSize(10);
+                });
+                row.RelativeItem(1f)
+                .Column(col =>
+                {
+                    col.Item().Row(row =>
+                    {
+                        row.AutoItem().Text("Total").Bold();
+                        row.RelativeItem().Text("1934.6").AlignRight();
+                    });
+
+                    col.Item().Row(row =>
+                    {
+                        row.AutoItem().Text("Paid").Bold().FontColor(Colors.Green.Medium);
+                        row.RelativeItem().Text("1900").AlignRight().FontColor(Colors.Green.Medium);
+                    });
+                    col.Item().Row(row =>
+                    {
+                        row.AutoItem().Text("Arrear").Bold().FontColor(Colors.Red.Medium);
+                        row.RelativeItem().Text("34.6").AlignRight().FontColor(Colors.Red.Medium);
+                    });
                 });
             });
         }
-
         void AddLogo(IContainer container)
         {
             var path = Path.Combine(AppContext.BaseDirectory, @"Pdf/logo.jpg");
@@ -125,7 +168,7 @@ namespace QuestPdfDemo
                     .Padding(30)
                     .Element(container =>
                     {
-                        container.Border(.5f).BorderColor(Colors.Grey.Lighten1);
+                        container.Border(1).BorderColor(Colors.Grey.Lighten1);
                     });
 
                     // Document Header
@@ -133,12 +176,12 @@ namespace QuestPdfDemo
                         .ShowOnce()
                         .Column(column =>
                         {
+                            column.Item().Text("Invoice").Bold().FontSize(15).AlignCenter();
                             AddLogo(column.Item());
                             PdfHeader(column.Item());
+                            PaymentDetails(column.Item());
                         });
 
-
-                    // Main content with regular font
                     page.Content().Column(column =>
                     {
                         // here we add Table
