@@ -58,7 +58,7 @@ namespace QuestPdfDemo
                     .Text("Invoice from 12-09-2025 to 12-10-2025").FontFamily(BoldFont).FontSize(15);
                     col.Item().PaddingTop(10);
                     col.Item()
-                    .Text("One Stop Kirana Store");
+                    .Text("One Stop Kirana Store").Bold();
                     col.Item()
                     .Text("A-228, Madhuban Vihar, Pusta Road, Kulesra");
                     col.Item()
@@ -70,7 +70,7 @@ namespace QuestPdfDemo
 
                     col.Item().Row(row =>
                     {
-                        row.AutoItem().Text("Phone: ");
+                        row.AutoItem().Text("Phone: ").Bold();
                         row.RelativeItem().Text("8505996726");
                     });
                 });
@@ -82,7 +82,7 @@ namespace QuestPdfDemo
                     col.Spacing(1);
                     col.Item().Row(row =>
                     {
-                        row.AutoItem().Text("Date: ");
+                        row.AutoItem().Text("Date: ").Bold();
                         row.RelativeItem().Text(formatedDate);
                     });
 
@@ -90,7 +90,7 @@ namespace QuestPdfDemo
                     .Text("Deepak Keshri");
                     col.Item().Row(row =>
                     {
-                        row.AutoItem().Text("Phone: ");
+                        row.AutoItem().Text("Phone: ").Bold();
                         row.RelativeItem().Text("8505996726");
                     });
                 });
@@ -166,8 +166,8 @@ namespace QuestPdfDemo
                         });
                 });
             })
-            //.GeneratePdf("output.pdf");
-            .ShowInCompanion();
+            .GeneratePdf("output.pdf");
+            //.ShowInCompanion();
 
         }
 
