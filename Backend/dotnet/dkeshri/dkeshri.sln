@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dkeshri.SystemDesign.LowLev
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExecuterApp", "SystemDesign\ExecuterApp\ExecuterApp.csproj", "{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuestPdfDemo", "QuestPdfDemo\QuestPdfDemo.csproj", "{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
