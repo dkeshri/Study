@@ -23,7 +23,7 @@ namespace QuestPdfDemo
         private float TableMarginLeft { get; set; }
         private float TableMarginRight { get; set; }
 
-        
+
 
         public PdfGenerator()
         {
@@ -68,7 +68,7 @@ namespace QuestPdfDemo
                     col.Item()
                    .Text("201306 (India)");
 
-                    col.Item().Row(row => 
+                    col.Item().Row(row =>
                     {
                         row.AutoItem().Text("Phone: ");
                         row.RelativeItem().Text("8505996726");
@@ -78,14 +78,14 @@ namespace QuestPdfDemo
                 .AlignLeft()
                 .Column(col =>
                 {
-                    string formatedDate = DateTime.Now.ToString("dd/MM/yyyy",CultureInfo.InvariantCulture);
+                    string formatedDate = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
                     col.Spacing(1);
                     col.Item().Row(row =>
                     {
                         row.AutoItem().Text("Date: ");
                         row.RelativeItem().Text(formatedDate);
                     });
-                    
+
                     col.Item()
                     .Text("Deepak Keshri");
                     col.Item().Row(row =>
@@ -100,7 +100,7 @@ namespace QuestPdfDemo
         void AddLogo(IContainer container)
         {
             var path = Path.Combine(AppContext.BaseDirectory, @"Pdf/logo.jpg");
-            using(var imagestream = File.OpenRead(path))
+            using (var imagestream = File.OpenRead(path))
             {
                 container.AlignRight()
                     .Width(35)
@@ -142,10 +142,13 @@ namespace QuestPdfDemo
                     page.Content().Column(column =>
                     {
                         // here we add Table
+
+                        GenerateTable(column.Item());
+
+                        column.Item().PaddingTop(30);
                         column.Item().Text("This is a normal paragraph using Arial Regular.")
                             .FontFamily(BoldFont)
                             .FontSize(14);
-
                         column.Item().Text("This text is important and uses Arial Bold Italic.")
                             .FontFamily(ItalicFont)
                             .FontSize(14);
@@ -163,9 +166,78 @@ namespace QuestPdfDemo
                         });
                 });
             })
-            .GeneratePdf("output.pdf");
-            //.ShowInCompanion();
+            //.GeneratePdf("output.pdf");
+            .ShowInCompanion();
 
         }
+
+        protected virtual (string Name, float Width)[] GetTableHeaders()
+        {
+            return new (string, float)[]
+            {
+                ("Col1",1f),
+                ("col2",2f)
+            };
+        }
+
+        protected virtual IContainer CellStyle(IContainer container)
+        {
+            float borderSize = .5f;
+            return container
+                    .BorderLeft(borderSize)
+                    .BorderBottom(borderSize)
+                    .BorderRight(borderSize)
+                    .PaddingVertical(4f);
+        }
+
+        protected virtual void GenerateTable(IContainer container)
+        {
+            var tableHeaders = GetTableHeaders();
+            container.PaddingTop(10)
+                .PaddingLeft(TableMarginLeft)
+                .PaddingRight(TableMarginRight)
+                .DefaultTextStyle(x => x.FontSize(TableFontSize))
+                .Table(table =>
+                {
+                    table.ColumnsDefinition(columns =>
+                    {
+                        foreach (var tableHeader in tableHeaders)
+                        {
+                            columns.RelativeColumn(tableHeader.Width);
+                        }
+                    });
+
+                    table.Header(header =>
+                    {
+                        foreach (var tableHeader in tableHeaders)
+                        {
+                            header.Cell().Border(0.5f).Background(Colors.Grey.Lighten2)
+                            .Padding(4f)
+                            .Text(tableHeader.Name).FontFamily(BoldFont).AlignCenter();
+                        }
+                    });
+
+                    List<int> rows = new List<int>() { 2, 4 };
+                    AddTableRows(table, rows);
+                });
+        }
+
+        protected virtual void AddTableRows(TableDescriptor table, List<int> items)
+        {
+            foreach (int item in items)
+            {
+                table.Cell()
+                    .Element(CellStyle)
+                    .Text(item.ToString()).AlignCenter();
+                table.Cell()
+                    .Element(CellStyle)
+                    .Text(item.ToString()).AlignCenter();
+                
+            }
+            
+        }
+
+
+
     }
 }
