@@ -23,8 +23,8 @@ Microservices architecture is a design pattern that structures an application as
     [Saga_Orchestration](./SagaPattern/Saga_Orchestration/)
 
 ## [Kubernetes](./MergeAllConcept/k8s/)
-
+* [Distrubated architecture Overview](https://chatgpt.com/share/68a1d423-efb8-8011-a069-95ac71985259)
 ## Chat GPT 
 
-    [Microservice_Architecture_Overview](https://chatgpt.com/share/68a1d3eb-8b20-8011-b23f-5d2971fed0a0)
-    [Distrubated_architecture_Overview](https://chatgpt.com/share/68a1d423-efb8-8011-a069-95ac71985259)
+* [Microservice Architecture_Overview](https://chatgpt.com/share/68a1d3eb-8b20-8011-b23f-5d2971fed0a0)
+* [Distrubated architecture Overview](https://chatgpt.com/share/68a1d423-efb8-8011-a069-95ac71985259)
