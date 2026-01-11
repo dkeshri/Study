@@ -26,7 +26,7 @@ public class TimeTriggered
         string connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage")!;
         // Define container and blob file name
         string containerName = "my-container";
-        string blobFileName = "data1.json";
+        string blobFileName = $"data{timestampUtc}.json";
         BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
         BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
         await containerClient.CreateIfNotExistsAsync();
