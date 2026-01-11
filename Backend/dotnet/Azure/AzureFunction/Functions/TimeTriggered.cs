@@ -19,7 +19,6 @@ public class TimeTriggered
     [Function("TimeTriggered")]
     public async Task Run([TimerTrigger("0 * * * * *")] TimerInfo myTimer)
     {
-        Console.WriteLine("Running");
         _logger.LogInformation("C# Timer trigger function executed at: {executionTime}", DateTime.Now);
         var timestampUtc = DateTime.UtcNow;
         _logger.LogInformation($"C# Timer trigger function executed at: {timestampUtc}");
