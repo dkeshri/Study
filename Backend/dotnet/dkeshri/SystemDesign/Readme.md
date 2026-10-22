@@ -8,13 +8,13 @@ For more information, see [Refactoring.Guru: Design Patterns](https://refactorin
 
 ## Low Level Design Pattern
 
-- [Creational Design Patterns](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/README.md)
+- [Creational Design Patterns](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/)
   - [Factory Method](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/README.md#factory-method)
   - [Abstract Factory](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/README.md#abstract-factory)
   - [Builder](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/README.md#builder)
   - [Prototype](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/README.md#prototype)
   - [Singleton](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Creational/README.md#singleton)
-- [Behavioral Design Patterns](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md)
+- [Behavioral Design Patterns](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/)
   - [Chain of Responsibility](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md#chain-of-responsibility)
   - [Command](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md#command)
   - [Iterator](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md#iterator)
@@ -25,7 +25,7 @@ For more information, see [Refactoring.Guru: Design Patterns](https://refactorin
   - [Strategy](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md#strategy)
   - [Template Method](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md#template-method)
   - [Visitor](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Behavioral/README.md#visitor)
-- [Structural Design Patterns](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Structural/README.md)
+- [Structural Design Patterns](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Structural/)
   - [Adapter](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Structural/README.md#adapter)
   - [Bridge](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Structural/README.md#bridge)
   - [Composite](./Dkeshri.SystemDesign.LowLevel/DesignPatterns/Structural/README.md#composite)
