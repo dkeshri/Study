@@ -4,7 +4,7 @@
 # Table Of Content
 * [Video Editing Settings](./VideoEditing/README.md)
 * [Ef Core Migration](./Backend/README.md)
-* [System Design](./Backend/dotnet/dkeshri/SystemDesign/SystemDesign.md)
+* [System Design](./Backend/dotnet/dkeshri/SystemDesign/)
     
     * *Low level Design*
         * [Design Pattern](./Backend/dotnet/dkeshri/SystemDesign/Dkeshri.SystemDesign.LowLevel/)
