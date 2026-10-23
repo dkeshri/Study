@@ -202,13 +202,11 @@ host.RunAsync().Wait();
 
 ### In Receiver Application
 
-The `IMessageReceiver` interface includes a delegate:
-`Predicate<string>? MessageHandler`.
+The application configures message processing through `IMessageReceiver.MessageHandler`, a `Predicate<string>` callback invoked with the UTF-8 decoded message body.
 
-This allows you to provide a callback method that will be invoked when a message is received from the RabbitMQ queue.
+Set `RegisterReceiverServices` to `true` to register the receiver. The core `AddMessageBroker` extension exposes `IMessageReceiver` through `MessageBrokerFactory`; the RabbitMQ registration adds the internal delivery handler and hosted queue service. `RabbitMqDeliveryHandler` implements `IRabbitMqDeliveryHandler` and handles decoding the RabbitMQ delivery, invoking the configured callback, and acknowledging or rejecting the delivery.
 
-> Note: Ensure that `RegisterReceiverServices` is set to true. This is necessary for the `IMessageReceiver` interface to be provided. 
-Provide `ExchangeName` and `RoutingKeys` only if the sender application is sending messages to the exchange; otherwise, omit them.
+> Note: Provide `ExchangeName` and `RoutingKeys` only when the sender publishes to an exchange. The queue's exchange name and routing key must match the sender's configuration.
 
 * When configuring the queue using the `UseQueue` extension method, ensure that the exchange name matches the one specified in the `Sender` application.
 * Additionally, provide the same **routing key** used for sending messages to the exchange in the `Sender` application.
@@ -252,10 +250,10 @@ using (var scope = host.Services.CreateScope())
     startup.OnStart();
     messageReceiver.MessageHandler = (message) =>
     {
-        // After Process Message and return boolean value.
+        // Process the message and return whether processing succeeded.
         Console.WriteLine(message);
 
-        // message will only acknowledge to RabbitMq Service if return true.
+        // true acknowledges the delivery; false rejects it without requeueing.
         return true; 
     };
 }
@@ -298,4 +296,3 @@ Port `5672` is use in communication during producing and consuming of message.
 
 <small style='color:green'>_Username_</small> `guest` and <small style='color:green'>_Password_</small> `guest`
  
-

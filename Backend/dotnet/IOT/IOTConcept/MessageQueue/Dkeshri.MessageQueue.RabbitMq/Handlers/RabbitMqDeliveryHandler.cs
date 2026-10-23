@@ -6,16 +6,16 @@ using System.Text;
 
 namespace Dkeshri.MessageQueue.RabbitMq.Handlers
 {
-    internal sealed class RabbitMqMessageHandler : IMessageHandler
+    internal sealed class RabbitMqDeliveryHandler : IRabbitMqDeliveryHandler
     {
         private readonly IMessageReceiver _messageReceiver;
 
-        public RabbitMqMessageHandler(IMessageReceiver messageReceiver)
+        public RabbitMqDeliveryHandler(IMessageReceiver messageReceiver)
         {
             _messageReceiver = messageReceiver;
         }
 
-        void IMessageHandler.HandleMessage(object? model, BasicDeliverEventArgs ea, IModel channel)
+        void IRabbitMqDeliveryHandler.HandleDelivery(object? model, BasicDeliverEventArgs ea, IModel channel)
         {
             var messageHandler = _messageReceiver.MessageHandler;
             if (messageHandler == null)
