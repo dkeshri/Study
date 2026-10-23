@@ -13,13 +13,13 @@ namespace MessageQueue.RabbitMq.Services
         private bool _isDisposing = false;
         private bool _isQueueServiceStopping = false;
         private readonly IRabbitMqConnection _connection;
-        private IMessageHandler _messageHanadler;
+        private IRabbitMqDeliveryHandler _deliveryHandler;
         private readonly QueueConfig queueConfig;
-        public MessageReceiverQueueService(IRabbitMqConnection rabbitMqConnection,IMessageHandler messageHandler)
+        public MessageReceiverQueueService(IRabbitMqConnection rabbitMqConnection, IRabbitMqDeliveryHandler deliveryHandler)
         {
             _connection = rabbitMqConnection;
             queueConfig = rabbitMqConnection.Queue;
-            _messageHanadler = messageHandler;
+            _deliveryHandler = deliveryHandler;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ namespace MessageQueue.RabbitMq.Services
                     var consumer = new EventingBasicConsumer(channel);
                     consumer.Received += (model, ea) =>
                     {
-                        _messageHanadler.HandleMessage(model, ea, channel);
+                        _deliveryHandler.HandleDelivery(model, ea, channel);
                     };
                     channel.BasicConsume(queue: queueConfig.QueueName,
                                          autoAck: false,
@@ -138,7 +138,7 @@ namespace MessageQueue.RabbitMq.Services
                     Console.WriteLine("Processing Messages from unroutable.queue");
                     consumer.Received += (model, ea) =>
                     {
-                        _messageHanadler.HandleMessage(model, ea, channel);
+                        _deliveryHandler.HandleDelivery(model, ea, channel);
                     };
                     channel.BasicConsume(queue: "unroutable.queue",
                                          autoAck: false,
