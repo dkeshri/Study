@@ -64,7 +64,7 @@ namespace Dkeshri.MessageQueue.RabbitMq.Extensions
 
         private static void AddMessageReceiverQueueService(this IServiceCollection services) 
         {
-            services.AddSingleton<IMessageHandler, MessageReceiverHandler>();
+            services.AddSingleton<IMessageHandler, RabbitMqMessageHandler>();
             services.AddHostedService<MessageReceiverQueueService>();
         }
 
