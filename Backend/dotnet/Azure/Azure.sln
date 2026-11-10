@@ -5,6 +5,14 @@ VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFunction", "AzureFunction\AzureFunction.csproj", "{8A988B03-A6A3-4B9B-AC1E-E337515625E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureMessageDemo", "AzureMessageDemo", "{94C548B5-893D-430D-B040-C13F87B8DABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sender", "Sender\Sender.csproj", "{B932FD39-0925-4707-A0CD-1880DBB5F319}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Contract\Contract.csproj", "{9E9753C8-0DBC-4CA0-9FD0-3FE2FE792A03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consumer", "Consumer\Consumer.csproj", "{CCADC360-1CB4-45B2-B2FE-0B5B6D03913D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +23,26 @@ Global
 		{8A988B03-A6A3-4B9B-AC1E-E337515625E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A988B03-A6A3-4B9B-AC1E-E337515625E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A988B03-A6A3-4B9B-AC1E-E337515625E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B932FD39-0925-4707-A0CD-1880DBB5F319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B932FD39-0925-4707-A0CD-1880DBB5F319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B932FD39-0925-4707-A0CD-1880DBB5F319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B932FD39-0925-4707-A0CD-1880DBB5F319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E9753C8-0DBC-4CA0-9FD0-3FE2FE792A03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9753C8-0DBC-4CA0-9FD0-3FE2FE792A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9753C8-0DBC-4CA0-9FD0-3FE2FE792A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E9753C8-0DBC-4CA0-9FD0-3FE2FE792A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCADC360-1CB4-45B2-B2FE-0B5B6D03913D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCADC360-1CB4-45B2-B2FE-0B5B6D03913D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCADC360-1CB4-45B2-B2FE-0B5B6D03913D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCADC360-1CB4-45B2-B2FE-0B5B6D03913D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B932FD39-0925-4707-A0CD-1880DBB5F319} = {94C548B5-893D-430D-B040-C13F87B8DABA}
+		{9E9753C8-0DBC-4CA0-9FD0-3FE2FE792A03} = {94C548B5-893D-430D-B040-C13F87B8DABA}
+		{CCADC360-1CB4-45B2-B2FE-0B5B6D03913D} = {94C548B5-893D-430D-B040-C13F87B8DABA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E7B6B6D-B88E-4189-9C5E-D42156D44451}

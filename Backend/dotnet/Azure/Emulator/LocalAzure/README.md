@@ -399,7 +399,26 @@ For a host-based local application, the standard development storage connection 
 UseDevelopmentStorage=true
 ```
 
+Connection string 
+```
+DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFeqCnf2w==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;
+```
 Azurite persists its data in the Docker volume named `azurite-data`.
+
+
+azurite debug
+
+check running azure
+
+```
+Get-NetTCPConnection -LocalPort 10000 -State Listen |
+    Select-Object LocalPort, OwningProcess
+```
+
+```
+Get-CimInstance Win32_Process -Filter "ProcessId = 63440" |
+    Select-Object ProcessId, ExecutablePath, CommandLine
+```
 
 ## 11. Useful Docker commands
 
