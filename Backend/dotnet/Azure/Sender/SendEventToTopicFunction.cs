@@ -1,9 +1,12 @@
 using Azure.Messaging.ServiceBus;
 using Contract;
+using Contract.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Text.Json;
 
 namespace Sender;
@@ -52,7 +55,7 @@ public class SendEventToTopicFunction
         var message = new ServiceBusMessage(messageBody)
         {
             ContentType = "application/json",
-            MessageId = Guid.NewGuid().ToString()
+            MessageId = Guid.NewGuid().ToString(),
         };
 
         await sender.SendMessageAsync(message);
@@ -64,5 +67,46 @@ public class SendEventToTopicFunction
 
         return new OkObjectResult("Message sent to topic: order-events !");
     }
+
+
+
+    [Function(nameof(SendMessageToTopicAsSession))]
+    public async Task<IActionResult> SendMessageToTopicAsSession([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+        var request = await JsonSerializer.DeserializeAsync<TransactionRequest>(
+            req.Body,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        if (request is null)
+        {
+            return new BadRequestObjectResult("Invalid request body.");
+        }
+
+        // Send to topic
+        string topicName = "banking-transactions";
+        var sender = serviceBusClient.CreateSender(topicName);
+
+        var messageBody = JsonSerializer.Serialize(request);
+        var message = new ServiceBusMessage(messageBody)
+        {
+            ContentType = "application/json",
+            MessageId = Guid.NewGuid().ToString(),
+            SessionId = request.AccountId
+        };
+
+        await sender.SendMessageAsync(message);
+
+
+        Console.WriteLine("Message sent to topic: {0} !", topicName);
+
+        await sender.DisposeAsync();
+        string responseMessage = $"Message sent to topic: {topicName} !";
+        return new OkObjectResult(responseMessage);
+    }
+
 
 }

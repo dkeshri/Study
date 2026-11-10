@@ -59,4 +59,25 @@ public class EventHandlerForTopic
         // Complete the message
         await messageActions.CompleteMessageAsync(message);
     }
+
+
+    [Function(nameof(TransactionProcessorFunction))]
+    public async Task TransactionProcessorFunction(
+        [ServiceBusTrigger(
+            topicName:"banking-transactions",
+            subscriptionName:"transaction-processor-sub", 
+            Connection = "ServiceBusConnection",
+            IsSessionsEnabled = true)]
+        ServiceBusReceivedMessage message,
+        ServiceBusMessageActions messageActions)
+    {
+        _logger.LogInformation("Processing transaction event...");
+        _logger.LogInformation("Message ID: {id}", message.MessageId);
+        _logger.LogInformation("Message Session ID: {sessionId}", message.SessionId);
+        _logger.LogInformation("Message Body: {body}", message.Body);
+        _logger.LogInformation("Message Content-Type: {contentType}", message.ContentType);
+
+        // Complete the message
+        await messageActions.CompleteMessageAsync(message);
+    }
 }
