@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.7.34031.279
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12224.181 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplication", "{7E2EA53B-7DBA-46CE-B85C-9D048D39E5B0}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExecuterApp", "SystemDesign\ExecuterApp\ExecuterApp.csproj", "{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuestPdfDemo", "QuestPdfDemo\QuestPdfDemo.csproj", "{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MininalApi", "MininalApi\MininalApi.csproj", "{9A345CFA-8628-471D-8B46-2D7C1DB56E73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96ABB42B-E126-418F-AEE8-B9AD449FF6AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A345CFA-8628-471D-8B46-2D7C1DB56E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A345CFA-8628-471D-8B46-2D7C1DB56E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A345CFA-8628-471D-8B46-2D7C1DB56E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A345CFA-8628-471D-8B46-2D7C1DB56E73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{F0F867EE-EC33-44A2-9880-4856490C8453} = {30EDD73B-31D8-4BCA-8D63-4C0ACFB5B997}
 		{26E4C105-3647-4799-BDE6-C3DFEAB990EE} = {F0F867EE-EC33-44A2-9880-4856490C8453}
 		{A26BAB04-3C4F-4E16-AC25-6CFF1A34CDF3} = {30EDD73B-31D8-4BCA-8D63-4C0ACFB5B997}
+		{9A345CFA-8628-471D-8B46-2D7C1DB56E73} = {7E2EA53B-7DBA-46CE-B85C-9D048D39E5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {980EACD2-F298-4BB6-8DC2-14CE1187888D}

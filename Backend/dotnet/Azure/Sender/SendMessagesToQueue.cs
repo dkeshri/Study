@@ -1,0 +1,56 @@
+using Azure.Messaging.ServiceBus;
+using Contract;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
+
+namespace Sender;
+
+public class SendMessagesToQueue
+{
+    private readonly ILogger<SendMessagesToQueue> _logger;
+
+    ServiceBusClient serviceBusClient;
+    public SendMessagesToQueue(ILogger<SendMessagesToQueue> logger,ServiceBusClient serviceBusClient)
+    {
+        _logger = logger;
+        this.serviceBusClient = serviceBusClient;
+    }
+
+    [Function(nameof(SendMessageToQueue))]
+    public async Task<IActionResult> SendMessageToQueue([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+        // Send to queue
+        var sender = serviceBusClient.CreateSender("order-queue");
+
+        Order orderCreated = new Order()
+        {
+            OrderId = Guid.NewGuid(),
+            CustomerId = Guid.NewGuid(),
+            TotalAmount = 100.0m,
+            ProductId = "Product-1",
+            Quantity = 1,
+            CreatedAtUtc = DateTime.UtcNow
+        };
+        var messageBody = JsonSerializer.Serialize(orderCreated);
+        var message = new ServiceBusMessage(messageBody)
+            {
+                ContentType = "application/json",
+                MessageId = Guid.NewGuid().ToString()
+            };
+
+        await sender.SendMessageAsync(message);
+
+
+        Console.WriteLine("Message sent to order-queue!");
+
+        await sender.DisposeAsync();
+
+        return new OkObjectResult("Message sent to order-queue!");
+    }
+
+}

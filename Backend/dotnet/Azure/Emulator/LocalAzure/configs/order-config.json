@@ -1,0 +1,81 @@
+
+{
+  "UserConfig": {
+    "Namespaces": [
+      {
+        "Name": "sbemulatorns",
+        "Queues": [
+          {
+            "Name": "order-queue",
+            "Properties": {
+              "DefaultMessageTimeToLive": "PT1H",
+              "LockDuration": "PT1M",
+              "MaxDeliveryCount": 5,
+              "RequiresDuplicateDetection": false,
+              "RequiresSession": false,
+              "DeadLetteringOnMessageExpiration": true
+            }
+          }
+        ],
+        "Topics": [
+          {
+            "Name": "order-events",
+            "Properties": {
+              "DefaultMessageTimeToLive": "PT1H",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "inventory-sub",
+                "Properties": {
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 5,
+                  "RequiresSession": false
+                }
+              },
+              {
+                "Name": "payment-sub",
+                "Properties": {
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 5,
+                  "RequiresSession": false
+                }
+              },
+              {
+                "Name": "notification-sub",
+                "Properties": {
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 5,
+                  "RequiresSession": false
+                }
+              }
+            ]
+          },
+          {
+            "Name": "banking-transactions",
+            "Properties": {
+              "DefaultMessageTimeToLive": "PT1H",
+              "DuplicateDetectionHistoryTimeWindow": "PT20S",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "transaction-processor-sub",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": true,
+                  "DefaultMessageTimeToLive": "PT1H",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 5,
+                  "RequiresSession": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Logging": {
+      "Type": "Console"
+    }
+  }
+}
