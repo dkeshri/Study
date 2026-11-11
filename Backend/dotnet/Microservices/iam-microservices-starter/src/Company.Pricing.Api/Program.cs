@@ -1,0 +1,10 @@
+using Company.Security;
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddIamAuthentication(builder.Configuration, "pricing.read", "pricing.write");
+var app = builder.Build();
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
