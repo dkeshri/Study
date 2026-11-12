@@ -24,7 +24,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireNonAlphanumeric = true;
 })
 .AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<ApplicationDbContext>();
+.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI();
+
 
 builder.Services.AddIamOpenIddict(builder.Configuration);
 
