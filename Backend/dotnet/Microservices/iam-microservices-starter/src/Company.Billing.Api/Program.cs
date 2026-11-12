@@ -12,7 +12,7 @@ builder.Services.AddTransient<IamBearerHandler>();
 builder.Services.AddHttpClient<PricingClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Services:Pricing"]!);
-    client.Timeout = TimeSpan.FromSeconds(10);
+    client.Timeout = TimeSpan.FromSeconds(300);
 }).AddHttpMessageHandler<IamBearerHandler>();
 var app = builder.Build();
 app.UseHttpsRedirection();
