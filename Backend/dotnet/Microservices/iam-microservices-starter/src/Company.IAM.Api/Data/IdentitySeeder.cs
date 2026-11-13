@@ -26,6 +26,7 @@ public static class IdentitySeeder
             "pricing.read", "pricing.write", "users.read" };
 
         await EnsureAngularClient(appManager, allUserScopes, configuration);
+        await EnsurePostmanClient(appManager);
         await EnsureConfidentialClient(appManager, "billing-service",
             configuration["Clients:Billing:Secret"], "pricing.read");
         await EnsureConfidentialClient(appManager, "payment-service",
@@ -109,6 +110,66 @@ public static class IdentitySeeder
                 OpenIddictConstants.Permissions.Prefixes.Scope + allowedScope
             }
         };
+        await manager.CreateAsync(descriptor);
+    }
+
+    private static async Task EnsurePostmanClient(
+    IOpenIddictApplicationManager manager)
+    {
+        const string clientId = "postman-client";
+
+        if (await manager.FindByClientIdAsync(clientId) is not null)
+            return;
+
+        var descriptor = new OpenIddictApplicationDescriptor
+        {
+            ClientId = clientId,
+            DisplayName = "Postman OAuth Client",
+
+            // Postman is a public OAuth client.
+            ClientType = OpenIddictConstants.ClientTypes.Public,
+
+            // No separate consent screen required for this test client.
+            ConsentType = OpenIddictConstants.ConsentTypes.Implicit
+        };
+
+        descriptor.RedirectUris.Add(
+            new Uri("https://oauth.pstmn.io/v1/callback"));
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Endpoints.Authorization);
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Endpoints.Token);
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode);
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.GrantTypes.RefreshToken);
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.ResponseTypes.Code);
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Prefixes.Scope + "openid");
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Prefixes.Scope + "profile");
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Prefixes.Scope + "email");
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Prefixes.Scope + "offline_access");
+
+        descriptor.Permissions.Add(
+            OpenIddictConstants.Permissions.Prefixes.Scope + "billing.read");
+
+        // Require PKCE for public-client authentication.
+        descriptor.Requirements.Add(
+            OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange);
+
         await manager.CreateAsync(descriptor);
     }
 }

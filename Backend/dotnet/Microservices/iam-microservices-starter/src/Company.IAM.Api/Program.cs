@@ -24,7 +24,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireNonAlphanumeric = true;
 })
 .AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<ApplicationDbContext>();
+.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI();
+
 
 builder.Services.AddIamOpenIddict(builder.Configuration);
 
@@ -61,9 +62,22 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularSpa", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseRouting();
+// IMPORTANT: CORS must run after routing and before authentication.
+app.UseCors("AngularSpa");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

@@ -1,12 +1,13 @@
-using System.Security.Claims;
 using Company.IAM.Api.Identity;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore;
+using System.Collections.Immutable;
+using System.Security.Claims;
 
 namespace Company.IAM.Api.Controllers;
 
@@ -126,11 +127,20 @@ public sealed class AuthorizationController : Controller
         return principal;
     }
 
-    private async Task SetResourcesAsync(ClaimsPrincipal principal, IEnumerable<string> scopes)
+    private async Task SetResourcesAsync(
+    ClaimsPrincipal principal,
+    IEnumerable<string> scopes)
     {
+        // Convert IEnumerable<string> into ImmutableArray<string>.
+        var scopeArray = scopes.ToImmutableArray();
+
         var resources = new List<string>();
-        await foreach (var resource in _scopes.ListResourcesAsync((System.Collections.Immutable.ImmutableArray<string>)scopes))
+
+        await foreach (var resource in _scopes.ListResourcesAsync(scopeArray))
+        {
             resources.Add(resource);
+        }
+
         principal.SetResources(resources);
     }
 }
