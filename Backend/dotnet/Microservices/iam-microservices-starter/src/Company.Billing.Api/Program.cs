@@ -14,8 +14,22 @@ builder.Services.AddHttpClient<PricingClient>(client =>
     client.BaseAddress = new Uri(builder.Configuration["Services:Pricing"]!);
     client.Timeout = TimeSpan.FromSeconds(300);
 }).AddHttpMessageHandler<IamBearerHandler>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularSpa", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 app.UseHttpsRedirection();
+// IMPORTANT: CORS must run after routing and before authentication.
+app.UseCors("AngularSpa");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

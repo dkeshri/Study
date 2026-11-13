@@ -1,0 +1,7 @@
+/dist
+/node_modules
+/.angular
+/coverage
+*.log
+.DS_Store
+.env
