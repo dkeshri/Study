@@ -8,14 +8,21 @@ export const environment = {
     redirectUri: 'http://localhost:4200/auth/callback',
     postLogoutRedirectUri: 'http://localhost:4200/',
     // Request only scopes this SPA needs. Do not request service-to-service scopes.
-    scope: 'openid profile email offline_access billing.read'
+    scope: 'openid profile email offline_access billing.read payment.read pricing.read'
   },
   billing: {
-    // Intentionally blank until the actual Billing API address is supplied.
-    // Example format only: 'https://localhost:<billing-api-port>'
+    // Set these only after checking the actual Billing API launch profile and route.
     apiBaseUrl: 'https://localhost:7005/',
-    // Configure the exact GET route after checking the Billing API controllers.
-    // Example format only: 'api/<resource>'
     readEndpoint: 'api/billing/customer/1/charge'
+  },
+  pricing: {
+    // Set these only after checking the actual Pricing API launch profile and route.
+    apiBaseUrl: 'https://localhost:7003/',
+    readEndpoint: 'api/prices/customer/1'
+  },
+  payment: {
+    // Set these only after checking the actual Payment API launch profile and route.
+    apiBaseUrl: 'https://localhost:7007/',
+    readEndpoint: 'api/payments/customer/507208be-f1e5-46a3-a52d-24dc0b29686c/profile'
   }
 };

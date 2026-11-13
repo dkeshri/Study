@@ -17,6 +17,9 @@ import { AuthService } from './core/auth/auth.service';
         <nav class="topnav" aria-label="Main navigation">
           @if (auth.isAuthenticated$ | async) {
             <a routerLink="/home" class="nav-link">Home</a>
+            <a [routerLink]="['/home']" fragment="billing" class="nav-link">Billing</a>
+            <a routerLink="/pricing" class="nav-link">Pricing</a>
+            <a routerLink="/payment" class="nav-link">Payments</a>
             <button type="button" class="nav-button" (click)="auth.logout()">Sign out</button>
           } @else {
             <a routerLink="/login" class="nav-link">Sign in</a>

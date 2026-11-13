@@ -15,13 +15,21 @@ iam-angular-spa/
       app.routes.ts
       app.component.ts
       core/
+        api/
+          authenticated-api-client.service.ts
         auth/
           auth.config.ts
           auth.service.ts
           auth.guard.ts
         billing/
           billing-api.service.ts
+        pricing/
+          pricing-api.service.ts
+        payment/
+          payment-api.service.ts
       features/
+        api-resource/
+          api-resource-page.component.ts
         auth-callback/
           auth-callback.component.ts
         home/

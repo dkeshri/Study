@@ -37,12 +37,13 @@ type BillingViewState = 'not-configured' | 'loading' | 'error' | 'empty' | 'succ
       <article class="dashboard-card access-card">
         <div class="card-topline"><span class="tile-icon blue">⌘</span><span class="tile-label">APPLICATION ACCESS</span></div>
         <h2>Connected workspace</h2>
-        <p class="card-copy">This SPA requests only the identity and Billing API scopes it needs:</p>
+        <p class="card-copy">This SPA requests identity, Billing read, and Payment read scopes. Pricing uses a separate public catalogue scope when enabled:</p>
         <div class="scope-chip-list">
           <span class="scope-chip">openid</span>
           <span class="scope-chip">profile</span>
           <span class="scope-chip">email</span>
           <span class="scope-chip">billing.read</span>
+          <span class="scope-chip">payment.read</span>
         </div>
         <div class="info-note">Internal service scopes such as pricing.read and users.read are not requested by Angular.</div>
       </article>
@@ -55,7 +56,7 @@ type BillingViewState = 'not-configured' | 'loading' | 'error' | 'empty' | 'succ
       </article>
     </section>
 
-    <section class="billing-panel" aria-labelledby="billing-title">
+    <section id="billing" class="billing-panel" aria-labelledby="billing-title">
       <div class="billing-panel-heading">
         <div>
           <div class="card-topline billing-topline">

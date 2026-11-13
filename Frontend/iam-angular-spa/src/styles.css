@@ -150,3 +150,19 @@ button { cursor: pointer; }
   .billing-panel { padding: 21px 17px; }
   .billing-panel-heading { flex-direction: column; }
 }
+
+/* Pricing and Payment resource pages */
+.resource-heading { margin-bottom: 26px; }
+.resource-panel { margin-top: 0; }
+.resource-shortcuts { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 20px; }
+.resource-shortcuts a { color: #5369c8; font-size: 11px; font-weight: 700; }
+.resource-shortcuts a:hover { text-decoration: underline; }
+@media (max-width: 850px) {
+  .topnav { gap: 13px; }
+  .topnav .nav-link { font-size: 10px; }
+}
+@media (max-width: 560px) {
+  .topnav { gap: 9px; }
+  .topnav .nav-link { font-size: 9px; }
+  .topnav .nav-button { font-size: 9px; padding: 8px 9px; }
+}

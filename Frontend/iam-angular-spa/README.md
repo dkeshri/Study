@@ -251,3 +251,115 @@ Once those are known, replace `unknown` with the real DTO and render actual bill
 ## 11. Validation status
 
 The Angular source was updated with the typed generic Billing API client, bearer-token handling, environment configuration, Home page states, and setup notes. A TypeScript source syntax parse completed successfully. `npm install --no-audit --no-fund` was attempted but could not reach `registry.npmjs.org` (`EAI_AGAIN` DNS resolution); `node_modules` is therefore absent, so `ng build` and Angular tests could not be run in this environment. No Billing API end-to-end request can be verified until the actual Billing API base URL and route contract are supplied.
+
+## 12. Pricing and Payment pages
+
+The authenticated navigation now includes **Home/Billing**, **Pricing**, and **Payments**. The routes are `/home`, `/pricing`, and `/payment`. Both new pages use typed generic API services and the same safe request lifecycle as Billing: not configured, loading, error, empty, and success. Until the actual endpoint DTO is available, successful responses are displayed as JSON (`unknown`) rather than mapped to guessed business fields.
+
+### Payment API
+
+`payment.read` is included in the Angular OIDC request because the IAM client record you shared already grants `angular-web` the `payment.read` scope permission and your IAM seeder maps that scope to the `payment-api` resource. The Payment API should validate:
+
+- Issuer/signature/lifetime from the IAM authority.
+- Audience `payment-api`.
+- Scope `payment.read` on read endpoints.
+
+Configure the actual Payment API URL and GET path after inspecting its launch profile and controller/minimal API route:
+
+```ts
+payment: {
+  apiBaseUrl: '',
+  readEndpoint: ''
+}
+```
+
+### Pricing API: keep the internal service scope private
+
+The existing `pricing.read` scope is the Billing-to-Pricing service-to-service permission in this architecture. Do **not** request that internal scope from Angular or expose the `pricing-service` client credentials in the browser.
+
+The Pricing page is prepared for a separate browser-facing scope named `pricing.catalog.read`, mapped to the `pricing-api` resource. Before enabling direct Angular-to-Pricing calls, register that scope in IAM and grant it to `angular-web`:
+
+1. In the IAM `IdentitySeeder.SeedAsync()`, add:
+
+   ```csharp
+   await EnsureScope(scopeManager, "pricing.catalog.read", "pricing-api");
+   ```
+
+2. Add `pricing.catalog.read` to the scope permissions for the existing `angular-web` application. Your current `EnsureAngularClient()` returns early when the client already exists, so changing its new-client scope array alone will **not** update the existing database record. Update the existing application descriptor through `IOpenIddictApplicationManager.PopulateAsync()` and `UpdateAsync()`, or apply an equivalent reviewed database migration/administrative update. For example:
+
+   ```csharp
+   var application = await appManager.FindByClientIdAsync("angular-web");
+   if (application is not null)
+   {
+       var descriptor = new OpenIddictApplicationDescriptor();
+       await appManager.PopulateAsync(descriptor, application);
+       descriptor.Permissions.Add(
+           OpenIddictConstants.Permissions.Prefixes.Scope + "pricing.catalog.read");
+       await appManager.UpdateAsync(application, descriptor);
+   }
+   ```
+
+3. Add `pricing.catalog.read` to `environment.iam.scope` only after IAM has registered the scope and granted it to `angular-web`:
+
+   ```ts
+   scope: 'openid profile email offline_access billing.read payment.read pricing.catalog.read'
+   ```
+
+4. The Pricing API must accept the browser-facing `pricing.catalog.read` scope and audience `pricing-api`. Keep the internal `pricing.read` requirement for Billing's confidential service client; do not replace it.
+
+Until those IAM changes are completed, the Pricing page intentionally shows a scope-not-configured message and does not send a request.
+
+### Pricing and Payment API configuration
+
+Edit `src/environments/environment.ts` after checking the actual API source and launch profiles:
+
+```ts
+pricing: {
+  apiBaseUrl: '',  // actual HTTPS Pricing API origin
+  readEndpoint: '' // exact GET route from the API
+},
+payment: {
+  apiBaseUrl: '',  // actual HTTPS Payment API origin
+  readEndpoint: '' // exact GET route from the API
+}
+```
+
+No Pricing or Payment API project, routes, response DTOs, or ports were present in the supplied project files, so these values remain empty by design. Do not copy the sample values from another environment or guess controller routes.
+
+### CORS on Pricing and Payment APIs
+
+CORS is configured separately on each API, just as it is on IAM and Billing. For these read-only bearer-token requests, allow only the Angular origin and the required request headers/method:
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularSpa", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .WithMethods("GET")
+              .WithHeaders("Authorization", "Accept");
+    });
+});
+
+// After app.Build():
+app.UseRouting();
+app.UseCors("AngularSpa");
+app.UseAuthentication();
+app.UseAuthorization();
+```
+
+Apply a matching, narrowly scoped policy to both Pricing and Payment APIs. In production, replace the localhost origin with the exact HTTPS SPA origin. Do not use `AllowAnyOrigin()` or `AllowCredentials()` for this bearer-token flow.
+
+## 13. Shared API client and routes
+
+- `src/app/core/api/authenticated-api-client.service.ts`: validates HTTPS API origin and relative route, attaches the IAM bearer token only to that configured origin, and formats safe API errors.
+- `src/app/core/pricing/pricing-api.service.ts`: typed Pricing API GET client.
+- `src/app/core/payment/payment-api.service.ts`: typed Payment API GET client.
+- `src/app/features/api-resource/api-resource-page.component.ts`: shared authenticated page used by `/pricing` and `/payment`.
+- `src/app/app.routes.ts`: protects both pages with the existing auth guard.
+
+The client uses generic `get<TResponse>()` methods. Once the backend contracts are supplied, replace `unknown` with real response DTOs and render domain-specific fields. Do not log access tokens or attach them through a global interceptor.
+
+## 14. Validation status
+
+The source changes were inspected, including route registration, API-service configuration, and page scope gating. A full Angular compiler/build check still requires installing the project dependencies with `npm install`; the npm registry was unreachable in the earlier build environment. No Pricing or Payment end-to-end call can be verified until their real base URLs, routes, and response DTOs are supplied. The Pricing page also requires the dedicated public scope setup above before it can request data.
