@@ -7,25 +7,57 @@ using System.Threading.Tasks;
 
 namespace Dkeshri.SystemDesign.LowLevel.Basic
 {
+    class Deepak
+    {
+        private static Deepak _deepak;
+        int a = 0;
+        private Deepak()
+        {
+        }
+       
+        public void display()
+        {
+            Console.WriteLine("Deepak"+ a++);
+        }
+
+        public static Deepak GetInstance()
+        {
+            if(_deepak == null)
+            {
+                _deepak = new Deepak();
+            }
+            return _deepak;
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public class RandomConcept : IExecute
     {
-        private void test(out int a)
-        {
-            a = 20;
-            dynamic test;
-            test = "deepak";
-            Console.WriteLine(a);
-            Console.WriteLine(test);
-        }
+        
 
         public void run()
         {
-            // Implementation for run method
+            Deepak deepak = Deepak.GetInstance();
+            deepak.display();
 
+            deepak = Deepak.GetInstance();
+            deepak.display();
 
-            int a = 9;
-            test(out a);
-            Console.WriteLine(a);
         }
     }
 }

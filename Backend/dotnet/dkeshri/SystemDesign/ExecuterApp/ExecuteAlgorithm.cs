@@ -10,7 +10,7 @@ namespace ExecuterApp
         IExecute execute;
         public ExecuteAlgorithm()
         {
-            execute = new DecoratorClientApplication();
+            execute = new RandomConcept();
         }
         public void Run()
         {

@@ -1,0 +1,125 @@
+﻿@page
+@model Company.IAM.Api.Areas.Identity.Pages.Account.LoginModel
+
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h2 class="text-center mb-2">
+                        Welcome Back
+                    </h2>
+
+                    <p class="text-center text-muted mb-4">
+                        Sign in to your account
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            @Model.ErrorMessage
+                        </div>
+                    }
+
+                    @if (TempData["ExternalLoginError"] is string externalError)
+                    {
+                        <div class="alert alert-danger">
+                            @externalError
+                        </div>
+                    }
+
+                    <form method="post"
+                          asp-route-returnUrl="@Model.ReturnUrl">
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email"
+                                   class="form-label">
+                                Email address
+                            </label>
+
+                            <input asp-for="Input.Email"
+                                   class="form-control"
+                                   placeholder="Enter your email" />
+
+                            <span asp-validation-for="Input.Email"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Password"
+                                   class="form-label">
+                                Password
+                            </label>
+
+                            <input asp-for="Input.Password"
+                                   class="form-control"
+                                   placeholder="Enter your password" />
+
+                            <span asp-validation-for="Input.Password"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="Input.RememberMe"
+                                   class="form-check-input" />
+
+                            <label asp-for="Input.RememberMe"
+                                   class="form-check-label">
+                            </label>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Sign in
+                        </button>
+                    </form>
+
+                    <div class="text-center my-4">
+                        <span class="text-muted">OR</span>
+                    </div>
+
+                    <form asp-controller="ExternalLogin"
+                          asp-action="Login"
+                          asp-route-returnUrl="@Model.ReturnUrl"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                name="provider"
+                                value="Google"
+                                class="btn btn-outline-dark w-100">
+
+                            <strong>G</strong>
+                            Continue with Google
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            Secure authentication powered by Company IAM
+                        </small>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
