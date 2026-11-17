@@ -9,3 +9,4 @@
 **/Release
 
 /Backend/dotnet/dkeshri/Dkeshri.WebApi/Logs
+Backend/dotnet/Microservices/iam-microservices-starter/src/Company.IAM.Api/appsettings.Development.json
