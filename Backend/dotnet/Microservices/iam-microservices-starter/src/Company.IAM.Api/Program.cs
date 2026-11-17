@@ -1,6 +1,7 @@
 using Company.IAM.Api.Configuration;
 using Company.IAM.Api.Data;
 using Company.IAM.Api.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,25 +32,54 @@ builder.Services.AddIamOpenIddict(builder.Configuration);
 
 // IAM's own user-management API validates access tokens just like other resource APIs.
 var issuer = builder.Configuration["OpenIddict:Issuer"]!;
-builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-{
-    options.Authority = issuer;
-    options.MetadataAddress = new Uri(new Uri(issuer), ".well-known/openid-configuration").ToString();
-    options.RequireHttpsMetadata = true;
-    options.MapInboundClaims = false;
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        ValidateIssuer = true,
-        ValidIssuer = issuer,
-        ValidateAudience = true,
-        ValidAudience = "iam-api",
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ClockSkew = TimeSpan.FromSeconds(30),
-        NameClaimType = "name",
-        RoleClaimType = "role"
-    };
-});
+        options.Authority = issuer;
+        options.MetadataAddress = new Uri(new Uri(issuer), ".well-known/openid-configuration").ToString();
+        options.RequireHttpsMetadata = true;
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = true,
+            ValidAudience = "iam-api",
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.FromSeconds(30),
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    })
+    .AddGoogle("Google", options =>
+    {
+        options.ClientId =
+            builder.Configuration["Authentication:Google:ClientId"]
+            ?? throw new InvalidOperationException(
+                "Google ClientId is missing.");
+
+        options.ClientSecret =
+            builder.Configuration["Authentication:Google:ClientSecret"]
+            ?? throw new InvalidOperationException(
+                "Google ClientSecret is missing.");
+
+        options.SignInScheme = IdentityConstants.ExternalScheme;
+
+        options.CallbackPath = "/signin-google";
+
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+
+        // Map Google's verified_email response field to our
+        // application's standard email_verified claim.
+        options.ClaimActions.MapJsonKey(
+            "email_verified",
+            "verified_email");
+
+        options.SaveTokens = false;
+    });
+
 
 builder.Services.AddAuthorization(options =>
 {
